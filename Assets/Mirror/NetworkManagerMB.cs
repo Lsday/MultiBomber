@@ -9,11 +9,6 @@ using Mirror;
 
 public class NetworkManagerMB : NetworkManager
 {
-    
 
-
-   
-    
-
-   
+	
 }

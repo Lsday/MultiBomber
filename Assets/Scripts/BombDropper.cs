@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class BombDropper : NetworkBehaviour
 {
     public NetworkIdentity playerIdentity;
     public GameObject bombPrefab;
-    [SyncVar]public int bombCounter = 1;
+    [SyncVar] public int bombCounter = 1;
 
 
     private void Start()
@@ -45,11 +46,10 @@ public class BombDropper : NetworkBehaviour
         bombCounter += count;
     }
 
-   
+
     void RemoveBomb(int count)
     {
         bombCounter -= count;
     }
-
 
 }

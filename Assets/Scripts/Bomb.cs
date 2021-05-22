@@ -24,8 +24,8 @@ public class Bomb : NetworkBehaviour
 
     private void BombExplode()
     {
-        Debug.Log("Boom");
+        Debug.Log("BombExplode, " + "playerIdentity, " + playerIdentity + " isServer = " + isServer);
         NetworkServer.Destroy(gameObject);
-        
+
     }
 }

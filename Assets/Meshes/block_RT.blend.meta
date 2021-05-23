@@ -1,54 +1,140 @@
 fileFormatVersion: 2
 guid: a72a3930b826010449f5ed5f0dbf4522
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: block_I
-    100004: block_L
-    100006: block_O
-    100008: block_T
-    100010: block_X
-    100012: box
-    100014: block_U
-    400000: //RootNode
-    400002: block_I
-    400004: block_L
-    400006: block_O
-    400008: block_T
-    400010: block_X
-    400012: box
-    400014: block_U
-    2100000: Material
-    2300000: //RootNode
-    2300002: block_I
-    2300004: block_L
-    2300006: block_O
-    2300008: block_T
-    2300010: block_X
-    2300012: box
-    2300014: block_U
-    3300000: //RootNode
-    3300002: block_I
-    3300004: block_L
-    3300006: block_O
-    3300008: block_T
-    3300010: block_X
-    3300012: box
-    3300014: block_U
-    4300000: block_o
-    4300002: block_L
-    4300004: block_T
-    4300006: block_X
-    4300008: block_I
-    4300010: block_O
-    4300012: box
-    4300014: block_U
-    7400000: Default Take
-    9500000: //RootNode
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: block_I
+  - first:
+      1: 100004
+    second: block_L
+  - first:
+      1: 100006
+    second: block_O
+  - first:
+      1: 100008
+    second: block_T
+  - first:
+      1: 100010
+    second: block_X
+  - first:
+      1: 100012
+    second: box
+  - first:
+      1: 100014
+    second: block_U
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: block_I
+  - first:
+      4: 400004
+    second: block_L
+  - first:
+      4: 400006
+    second: block_O
+  - first:
+      4: 400008
+    second: block_T
+  - first:
+      4: 400010
+    second: block_X
+  - first:
+      4: 400012
+    second: box
+  - first:
+      4: 400014
+    second: block_U
+  - first:
+      21: 2100000
+    second: Material
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      23: 2300002
+    second: block_I
+  - first:
+      23: 2300004
+    second: block_L
+  - first:
+      23: 2300006
+    second: block_O
+  - first:
+      23: 2300008
+    second: block_T
+  - first:
+      23: 2300010
+    second: block_X
+  - first:
+      23: 2300012
+    second: box
+  - first:
+      23: 2300014
+    second: block_U
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      33: 3300002
+    second: block_I
+  - first:
+      33: 3300004
+    second: block_L
+  - first:
+      33: 3300006
+    second: block_O
+  - first:
+      33: 3300008
+    second: block_T
+  - first:
+      33: 3300010
+    second: block_X
+  - first:
+      33: 3300012
+    second: box
+  - first:
+      33: 3300014
+    second: block_U
+  - first:
+      43: 4300000
+    second: block_o
+  - first:
+      43: 4300002
+    second: block_L
+  - first:
+      43: 4300004
+    second: block_T
+  - first:
+      43: 4300006
+    second: block_X
+  - first:
+      43: 4300008
+    second: block_I
+  - first:
+      43: 4300010
+    second: block_O
+  - first:
+      43: 4300012
+    second: box
+  - first:
+      43: 4300014
+    second: block_U
+  - first:
+      74: 7400000
+    second: Default Take
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects: {}
   materials:
-    importMaterials: 0
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -80,34 +166,45 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 0
     importCameras: 0
     importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -117,14 +214,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

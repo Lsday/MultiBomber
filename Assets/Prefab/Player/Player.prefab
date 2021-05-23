@@ -87,6 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  playerIndex: 0
   speed: 7
 --- !u!114 &161878465008676798
 MonoBehaviour:
@@ -105,23 +106,6 @@ MonoBehaviour:
   playerIdentity: {fileID: 0}
   bombPrefab: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
   bombCounter: 1
---- !u!111 &420797086287954694
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022638314612746890}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: -3100369314251171874, guid: f1bacd5ed2008f24aa4fc6d45cdedbe1, type: 3}
-  m_Animations:
-  - {fileID: -3100369314251171874, guid: f1bacd5ed2008f24aa4fc6d45cdedbe1, type: 3}
-  - {fileID: 5522812681064789136, guid: f1bacd5ed2008f24aa4fc6d45cdedbe1, type: 3}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

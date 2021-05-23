@@ -78,10 +78,10 @@ public class LevelBuilder : MonoBehaviour
         wallShapes.Add(0, new MeshShape { mesh = block_O, rotation = 0 }); // ALL EMPTY
 
         // L BLOCKS (CORNER)
-        wallShapes.Add(3, new MeshShape { mesh = block_L, rotation = 0 }); // TOP AND LEFT NOT EMPTY
-        wallShapes.Add(5, new MeshShape { mesh = block_L, rotation = 90 });  // TOP AND RIGHT NOT EMPTY
-        wallShapes.Add(10, new MeshShape { mesh = block_L, rotation = 270 }); // BOTTOM AND LEFT NOT EMPTY
-        wallShapes.Add(12, new MeshShape { mesh = block_L, rotation = 180 }); // BOTTOM AND RIGHT NOT EMPTY
+        wallShapes.Add(3, new MeshShape { mesh = block_L, rotation = 180 }); // TOP AND LEFT NOT EMPTY
+        wallShapes.Add(5, new MeshShape { mesh = block_L, rotation = 270 });  // TOP AND RIGHT NOT EMPTY
+        wallShapes.Add(10, new MeshShape { mesh = block_L, rotation = 90 }); // BOTTOM AND LEFT NOT EMPTY
+        wallShapes.Add(12, new MeshShape { mesh = block_L, rotation = 0 }); // BOTTOM AND RIGHT NOT EMPTY
 
         // I BLOCKS (WALLS)
         wallShapes.Add(6, new MeshShape { mesh = block_I, rotation = 90 }); // LEFT AND RIGHT NOT EMPTY
@@ -148,7 +148,7 @@ public class LevelBuilder : MonoBehaviour
 
                     if (mesh != null)
                     {
-                        transform.rotation = Quaternion.Euler(-90, meshShape.rotation, 0); // x = -90 : to compensate Blender import settings
+                        transform.rotation = Quaternion.Euler(0, meshShape.rotation, 0);
 
                         Mesh m_NewMesh = new Mesh();
                         m_NewMesh.name = (mesh.name + "_patches");

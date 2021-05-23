@@ -3,9 +3,11 @@ using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
+    public NetworkIdentity hubIdentity;
+    private PlayersHub myHub;
+    public byte playerIndex;
     public float speed = 5;
-
-    
+    public KeyCode myKey;
 
     Animator animator;
     [SyncVar]bool isRunning;
@@ -15,12 +17,21 @@ public class PlayerMovement : NetworkBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    void Update()
+    public void Init(NetworkIdentity identity , byte index, KeyCode key)
     {
-        if (!isLocalPlayer) return;
+        playerIndex = index;
+        hubIdentity = identity;
+        myHub = hubIdentity.GetComponent<PlayersHub>();
+        transform.position += transform.forward * index;
+        myKey = key;
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        myHub.LinkPlayer(this);
+    }
+
+    public void SetMovement(Vector2 movement)
+    {
+        float horizontal = movement.x;
+        float vertical = movement.y;
 
         if (horizontal + vertical !=0)
         {

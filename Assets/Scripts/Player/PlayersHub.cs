@@ -6,60 +6,60 @@ using UnityEngine;
 
 public class PlayersHub : NetworkBehaviour
 {
-    public NetworkIdentity hubIdentity;
-    public byte localPlayersCount = 3;
     public GameObject playerPrefab;
 
-    [SyncVar] byte nextPlayerIndex;
+    [SyncVar] byte playerIndex;
 
-    List<PlayerMovement> players = new List<PlayerMovement>();
+    public List<PlayerMovement> players = new List<PlayerMovement>();
 
-    void Start()
+    private void OnGUI()
     {
-        hubIdentity = GetComponent<NetworkIdentity>();
-
         if (isLocalPlayer)
         {
-            for (byte i = 0; i < localPlayersCount; i++)
+            if (GUI.Button(new Rect(300, 5, 200, 25), "Add Player"))
             {
-                CmdSpawnPlayer(nextPlayerIndex,i);
-                nextPlayerIndex++;
+                AddPlayer();
             }
-        }
 
+            GUI.Label(new Rect(500, 5, 100, 25), playerIndex.ToString());
+        }
     }
 
-    public void LinkPlayer(PlayerMovement playerMovement)
+    void AddPlayer()
     {
-        players.Add(playerMovement);
+        if (isLocalPlayer)
+        {
+            CmdSpawnPlayer(this.netIdentity);
+        }
+
     }
 
     void Update()
     {
         if (!isLocalPlayer) return;
-
-        foreach (PlayerMovement p in players)
-        {
-            if(Input.GetKey(p.myKey))
-            {
-                p.SetMovement(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
-            }
-        }
-
     }
 
     [Command]
-    private void CmdSpawnPlayer(byte playerIndex,byte localIndex)
+    private void CmdSpawnPlayer(NetworkIdentity identity)
     {
-        Vector3 spawnpos = transform.position;
-        GameObject player = Instantiate(playerPrefab, spawnpos, Quaternion.identity);
+        GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
 
-        PlayerMovement playerScript = player.GetComponent<PlayerMovement>();
+        PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+        playerMovement.SetHubIdentity(identity);
+        playerMovement.playerIndex = playerIndex;
+        playerIndex++;
 
-        KeyCode[] keys = { KeyCode.RightShift , KeyCode.LeftShift , KeyCode.LeftControl, KeyCode.RightControl };
+        NetworkServer.Spawn(player, gameObject);
 
-        playerScript.Init(hubIdentity , playerIndex, keys[localIndex]);
+        players.Add(playerMovement);
 
-        NetworkServer.Spawn(player);
+        Response();
+    }
+
+
+    [ClientRpc]
+    private void Response()
+    {
+        Debug.Log("yo");
     }
 }

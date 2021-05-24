@@ -38,9 +38,9 @@ public class PlayersHub : NetworkBehaviour
 
     void CreatePlayers()
     {
-        for(byte i = 0; i < PlayerInputs.instances.Count; i++)
+        for(byte i = 0; i < DeviceInputs.instances.Count; i++) // TODO RAJOUTER UN SO_INT à la place de PlayerInputs.instances.Count
         {
-            AddPlayer(i);
+            AddPlayer(i); 
         }
     }
 
@@ -48,9 +48,8 @@ public class PlayersHub : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            CmdSpawnPlayer(this.netIdentity, localPlayerIndex);
+            CmdSpawnPlayer(netIdentity, localPlayerIndex);
         }
-
     }
 
     void Update()

@@ -10,41 +10,46 @@ public class SO_Variable<T> : ScriptableObject
     [SerializeField]
     private T _value;
 
-    public T value{
-        get{
+    public T value
+    {
+        get
+        {
             return _value;
         }
-        set{
+        set
+        {
             if (_value.Equals(value)) return;
             _value = value;
 
-            if (OnChange != null){
-                OnChange(_value);
-            }
+            OnChange?.Invoke(_value);
         }
     }
 
-    public void Refresh(){
-        if (OnChange != null){
-            OnChange(_value);
-        }
+    public void Refresh()
+    {
+        OnChange?.Invoke(_value);
     }
 
-    public void OnValidate(){
+    public void OnValidate()
+    {
         Refresh();
     }
 
-    public void Reset(){
-        if(originalReference != null){
-            this.value = originalReference.value;
+    public void Reset()
+    {
+        if(originalReference != null)
+        {
+            value = originalReference.value;
         }
     }
 
-    private void SetOriginalReference(SO_Variable<T> original){
+    private void SetOriginalReference(SO_Variable<T> original)
+    {
         originalReference = original;
     }
 
-    protected SO_Variable<T> PrepareClone(){
+    protected SO_Variable<T> PrepareClone()
+    {
         SO_Variable<T> clone = Instantiate(this) as SO_Variable<T>;
         clone.SetOriginalReference(this);
         return clone;

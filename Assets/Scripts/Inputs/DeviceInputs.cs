@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputs : MonoBehaviour
+public class DeviceInputs : MonoBehaviour
 {
-    public static List<PlayerInputs> instances = new List<PlayerInputs>();
+    public static List<DeviceInputs> instances = new List<DeviceInputs>();
 
     public SO_Int ConnectedCount;
 

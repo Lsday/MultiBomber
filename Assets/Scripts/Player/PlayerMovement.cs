@@ -12,7 +12,7 @@ public class PlayerMovement : NetworkBehaviour
     Animator animator;
     [SyncVar]bool isRunning;
 
-    public PlayerInputs inputs;
+    public DeviceInputs inputs;
 
     private void Start()
     {
@@ -20,7 +20,7 @@ public class PlayerMovement : NetworkBehaviour
 
         if (inputs == null && hubIdentity.isLocalPlayer)
         {
-            inputs = PlayerInputs.instances[localPlayerIndex];
+            inputs = DeviceInputs.instances[localPlayerIndex];
         }
     }
 

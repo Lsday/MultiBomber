@@ -9,7 +9,7 @@ public class Tile
     GenericGrid<Tile> grid;
     public ElementType type { get; private set; }
 
-    public Tile(GenericGrid<Tile> grid, int x, int y)
+    public Tile(GenericGrid<Tile> grid, int x, int y, ElementType type = ElementType.Empty)
     {
         this.grid = grid;
         this.x = x;

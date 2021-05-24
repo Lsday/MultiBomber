@@ -21,7 +21,7 @@ public class InputsDevicesManager : MonoBehaviour
         inputManager = GetComponent<PlayerInputManager>();
         ConnectedCount.value = 0;
 
-        InvokeRepeating("DetectNewPlayers", 0.1f, 0.5f);
+        InvokeRepeating("DetectNewPlayers", 0.1f, 0.5f); //TODO : AJOUTER TIMER CLASS
     }
 
     private void OnGUI()

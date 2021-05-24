@@ -14,10 +14,10 @@ public class SO_Int : SO_Variable<int>
         }
     }
     public override string ToString(){
-        return this.value.ToString();
+        return value.ToString();
     }
 
     public SO_Int GetClone(){
-        return this.PrepareClone() as SO_Int;
+        return PrepareClone() as SO_Int;
     }
 }

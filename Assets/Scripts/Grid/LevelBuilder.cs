@@ -46,6 +46,8 @@ public class LevelBuilder : MonoBehaviour
 
     public Material blockMaterial;
 
+    public Vector3[] startPositions = new Vector3[10];
+
     [Header("Wall Meshes")]
     public Mesh block_I;
     public Mesh block_T;
@@ -54,6 +56,9 @@ public class LevelBuilder : MonoBehaviour
     public Mesh block_U;
     public Mesh block_O;
 
+    /// <summary>
+    /// The size of the Map
+    /// </summary>
     [Header("Map Size")]
     [Range(3, 10)] public int mapSize;
 
@@ -62,12 +67,19 @@ public class LevelBuilder : MonoBehaviour
     private void Start()
     {
         int mapDimension = GetMapDimension(mapSize);
-        grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, (GenericGrid<Tile> grid, int x, int y) => new Tile(grid, x, y));
+        grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
         CreateMeshDictionary();
         CreateLevelData();
         CombineMesh();
     }
+
+    public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
+    {
+        return new Tile(grid, x, y);
+    }
+
+
     private int GetMapDimension(int mapSize)
     {
         return mapSize * 2 + 1;
@@ -88,6 +100,16 @@ public class LevelBuilder : MonoBehaviour
         wallShapes.Add(9, new MeshShape { mesh = block_I, rotation = 0 }); // TOP AND BOTTOM NOT EMPTY
 
     }
+
+
+    // INIT les startPositions en fonction du nompbre de joeurs InitPlayerStartPositions
+    // FAIRE LES MURS 
+    // Réperer les cases vides
+    // CREER LES BOITES  dans les cases vides sauf sur les cases proche de la startposition d'un joueur (IsNearPlayerStartPosition)
+    // spécifier un pourcentage de boite qui sont placée aléatoirement dans les cases vides
+
+
+
     void CreateLevelData()
     {
         int xc = grid.GetWidth();
@@ -106,18 +128,21 @@ public class LevelBuilder : MonoBehaviour
                     Tile wallTile = grid.GetGridObject(i, j);
                     wallTile.SetType(ElementType.Wall);
                     wallTiles.Add(wallTile);
-                    //grid.GetValue(i, j).category = 0;             ??????????
-                    //grid.GetValue(i, j).script = null;            ??????????
                 }
+
+
                 else
                 {
-                    //maxFreecount++;
-                    //if (!IsNearStartPosition(i, j))
-                    //{
-                    //    freeCells.Add(grid.GetValue(i, j));
-                    //}
+                    
+                    if (!IsNearPlayerStartPosition(i, j))
+                    {
+                        
+                    }
 
-                    emptyTiles.Add(grid.GetGridObject(i, j));
+                    Tile emptyTile = grid.GetGridObject(i, j);
+                    emptyTile.SetType(ElementType.Empty);
+                    emptyTiles.Add(emptyTile);
+
                 }
 
             }
@@ -213,165 +238,162 @@ public class LevelBuilder : MonoBehaviour
 
         return (byte)direction;
     }
+    private bool IsNearPlayerStartPosition(int x, int z) // EXCLUT CERTAINES CASES POUR EN PLACER DES BOITES DESSUS
+    {
+        for (int i = 0; i < DeviceInputs.instances.Count; i++)
+        {
+            if (Mathf.Abs(x - startPositions[i].x) < 2 && Mathf.Abs(z - startPositions[i].z) < 2)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    private void InitPlayerStartPositions(int count = 1)
+    {
+        int xc = grid.GetWidth() - 1;
+        int zc = grid.GetHeight() - 1;
+
+        // player 1
+        startPositions[0].x = 1;
+        startPositions[0].z = zc - 1;
+
+        // player 2
+        startPositions[1].x = xc - 1;
+        startPositions[1].z = 1;
+
+        // player 3
+        startPositions[2].x = xc - 1;
+        startPositions[2].z = zc - 1;
+
+        // player 4
+        startPositions[3].x = 1;
+        startPositions[3].z = 1;
+
+        switch (count)
+        {
+            case 5:
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 2);
+                startPositions[4].z = Mathf.Round(zc / 2);
+                break;
+
+            case 6:
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 4);
+                startPositions[4].z = Mathf.Round(zc / 2);
+
+                // player 6
+                startPositions[5].x = xc - Mathf.Round(xc / 4);
+                startPositions[5].z = Mathf.Round(zc / 2);
+                break;
+
+            case 7:
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 2);
+                startPositions[4].z = Mathf.Round(zc / 2);
+
+                // player 6
+                startPositions[5].x = Mathf.Round(xc / 5);
+                startPositions[5].z = Mathf.Round(zc / 2);
+
+                // player 7
+                startPositions[6].x = xc - Mathf.Round(xc / 5);
+                startPositions[6].z = Mathf.Round(zc / 2);
+                break;
+
+            case 8:
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 4);
+                startPositions[4].z = Mathf.Round(zc / 2);
+
+                // player 6
+                startPositions[5].x = xc - Mathf.Round(xc / 4);
+                startPositions[5].z = Mathf.Round(zc / 2);
+
+                // player 7
+                startPositions[6].x = Mathf.Round(xc / 2);
+                startPositions[6].z = 1;
+
+                // player 8
+                startPositions[7].x = Mathf.Round(xc / 2);
+                startPositions[7].z = zc - 1;
+                break;
+
+            case 9:
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 4);
+                startPositions[4].z = Mathf.Round(zc / 2);
+
+                // player 6
+                startPositions[5].x = xc - Mathf.Round(xc / 4);
+                startPositions[5].z = Mathf.Round(zc / 2);
+
+                // player 7
+                startPositions[6].x = Mathf.Round(xc / 2);
+                startPositions[6].z = 1;
+
+                // player 8
+                startPositions[7].x = Mathf.Round(xc / 2);
+                startPositions[7].z = zc - 1;
 
 
+                // player 9
+                startPositions[8].x = Mathf.Round(xc / 2);
+                startPositions[8].z = Mathf.Round(zc / 2);
 
-    //private bool IsNearPlayerStartPosition(int x, int z) // EXCLUT CERTAINES CASES POUR EN PLACER DES BOITES DESSUS
-    //{
-    //    for (int i = 0; i < PlayingCount.value; i++)
-    //    {
-    //        if (Mathf.Abs(x - startPositions[i].x) < 2 && Mathf.Abs(z - startPositions[i].z) < 2)
-    //        {
-    //            return true;
-    //        }
-    //    }
+                break;
 
-    //    return false;
-    //}
-    //private void InitPlayerStartPositions(int count = 1)
-    //{
-    //    int xc = this.settings.GetColCount() - 1;
-    //    int zc = this.settings.GetRowCount() - 1;
+            case 10:
 
-    //    // player 1
-    //    startPositions[0].x = 1;
-    //    startPositions[0].z = zc - 1;
+                // player 5
+                startPositions[4].x = Mathf.Round(xc / 4);
+                startPositions[4].z = Mathf.Round(zc / 3);
 
-    //    // player 2
-    //    startPositions[1].x = xc - 1;
-    //    startPositions[1].z = 1;
+                // player 6
+                startPositions[5].x = xc - Mathf.Round(xc / 4);
+                startPositions[5].z = Mathf.Round(zc / 3);
 
-    //    // player 3
-    //    startPositions[2].x = xc - 1;
-    //    startPositions[2].z = zc - 1;
+                // player 7
+                startPositions[6].x = Mathf.Round(xc / 2);
+                startPositions[6].z = 1;
 
-    //    // player 4
-    //    startPositions[3].x = 1;
-    //    startPositions[3].z = 1;
+                // player 8
+                startPositions[7].x = Mathf.Round(xc / 2);
+                startPositions[7].z = zc - 1;
 
-    //    switch (count)
-    //    {
-    //        case 5:
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 2);
-    //            startPositions[4].z = Mathf.Round(zc / 2);
-    //            break;
+                // player 9
+                startPositions[8].x = Mathf.Round(xc / 4);
+                startPositions[8].z = zc - Mathf.Round(zc / 3);
 
-    //        case 6:
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 4);
-    //            startPositions[4].z = Mathf.Round(zc / 2);
+                // player 10
+                startPositions[9].x = xc - Mathf.Round(xc / 4);
+                startPositions[9].z = zc - Mathf.Round(zc / 3);
+                break;
 
-    //            // player 6
-    //            startPositions[5].x = xc - Mathf.Round(xc / 4);
-    //            startPositions[5].z = Mathf.Round(zc / 2);
-    //            break;
+        }
 
-    //        case 7:
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 2);
-    //            startPositions[4].z = Mathf.Round(zc / 2);
+        for (int i = 0; i < startPositions.Length; i++) // Décaler d'une case si ca arrive sur un mur
+        {
+            if (startPositions[i].x % 2 == 0)
+            {
+                if (startPositions[i].x < xc / 2)
+                {
+                    startPositions[i].x += 1;// Mathf.CeilToInt((float)xc / 10);
 
-    //            // player 6
-    //            startPositions[5].x = Mathf.Round(xc / 5);
-    //            startPositions[5].z = Mathf.Round(zc / 2);
+                }
+                else if (startPositions[i].x > xc / 2)
+                {
+                    startPositions[i].x -= 1;// Mathf.CeilToInt((float)xc / 10);
+                }
+                else
+                {
+                    startPositions[i].z++;
+                }
+            }
+        }
 
-    //            // player 7
-    //            startPositions[6].x = xc - Mathf.Round(xc / 5);
-    //            startPositions[6].z = Mathf.Round(zc / 2);
-    //            break;
-
-    //        case 8:
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 4);
-    //            startPositions[4].z = Mathf.Round(zc / 2);
-
-    //            // player 6
-    //            startPositions[5].x = xc - Mathf.Round(xc / 4);
-    //            startPositions[5].z = Mathf.Round(zc / 2);
-
-    //            // player 7
-    //            startPositions[6].x = Mathf.Round(xc / 2);
-    //            startPositions[6].z = 1;
-
-    //            // player 8
-    //            startPositions[7].x = Mathf.Round(xc / 2);
-    //            startPositions[7].z = zc - 1;
-    //            break;
-
-    //        case 9:
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 4);
-    //            startPositions[4].z = Mathf.Round(zc / 2);
-
-    //            // player 6
-    //            startPositions[5].x = xc - Mathf.Round(xc / 4);
-    //            startPositions[5].z = Mathf.Round(zc / 2);
-
-    //            // player 7
-    //            startPositions[6].x = Mathf.Round(xc / 2);
-    //            startPositions[6].z = 1;
-
-    //            // player 8
-    //            startPositions[7].x = Mathf.Round(xc / 2);
-    //            startPositions[7].z = zc - 1;
-
-
-    //            // player 9
-    //            startPositions[8].x = Mathf.Round(xc / 2);
-    //            startPositions[8].z = Mathf.Round(zc / 2);
-
-    //            break;
-
-    //        case 10:
-
-    //            // player 5
-    //            startPositions[4].x = Mathf.Round(xc / 4);
-    //            startPositions[4].z = Mathf.Round(zc / 3);
-
-    //            // player 6
-    //            startPositions[5].x = xc - Mathf.Round(xc / 4);
-    //            startPositions[5].z = Mathf.Round(zc / 3);
-
-    //            // player 7
-    //            startPositions[6].x = Mathf.Round(xc / 2);
-    //            startPositions[6].z = 1;
-
-    //            // player 8
-    //            startPositions[7].x = Mathf.Round(xc / 2);
-    //            startPositions[7].z = zc - 1;
-
-    //            // player 9
-    //            startPositions[8].x = Mathf.Round(xc / 4);
-    //            startPositions[8].z = zc - Mathf.Round(zc / 3);
-
-    //            // player 10
-    //            startPositions[9].x = xc - Mathf.Round(xc / 4);
-    //            startPositions[9].z = zc - Mathf.Round(zc / 3);
-    //            break;
-
-    //    }
-
-    //    for (int i = 0; i < startPositions.Length; i++) // Décaler d'une case si ca arrive sur un mur
-    //    {
-    //        if (startPositions[i].x % 2 == 0)
-    //        {
-    //            if (startPositions[i].x < xc / 2)
-    //            {
-    //                startPositions[i].x += 1;// Mathf.CeilToInt((float)xc / 10);
-
-    //            }
-    //            else if (startPositions[i].x > xc / 2)
-    //            {
-    //                startPositions[i].x -= 1;// Mathf.CeilToInt((float)xc / 10);
-    //            }
-    //            else
-    //            {
-    //                startPositions[i].z++;
-    //            }
-    //        }
-    //    }
-
-    //}
+    }
 
 }

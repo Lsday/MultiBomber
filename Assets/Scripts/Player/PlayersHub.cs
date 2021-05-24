@@ -21,7 +21,7 @@ public class PlayersHub : NetworkBehaviour
                 AddPlayer();
             }
 
-            GUI.Label(new Rect(500, 5, 100, 25), playerIndex.ToString());
+            GUI.Label(new Rect(500, 5, 100, 25), players.Count.ToString());
         }
     }
 
@@ -46,20 +46,10 @@ public class PlayersHub : NetworkBehaviour
 
         PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
         playerMovement.SetHubIdentity(identity);
-        playerMovement.playerIndex = playerIndex;
-        playerIndex++;
+        players.Add(playerMovement);
 
         NetworkServer.Spawn(player, gameObject);
 
-        players.Add(playerMovement);
-
-        Response();
-    }
-
-
-    [ClientRpc]
-    private void Response()
-    {
-        Debug.Log("yo");
+        
     }
 }

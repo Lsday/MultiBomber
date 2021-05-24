@@ -23,7 +23,6 @@ public class PlayerMovement : NetworkBehaviour
 
     void Update()
     {
-
         if (!hubIdentity.isLocalPlayer) return;
     
         float horizontal = Input.GetAxis("Horizontal");

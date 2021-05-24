@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 public struct MeshShape
 {
@@ -32,7 +30,7 @@ public class LevelBuilder : MonoBehaviour
     /// <summary>
     /// List containing the Empty Tiles of the map
     /// </summary>
-    List<Tile> emptyTiles = new List<Tile>();
+    List<Tile> potentialBoxPosition = new List<Tile>();
 
     /// <summary>
     /// List containing the Walls of the map
@@ -44,10 +42,13 @@ public class LevelBuilder : MonoBehaviour
     /// </summary>
     Dictionary<byte, MeshShape> wallShapes = new Dictionary<byte, MeshShape>();
 
-    public Material blockMaterial;
+    /// <summary>
+    /// The size of the Map
+    /// </summary>
+    [Header("Map Size")]
+    [Range(3, 10)] public int mapSize;
 
-    public Vector3[] startPositions = new Vector3[10];
-
+    #region Meshs
     [Header("Wall Meshes")]
     public Mesh block_I;
     public Mesh block_T;
@@ -55,31 +56,68 @@ public class LevelBuilder : MonoBehaviour
     public Mesh block_L;
     public Mesh block_U;
     public Mesh block_O;
-
-    /// <summary>
-    /// The size of the Map
-    /// </summary>
-    [Header("Map Size")]
-    [Range(3, 10)] public int mapSize;
-
     #endregion
 
-    private void Start()
+    public GameObject boxPrefab;
+
+    /// <summary>
+    /// number of boxs in the map in pourcent
+    /// </summary>
+    [Range(0, 100)]
+    public int boxPrcent;
+
+    public Vector3[] playerStartPositions;
+
+    public Material blockMaterial;
+    #endregion
+
+    #region Init
+    private void Init()
     {
         int mapDimension = GetMapDimension(mapSize);
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
         CreateMeshDictionary();
-        CreateLevelData();
-        CombineMesh();
-    }
 
+        CalculatePlayerStartPositions(DeviceInputs.instances.Count);
+
+        CalculateWallsAndBoxsPositions();
+
+        CreateWalls();
+
+        CreateBoxs();
+    } 
+    #endregion
+
+    private void CreateBoxs()
+    {
+        int boxCount = Mathf.RoundToInt(potentialBoxPosition.Count * (1-boxPrcent/100f));
+
+        // Randomize boxs positions
+        for (int i = 0; i < boxCount; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, potentialBoxPosition.Count);
+            potentialBoxPosition.RemoveAt(randomIndex);
+        }
+
+        // Add offset to center the box on the middle of the tile 
+        Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
+
+        // Instantiate the boxes
+        for (int i = 0; i < potentialBoxPosition.Count; i++)
+        {
+            Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxPosition[i].x, potentialBoxPosition[i].y);
+            InstantiateBoxs(boxTilePosition + offset);
+        }
+    }
+    private void InstantiateBoxs(Vector3 position)
+    {
+        Instantiate(boxPrefab, position, Quaternion.identity);
+    }
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
         return new Tile(grid, x, y);
     }
-
-
     private int GetMapDimension(int mapSize)
     {
         return mapSize * 2 + 1;
@@ -100,55 +138,33 @@ public class LevelBuilder : MonoBehaviour
         wallShapes.Add(9, new MeshShape { mesh = block_I, rotation = 0 }); // TOP AND BOTTOM NOT EMPTY
 
     }
-
-
-    // INIT les startPositions en fonction du nompbre de joeurs InitPlayerStartPositions
-    // FAIRE LES MURS 
-    // Réperer les cases vides
-    // CREER LES BOITES  dans les cases vides sauf sur les cases proche de la startposition d'un joueur (IsNearPlayerStartPosition)
-    // spécifier un pourcentage de boite qui sont placée aléatoirement dans les cases vides
-
-
-
-    void CreateLevelData()
+    void CalculateWallsAndBoxsPositions()
     {
-        int xc = grid.GetWidth();
-        int zc = grid.GetHeight();
+        int width = grid.GetWidth();
+        int height = grid.GetHeight();
 
-        for (int i = 0; i < xc; i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < zc; j++)
+            for (int j = 0; j < height; j++)
             {
                 bool isWall = (i % 2 == 0 && j % 2 == 0);
-                isWall = isWall || (i == 0 || j == 0 || i == xc - 1 || j == zc - 1);
+                isWall = isWall || (i == 0 || j == 0 || i == width - 1 || j == height - 1);
 
                 if (isWall)
-                {
-
-                    Tile wallTile = grid.GetGridObject(i, j);
-                    wallTile.SetType(ElementType.Wall);
-                    wallTiles.Add(wallTile);
-                }
-
-
+                    SetTileAsWall(i, j);
                 else
-                {
-                    
                     if (!IsNearPlayerStartPosition(i, j))
-                    {
-                        
-                    }
-
-                    Tile emptyTile = grid.GetGridObject(i, j);
-                    emptyTile.SetType(ElementType.Empty);
-                    emptyTiles.Add(emptyTile);
-
-                }
-
+                    potentialBoxPosition.Add(grid.GetGridObject(i, j)); // Store potential boxPositions who are not near the playerPosition
             }
         }
     }
-    private void CombineMesh()
+    private void SetTileAsWall(int i, int j)
+    {
+        Tile wallTile = grid.GetGridObject(i, j);
+        wallTile.SetType(ElementType.Wall);
+        wallTiles.Add(wallTile);
+    }
+    private void CreateWalls()
     {
         CombineInstance[] combine = new CombineInstance[wallTiles.Count];
         int meshCount = 0;
@@ -159,7 +175,7 @@ public class LevelBuilder : MonoBehaviour
             {
                 Tile tile = grid.GetGridObject(i, j);
 
-                if (tile.type != ElementType.Empty)
+                if (tile.type == ElementType.Wall)
                 {
                     byte wallShape = GetWallShapeIndex(grid.GetGridObject(i, j));
 
@@ -238,11 +254,11 @@ public class LevelBuilder : MonoBehaviour
 
         return (byte)direction;
     }
-    private bool IsNearPlayerStartPosition(int x, int z) // EXCLUT CERTAINES CASES POUR EN PLACER DES BOITES DESSUS
+    private bool IsNearPlayerStartPosition(int x, int z) 
     {
         for (int i = 0; i < DeviceInputs.instances.Count; i++)
         {
-            if (Mathf.Abs(x - startPositions[i].x) < 2 && Mathf.Abs(z - startPositions[i].z) < 2)
+            if (Mathf.Abs(x - playerStartPositions[i].x) < 2 && Mathf.Abs(z - playerStartPositions[i].z) < 2)
             {
                 return true;
             }
@@ -250,150 +266,158 @@ public class LevelBuilder : MonoBehaviour
 
         return false;
     }
-    private void InitPlayerStartPositions(int count = 1)
+    private void CalculatePlayerStartPositions(int count = 1)
     {
-        int xc = grid.GetWidth() - 1;
-        int zc = grid.GetHeight() - 1;
+
+         playerStartPositions = new Vector3[10];
+        int width = grid.GetWidth() - 1;
+        int height = grid.GetHeight() - 1;
 
         // player 1
-        startPositions[0].x = 1;
-        startPositions[0].z = zc - 1;
+        playerStartPositions[0].x = 1;
+        playerStartPositions[0].z = height - 1;
 
         // player 2
-        startPositions[1].x = xc - 1;
-        startPositions[1].z = 1;
+        playerStartPositions[1].x = width - 1;
+        playerStartPositions[1].z = 1;
 
         // player 3
-        startPositions[2].x = xc - 1;
-        startPositions[2].z = zc - 1;
+        playerStartPositions[2].x = width - 1;
+        playerStartPositions[2].z = height - 1;
 
         // player 4
-        startPositions[3].x = 1;
-        startPositions[3].z = 1;
+        playerStartPositions[3].x = 1;
+        playerStartPositions[3].z = 1;
 
         switch (count)
         {
             case 5:
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 2);
-                startPositions[4].z = Mathf.Round(zc / 2);
+                playerStartPositions[4].x = Mathf.Round(width / 2);
+                playerStartPositions[4].z = Mathf.Round(height / 2);
                 break;
 
             case 6:
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 4);
-                startPositions[4].z = Mathf.Round(zc / 2);
+                playerStartPositions[4].x = Mathf.Round(width / 4);
+                playerStartPositions[4].z = Mathf.Round(height / 2);
 
                 // player 6
-                startPositions[5].x = xc - Mathf.Round(xc / 4);
-                startPositions[5].z = Mathf.Round(zc / 2);
+                playerStartPositions[5].x = width - Mathf.Round(width / 4);
+                playerStartPositions[5].z = Mathf.Round(height / 2);
                 break;
 
             case 7:
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 2);
-                startPositions[4].z = Mathf.Round(zc / 2);
+                playerStartPositions[4].x = Mathf.Round(width / 2);
+                playerStartPositions[4].z = Mathf.Round(height / 2);
 
                 // player 6
-                startPositions[5].x = Mathf.Round(xc / 5);
-                startPositions[5].z = Mathf.Round(zc / 2);
+                playerStartPositions[5].x = Mathf.Round(width / 5);
+                playerStartPositions[5].z = Mathf.Round(height / 2);
 
                 // player 7
-                startPositions[6].x = xc - Mathf.Round(xc / 5);
-                startPositions[6].z = Mathf.Round(zc / 2);
+                playerStartPositions[6].x = width - Mathf.Round(width / 5);
+                playerStartPositions[6].z = Mathf.Round(height / 2);
                 break;
 
             case 8:
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 4);
-                startPositions[4].z = Mathf.Round(zc / 2);
+                playerStartPositions[4].x = Mathf.Round(width / 4);
+                playerStartPositions[4].z = Mathf.Round(height / 2);
 
                 // player 6
-                startPositions[5].x = xc - Mathf.Round(xc / 4);
-                startPositions[5].z = Mathf.Round(zc / 2);
+                playerStartPositions[5].x = width - Mathf.Round(width / 4);
+                playerStartPositions[5].z = Mathf.Round(height / 2);
 
                 // player 7
-                startPositions[6].x = Mathf.Round(xc / 2);
-                startPositions[6].z = 1;
+                playerStartPositions[6].x = Mathf.Round(width / 2);
+                playerStartPositions[6].z = 1;
 
                 // player 8
-                startPositions[7].x = Mathf.Round(xc / 2);
-                startPositions[7].z = zc - 1;
+                playerStartPositions[7].x = Mathf.Round(width / 2);
+                playerStartPositions[7].z = height - 1;
                 break;
 
             case 9:
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 4);
-                startPositions[4].z = Mathf.Round(zc / 2);
+                playerStartPositions[4].x = Mathf.Round(width / 4);
+                playerStartPositions[4].z = Mathf.Round(height / 2);
 
                 // player 6
-                startPositions[5].x = xc - Mathf.Round(xc / 4);
-                startPositions[5].z = Mathf.Round(zc / 2);
+                playerStartPositions[5].x = width - Mathf.Round(width / 4);
+                playerStartPositions[5].z = Mathf.Round(height / 2);
 
                 // player 7
-                startPositions[6].x = Mathf.Round(xc / 2);
-                startPositions[6].z = 1;
+                playerStartPositions[6].x = Mathf.Round(width / 2);
+                playerStartPositions[6].z = 1;
 
                 // player 8
-                startPositions[7].x = Mathf.Round(xc / 2);
-                startPositions[7].z = zc - 1;
+                playerStartPositions[7].x = Mathf.Round(width / 2);
+                playerStartPositions[7].z = height - 1;
 
 
                 // player 9
-                startPositions[8].x = Mathf.Round(xc / 2);
-                startPositions[8].z = Mathf.Round(zc / 2);
+                playerStartPositions[8].x = Mathf.Round(width / 2);
+                playerStartPositions[8].z = Mathf.Round(height / 2);
 
                 break;
 
             case 10:
 
                 // player 5
-                startPositions[4].x = Mathf.Round(xc / 4);
-                startPositions[4].z = Mathf.Round(zc / 3);
+                playerStartPositions[4].x = Mathf.Round(width / 4);
+                playerStartPositions[4].z = Mathf.Round(height / 3);
 
                 // player 6
-                startPositions[5].x = xc - Mathf.Round(xc / 4);
-                startPositions[5].z = Mathf.Round(zc / 3);
+                playerStartPositions[5].x = width - Mathf.Round(width / 4);
+                playerStartPositions[5].z = Mathf.Round(height / 3);
 
                 // player 7
-                startPositions[6].x = Mathf.Round(xc / 2);
-                startPositions[6].z = 1;
+                playerStartPositions[6].x = Mathf.Round(width / 2);
+                playerStartPositions[6].z = 1;
 
                 // player 8
-                startPositions[7].x = Mathf.Round(xc / 2);
-                startPositions[7].z = zc - 1;
+                playerStartPositions[7].x = Mathf.Round(width / 2);
+                playerStartPositions[7].z = height - 1;
 
                 // player 9
-                startPositions[8].x = Mathf.Round(xc / 4);
-                startPositions[8].z = zc - Mathf.Round(zc / 3);
+                playerStartPositions[8].x = Mathf.Round(width / 4);
+                playerStartPositions[8].z = height - Mathf.Round(height / 3);
 
                 // player 10
-                startPositions[9].x = xc - Mathf.Round(xc / 4);
-                startPositions[9].z = zc - Mathf.Round(zc / 3);
+                playerStartPositions[9].x = width - Mathf.Round(width / 4);
+                playerStartPositions[9].z = height - Mathf.Round(height / 3);
                 break;
 
         }
 
-        for (int i = 0; i < startPositions.Length; i++) // Décaler d'une case si ca arrive sur un mur
+        for (int i = 0; i < playerStartPositions.Length; i++) // Décaler d'une case si ca arrive sur un mur
         {
-            if (startPositions[i].x % 2 == 0)
+            if (playerStartPositions[i].x % 2 == 0)
             {
-                if (startPositions[i].x < xc / 2)
+                if (playerStartPositions[i].x < width / 2)
                 {
-                    startPositions[i].x += 1;// Mathf.CeilToInt((float)xc / 10);
+                    playerStartPositions[i].x += 1;// Mathf.CeilToInt((float)xc / 10);
 
                 }
-                else if (startPositions[i].x > xc / 2)
+                else if (playerStartPositions[i].x > width / 2)
                 {
-                    startPositions[i].x -= 1;// Mathf.CeilToInt((float)xc / 10);
+                    playerStartPositions[i].x -= 1;// Mathf.CeilToInt((float)xc / 10);
                 }
                 else
                 {
-                    startPositions[i].z++;
+                    playerStartPositions[i].z++;
                 }
             }
         }
 
     }
-
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+        {
+            Init();
+        }
+    }
 }

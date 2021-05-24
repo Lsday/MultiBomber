@@ -20,7 +20,7 @@ public class GenericGrid<TGridObject>
     private float cellSize;
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
-    bool showDebug = true;
+    bool showDebug = false;
     TextMeshPro[,] debugTextArray;
 
 
@@ -45,21 +45,26 @@ public class GenericGrid<TGridObject>
 
         if (showDebug)
         {
-           debugTextArray = new TextMeshPro[width, height];
             Transform debugParent = GameObject.Find("Debug").transform;
-
-            for (int x = 0; x < gridArray.GetLength(0); x++)
+            if (debugParent)
             {
-                for (int z = 0; z < gridArray.GetLength(1); z++)
-                {
-                    debugTextArray[x, z] = Utils.CreateWorldText("GridData " + x + " " + z + " ", gridArray[x, z]?.ToString(), debugParent, GetGridObjectWorldPosition(x, z) + new Vector3(cellSize * 0.5f, 0, cellSize * 0.5f) + originPosition, 2, Color.white, TextAnchor.MiddleCenter);
+                debugTextArray = new TextMeshPro[width, height];
 
-                    Debug.DrawLine(GetGridObjectWorldPosition(x, z), GetGridObjectWorldPosition(x, z + 1), Color.white, 100f);
-                    Debug.DrawLine(GetGridObjectWorldPosition(x, z), GetGridObjectWorldPosition(x + 1, z), Color.white, 100f);
+
+                for (int x = 0; x < gridArray.GetLength(0); x++)
+                {
+                    for (int z = 0; z < gridArray.GetLength(1); z++)
+                    {
+                        debugTextArray[x, z] = Utils.CreateWorldText("GridData " + x + " " + z + " ", gridArray[x, z]?.ToString(), debugParent, GetGridObjectWorldPosition(x, z) + new Vector3(cellSize * 0.5f, 0, cellSize * 0.5f) + originPosition, 2, Color.white, TextAnchor.MiddleCenter);
+
+                        Debug.DrawLine(GetGridObjectWorldPosition(x, z), GetGridObjectWorldPosition(x, z + 1), Color.white, 100f);
+                        Debug.DrawLine(GetGridObjectWorldPosition(x, z), GetGridObjectWorldPosition(x + 1, z), Color.white, 100f);
+                    }
                 }
+                Debug.DrawLine(GetGridObjectWorldPosition(0, height), GetGridObjectWorldPosition(width, height), Color.white, 100f);
+                Debug.DrawLine(GetGridObjectWorldPosition(width, 0), GetGridObjectWorldPosition(width, height), Color.white, 100f);
             }
-            Debug.DrawLine(GetGridObjectWorldPosition(0, height), GetGridObjectWorldPosition(width, height), Color.white, 100f);
-            Debug.DrawLine(GetGridObjectWorldPosition(width, 0), GetGridObjectWorldPosition(width, height), Color.white, 100f);
+           
         }
     }
 

@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class InputsDevicesManager : MonoBehaviour
 {
+    public static InputsDevicesManager instance;
 
     public bool allowKeyboardPlayer = true;
 

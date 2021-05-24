@@ -7,13 +7,21 @@ public class PlayerMovement : NetworkBehaviour
 
     public byte playerIndex;
     public float speed = 5;
+    [SyncVar] public byte localPlayerIndex;
 
     Animator animator;
     [SyncVar]bool isRunning;
 
+    public PlayerInputs inputs;
+
     private void Start()
     {
         animator = GetComponentInChildren<Animator>();
+
+        if (inputs == null && hubIdentity.isLocalPlayer)
+        {
+            inputs = PlayerInputs.instances[localPlayerIndex];
+        }
     }
 
     public void SetHubIdentity(NetworkIdentity identity)
@@ -21,15 +29,24 @@ public class PlayerMovement : NetworkBehaviour
         hubIdentity = identity;
     }
 
+    public void SetLocalPlayerIndex(byte index)
+    {
+        localPlayerIndex = index;
+    }
+
     void Update()
     {
-        if (!hubIdentity.isLocalPlayer) return;
-    
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        
+        if (!hubIdentity.isLocalPlayer || inputs == null || !Application.isFocused) return;
 
-        if (horizontal + vertical !=0)
+        Vector2 moveVector = inputs.GetMoveVector();
+
+        float horizontal = moveVector.x;
+        float vertical = moveVector.y;
+
+        if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
         {
+
             Move(horizontal, vertical);
             isRunning = true;
             animator.SetBool("IsRunning", isRunning);

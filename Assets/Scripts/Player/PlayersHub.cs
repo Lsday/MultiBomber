@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayersHub : NetworkBehaviour
 {
+    public static PlayersHub instance;
+
     public GameObject playerPrefab;
 
     [SyncVar] byte playerIndex;
@@ -25,11 +27,28 @@ public class PlayersHub : NetworkBehaviour
         }
     }
 
-    void AddPlayer()
+    private void Start()
     {
         if (isLocalPlayer)
         {
-            CmdSpawnPlayer(this.netIdentity);
+            instance = this;
+            CreatePlayers();
+        }
+    }
+
+    void CreatePlayers()
+    {
+        for(byte i = 0; i < PlayerInputs.instances.Count; i++)
+        {
+            AddPlayer(i);
+        }
+    }
+
+    public void AddPlayer(byte localPlayerIndex = 0)
+    {
+        if (isLocalPlayer)
+        {
+            CmdSpawnPlayer(this.netIdentity, localPlayerIndex);
         }
 
     }
@@ -40,16 +59,15 @@ public class PlayersHub : NetworkBehaviour
     }
 
     [Command]
-    private void CmdSpawnPlayer(NetworkIdentity identity)
+    private void CmdSpawnPlayer(NetworkIdentity identity,byte localPlayerIndex)
     {
         GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
 
         PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
         playerMovement.SetHubIdentity(identity);
+        playerMovement.SetLocalPlayerIndex(localPlayerIndex);
         players.Add(playerMovement);
 
         NetworkServer.Spawn(player, gameObject);
-
-        
     }
 }

@@ -13,10 +13,14 @@ public class PlayerInputs : MonoBehaviour
     public bool connected = true;
     private Gamepad myGamepad;
 
+    public byte localPlayerIndex = 0;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
-        name += " "+instances.Count.ToString();
+
+        localPlayerIndex = (byte)instances.Count;
+
+        name += " "+ localPlayerIndex.ToString();
         instances.Add(this);
     }
 
@@ -62,7 +66,7 @@ public class PlayerInputs : MonoBehaviour
         Vector2 moveVector = value.Get<Vector2>();
 
         // send movement vector
-        Debug.Log("Move "+name + moveVector.ToString("f2"));
+        //Debug.Log("Move "+name + moveVector.ToString("f2"));
     }
 
     public Vector2 GetMoveVector()

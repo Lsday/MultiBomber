@@ -154,14 +154,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d871048b1e40db04992e3e08eadae33c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockMaterial: {fileID: 2100000, guid: c2b27b40d102e86488799738633bc451, type: 2}
+  mapSize: 5
   block_I: {fileID: 4300008, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   block_T: {fileID: 0}
   block_X: {fileID: 0}
   block_L: {fileID: 4300002, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   block_U: {fileID: 0}
   block_O: {fileID: 4300010, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
-  mapSize: 6
+  boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
+  boxPrcent: 0
+  playerStartPositions: []
+  blockMaterial: {fileID: 2100000, guid: c2b27b40d102e86488799738633bc451, type: 2}
 --- !u!4 &618848640
 Transform:
   m_ObjectHideFlags: 0
@@ -491,7 +494,7 @@ Transform:
   m_GameObject: {fileID: 1180805344}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.5, y: 0, z: 5}
-  m_LocalScale: {x: 1.2934083, y: 1, z: 1.191}
+  m_LocalScale: {x: 6.3335443, y: 1, z: 5.502313}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -511,7 +514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1191343267
 Transform:
   m_ObjectHideFlags: 0
@@ -520,7 +523,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191343266}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b70f6daa86fdc048a64dad412c8e226, type: 3}
-  m_Name: ConnectedInputs
+  m_Name: PhysicalDevicesCount
   m_EditorClassIdentifier: 
   _value: 0
-  resetOnAwake: 0
+  resetOnAwake: 1
   resetValue: 0

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3321146650922457952
+--- !u!1 &2473006615710586328
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2751574139028470025}
-  - component: {fileID: 5718034590302496186}
-  - component: {fileID: 4820399617299345293}
+  - component: {fileID: 1213525710443134570}
+  - component: {fileID: 7902628406803951314}
+  - component: {fileID: -4989395406537871684}
   m_Layer: 0
-  m_Name: PlayersHub
+  m_Name: VirtualDeviceEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2751574139028470025
+--- !u!4 &1213525710443134570
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3321146650922457952}
+  m_GameObject: {fileID: 2473006615710586328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,38 +32,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5718034590302496186
+--- !u!114 &7902628406803951314
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3321146650922457952}
+  m_GameObject: {fileID: 2473006615710586328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ba492d949f184d45a13fd3da3d26f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &4820399617299345293
+  ConnectedCount: {fileID: 11400000, guid: dddc4339a36e6c942a21663fe96c54cd, type: 2}
+  connected: 1
+  localPlayerIndex: 0
+  inputs: {fileID: 0}
+--- !u!114 &-4989395406537871684
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3321146650922457952}
+  m_GameObject: {fileID: 2473006615710586328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6936930b3d39ed3439a59a9e53ae16d2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1764ccbcd66aa0e46936674cf80bf656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  playerPrefab: {fileID: 340615587193445658, guid: 2181dbe36f4eb6544913ba7492badc9f, type: 3}
-  localPlayersCount: {fileID: 11400000, guid: 0dee5cb44b4c7554f8ec5d6a005847ce, type: 2}
-  totalPlayersCount: {fileID: 11400000, guid: 5a3f6384940da834db1a09c00d9edd70, type: 2}
-  players: []
+  changeDelay: 1

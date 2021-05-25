@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1213525710443134570}
   - component: {fileID: -6554822264936590627}
   - component: {fileID: 7902628406803951314}
+  - component: {fileID: -6291372254834823823}
   m_Layer: 0
-  m_Name: PlayerInputs
+  m_Name: PhysicalDeviceEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,3 +85,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConnectedCount: {fileID: 11400000, guid: dddc4339a36e6c942a21663fe96c54cd, type: 2}
   connected: 1
+  localPlayerIndex: 0
+  inputs: {fileID: 0}
+--- !u!114 &-6291372254834823823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2473006615710586328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9022963decb447f4b8097eee0b95d100, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

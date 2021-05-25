@@ -43,6 +43,12 @@ public class LevelBuilder : MonoBehaviour
     Dictionary<byte, MeshShape> wallShapes = new Dictionary<byte, MeshShape>();
 
     /// <summary>
+    /// The total number of players to put on the map
+    /// </summary>
+    [Header("Global variables")]
+    public SO_Int totalPlayersCount;
+
+    /// <summary>
     /// The size of the Map
     /// </summary>
     [Header("Map Size")]
@@ -79,19 +85,33 @@ public class LevelBuilder : MonoBehaviour
 
         CreateMeshDictionary();
 
-        CalculatePlayerStartPositions(DeviceInputs.instances.Count);
+        CalculatePlayerStartPositions(totalPlayersCount.value);
 
         CalculateWallsAndBoxsPositions();
 
         CreateWalls();
 
         CreateBoxs();
+
+        AssignPlayersPositions();
     } 
     #endregion
 
 
     // TODO : Ajouter un pooling system pour tous les élements destructibles (singleton)
     // Garder une référence des boites instancié et sur quel case elle se trouve
+
+    private void AssignPlayersPositions()
+    {
+        int count = Mathf.Min(PlayerEntity.instancesList.Count, playerStartPositions.Length);
+        float size = grid.GetCellsize();
+        Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
+
+        for (int i = 0; i < count; i++)
+        {
+            PlayerEntity.instancesList[i].transform.localPosition = offset + playerStartPositions[i] * size;
+        }
+    }
 
     private void CreateBoxs()
     {
@@ -261,7 +281,7 @@ public class LevelBuilder : MonoBehaviour
     }
     private bool IsNearPlayerStartPosition(int x, int z) 
     {
-        for (int i = 0; i < DeviceInputs.instances.Count; i++)
+        for (int i = 0; i < totalPlayersCount.value; i++)
         {
             if (Mathf.Abs(x - playerStartPositions[i].x) < 2 && Mathf.Abs(z - playerStartPositions[i].z) < 2)
             {
@@ -275,6 +295,7 @@ public class LevelBuilder : MonoBehaviour
     {
 
         playerStartPositions = new Vector3[10];
+
         int width = grid.GetWidth() - 1;
         int height = grid.GetHeight() - 1;
 

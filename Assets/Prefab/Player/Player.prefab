@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3459968452762245215}
   - component: {fileID: 7299415106740637390}
   - component: {fileID: 4082906206535819223}
+  - component: {fileID: 471709280951393523}
   - component: {fileID: 7299415106740637389}
   - component: {fileID: 161878465008676798}
   m_Layer: 0
@@ -70,9 +71,29 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
-  compressRotation: 0
-  interpolateScale: 1
-  syncScale: 1
+  compressRotation: 1
+  interpolateScale: 0
+  syncScale: 0
+--- !u!114 &471709280951393523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340615587193445658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c011b5b99442a40bad1ddb0a05715f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  debugName: 
+  hubIdentity: {fileID: 0}
+  localPlayerIndex: 0
+  controllerDevice: {fileID: 0}
+  animator: {fileID: 0}
+  totalPlayersCount: {fileID: 11400000, guid: 5a3f6384940da834db1a09c00d9edd70, type: 2}
 --- !u!114 &7299415106740637389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,8 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  playerIndex: 0
-  speed: 7
+  speed: 5
+  gameStarted: {fileID: 11400000, guid: a20b66596b11f3a41a957844de20d546, type: 2}
 --- !u!114 &161878465008676798
 MonoBehaviour:
   m_ObjectHideFlags: 0

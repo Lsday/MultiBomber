@@ -11,32 +11,42 @@ public class InputsDevicesManager : MonoBehaviour
 
     public bool allowKeyboardPlayer = true;
 
-    public GameObject inputPrefab;
-    public SO_Int ConnectedCount;
+    public GameObject physicalDevicePrefab;
+    public GameObject virtualDevicePrefab;
+
+    public SO_Int physicalDevicesCount;
+    public SO_Int localPlayersCount;
+    public SO_Int totalPlayersCount;
 
     PlayerInputManager inputManager;
     void Start()
     {
+        transform.position = Vector3.zero;
 
         inputManager = GetComponent<PlayerInputManager>();
-        ConnectedCount.value = 0;
 
         InvokeRepeating("DetectNewPlayers", 0.1f, 0.5f); //TODO : AJOUTER TIMER CLASS
     }
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(0, 0, 50, 25), ConnectedCount.value.ToString());
+        if (totalPlayersCount.value < 10)
+        {
+            if (GUI.Button(new Rect(150, 5, 100, 25), "Add BOT"))
+            {
+                AddBot();
+            }
+        }
     }
 
     public void OnPlayerJoined()
     {
-        Debug.Log("OnPlayerJoined");
+        //Debug.Log("OnPlayerJoined");
     }
 
     public void OnPlayerLeft()
     {
-        Debug.Log("OnPlayerLeft");
+        //Debug.Log("OnPlayerLeft");
     }
 
     // Get all unused devices and assign a new player input prefab to each
@@ -49,10 +59,37 @@ public class InputsDevicesManager : MonoBehaviour
             {
                 if (list[i].device is Gamepad || list[i].device is Joystick || (allowKeyboardPlayer && list[i].device is Keyboard))
                 {
-                    PlayerInput.Instantiate(inputPrefab, pairWithDevice: list[i]);
-                    ConnectedCount.value++;
+                    AddHuman(list[i]);
                 }
             }
         }
+    }
+
+    private void AddHuman(InputDevice device)
+    {
+        PlayerInput pi = PlayerInput.Instantiate(physicalDevicePrefab, pairWithDevice: device);
+        pi.transform.parent = transform;
+
+        if (PlayersHub.instance != null)
+        {
+            PlayersHub.instance.AddPlayer((byte)localPlayersCount.value);
+        }
+        physicalDevicesCount.value++;
+
+        localPlayersCount.value++;
+        totalPlayersCount.value++;
+    }
+
+    private void AddBot()
+    {
+        Instantiate(virtualDevicePrefab, transform);
+
+        if (PlayersHub.instance != null)
+        {
+            PlayersHub.instance.AddPlayer((byte)localPlayersCount.value);
+        }
+
+        localPlayersCount.value++;
+        totalPlayersCount.value++;
     }
 }

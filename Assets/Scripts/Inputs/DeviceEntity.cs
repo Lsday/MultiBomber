@@ -3,25 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DeviceInputs : MonoBehaviour
+public class DeviceEntity : MonoBehaviour
 {
-    public static List<DeviceInputs> instances = new List<DeviceInputs>();
+    public static List<DeviceEntity> instancesList = new List<DeviceEntity>();
 
     public SO_Int ConnectedCount;
+    public bool connected = true;
+    public byte localPlayerIndex = 0;
+
+    public PhysicalDevice inputs;
 
     private PlayerInput playerInput;
-    public bool connected = true;
     private Gamepad myGamepad;
 
-    public byte localPlayerIndex = 0;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+        
+        inputs = GetComponent<PhysicalDevice>();
 
-        localPlayerIndex = (byte)instances.Count;
+        localPlayerIndex = (byte)instancesList.Count;
 
         name += " "+ localPlayerIndex.ToString();
-        instances.Add(this);
+        instancesList.Add(this);
+    }
+
+    public PlayerInput GetPhysicalInput()
+    {
+        return playerInput;
     }
 
     void OnDeviceLost()
@@ -61,22 +70,4 @@ public class DeviceInputs : MonoBehaviour
         Debug.Log("control changed " + name);
     }
 
-    public void OnMove(InputValue value)
-    {
-        Vector2 moveVector = value.Get<Vector2>();
-
-        // send movement vector
-        //Debug.Log("Move "+name + moveVector.ToString("f2"));
-    }
-
-    public Vector2 GetMoveVector()
-    {
-        return playerInput.actions["Move"].ReadValue<Vector2>();
-    }
-
-    public void OnDropBomb(InputValue value)
-    {
-        // call drop bomb function
-        Debug.Log("Drop Bomb");
-    }
 }

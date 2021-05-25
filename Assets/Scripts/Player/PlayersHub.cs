@@ -6,45 +6,36 @@ using UnityEngine;
 
 public class PlayersHub : NetworkBehaviour
 {
+    public static List<PlayersHub> instancesList = new List<PlayersHub>();
+
     public static PlayersHub instance;
 
     public GameObject playerPrefab;
+    public SO_Int localPlayersCount;
+    public SO_Int totalPlayersCount;
 
-    [SyncVar] byte playerIndex;
-
-    public List<PlayerMovement> players = new List<PlayerMovement>();
-
-    private void OnGUI()
-    {
-        if (isLocalPlayer)
-        {
-            if (GUI.Button(new Rect(300, 5, 200, 25), "Add Player"))
-            {
-                AddPlayer();
-            }
-
-            GUI.Label(new Rect(500, 5, 100, 25), players.Count.ToString());
-        }
-    }
+    public List<PlayerEntity> players = new List<PlayerEntity>();
 
     private void Start()
     {
+        transform.position = Vector3.zero;
+
         if (isLocalPlayer)
         {
             instance = this;
             CreatePlayers();
         }
     }
-
+    
     void CreatePlayers()
     {
-        for(byte i = 0; i < DeviceInputs.instances.Count; i++) // TODO RAJOUTER UN SO_INT à la place de PlayerInputs.instances.Count
+        for(byte i = 0; i < localPlayersCount.value; i++)
         {
             AddPlayer(i); 
         }
     }
 
-    public void AddPlayer(byte localPlayerIndex = 0)
+    public void AddPlayer(byte localPlayerIndex)
     {
         if (isLocalPlayer)
         {
@@ -52,21 +43,29 @@ public class PlayersHub : NetworkBehaviour
         }
     }
 
-    void Update()
+    [Command]
+    private void CmdSpawnPlayer(NetworkIdentity identity , byte localPlayerIndex)
     {
-        if (!isLocalPlayer) return;
+        GameObject playerGameObject = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+
+        PlayerEntity playerEntity = playerGameObject.GetComponent<PlayerEntity>();
+        playerEntity.transform.parent = transform;
+
+        playerEntity.SetHubIdentity(identity);
+        playerEntity.SetLocalPlayerIndex(localPlayerIndex);
+
+        playerEntity.debugName = playerPrefab.name + " Hub:" + identity.netId + " Index:" + localPlayerIndex;
+
+        players.Add(playerEntity);
+
+        NetworkServer.Spawn(playerGameObject, gameObject);
+
+        UpdateTotalCount();
     }
 
-    [Command]
-    private void CmdSpawnPlayer(NetworkIdentity identity,byte localPlayerIndex)
+    [ClientRpc]
+    public void UpdateTotalCount()
     {
-        GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
-
-        PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-        playerMovement.SetHubIdentity(identity);
-        playerMovement.SetLocalPlayerIndex(localPlayerIndex);
-        players.Add(playerMovement);
-
-        NetworkServer.Spawn(player, gameObject);
+        totalPlayersCount.value = PlayerEntity.GetInstancesCount();
     }
 }

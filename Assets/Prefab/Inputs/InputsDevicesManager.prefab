@@ -88,6 +88,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allowKeyboardPlayer: 1
-  maxInputsCount: 10
-  inputPrefab: {fileID: 2473006615710586328, guid: e769cf1751a588d469e9524d03fb44cc, type: 3}
+  physicalDevicePrefab: {fileID: 2473006615710586328, guid: e769cf1751a588d469e9524d03fb44cc, type: 3}
+  virtualDevicePrefab: {fileID: 2473006615710586328, guid: 0dc2c8809e61a1e41affc420f4b35e83, type: 3}
   ConnectedCount: {fileID: 11400000, guid: dddc4339a36e6c942a21663fe96c54cd, type: 2}

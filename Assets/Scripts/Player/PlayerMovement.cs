@@ -3,58 +3,38 @@ using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    [SyncVar] public NetworkIdentity hubIdentity;
-
-    public byte playerIndex;
-    public float speed = 5;
-    [SyncVar] public byte localPlayerIndex;
-
-    Animator animator;
+    
     [SyncVar]bool isRunning;
+    public float speed = 5;
 
-    public DeviceInputs inputs;
+    PlayerEntity playerEntity;
+    public SO_Bool gameStarted;
 
     private void Start()
     {
-        animator = GetComponentInChildren<Animator>();
-
-        if (inputs == null && hubIdentity.isLocalPlayer)
-        {
-            inputs = DeviceInputs.instances[localPlayerIndex];
-        }
-    }
-
-    public void SetHubIdentity(NetworkIdentity identity)
-    {
-        hubIdentity = identity;
-    }
-
-    public void SetLocalPlayerIndex(byte index)
-    {
-        localPlayerIndex = index;
+        playerEntity = GetComponent<PlayerEntity>();
     }
 
     void Update()
     {
         
-        if (!hubIdentity.isLocalPlayer || inputs == null || !Application.isFocused) return;
+        if (!gameStarted.value || !playerEntity.hubIdentity.isLocalPlayer || playerEntity.controllerDevice == null || !Application.isFocused) return;
 
-        Vector2 moveVector = inputs.GetMoveVector();
+        Vector2 moveVector = playerEntity.controllerDevice.inputs.GetMoveVector();
 
         float horizontal = moveVector.x;
         float vertical = moveVector.y;
 
         if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
         {
-
             Move(horizontal, vertical);
             isRunning = true;
-            animator.SetBool("IsRunning", isRunning);
+            playerEntity.animator.SetBool("IsRunning", isRunning);
         }
         else
         {
             isRunning = false;
-            animator.SetBool("IsRunning", isRunning);
+            playerEntity.animator.SetBool("IsRunning", isRunning);
         }
        
     }

@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class GenericGrid<TGridObject>
 {
-    
-
     public event EventHandler<OnGridObjectChangedEventHandlerArgs> OnGridObjectChanged;
     public class OnGridObjectChangedEventHandlerArgs : EventArgs
     {
@@ -20,7 +18,7 @@ public class GenericGrid<TGridObject>
     private float cellSize;
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
-    bool showDebug = false;
+    bool showDebug = true;
     TextMeshPro[,] debugTextArray;
 
 

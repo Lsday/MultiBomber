@@ -30,7 +30,7 @@ public class LevelBuilder : MonoBehaviour
     /// <summary>
     /// List containing the Empty Tiles of the map
     /// </summary>
-    List<Tile> potentialBoxPosition = new List<Tile>();
+    List<Tile> potentialBoxTile = new List<Tile>();
 
     /// <summary>
     /// List containing the Walls of the map
@@ -95,30 +95,29 @@ public class LevelBuilder : MonoBehaviour
 
     private void CreateBoxs()
     {
-        int boxCount = Mathf.RoundToInt(potentialBoxPosition.Count * (1-boxPrcent/100f));
+        int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1-boxPrcent/100f));
 
         // Randomize boxs positions
         for (int i = 0; i < boxCount; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, potentialBoxPosition.Count);
-            potentialBoxPosition.RemoveAt(randomIndex);
+            int randomIndex = UnityEngine.Random.Range(0, potentialBoxTile.Count);
+            potentialBoxTile.RemoveAt(randomIndex);
         }
 
         // Add offset to center the box on the middle of the tile 
         Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
 
         // Instantiate the boxes
-        for (int i = 0; i < potentialBoxPosition.Count; i++)
+        for (int i = 0; i < potentialBoxTile.Count; i++)
         {
-            Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxPosition[i].x, potentialBoxPosition[i].y);
-            InstantiateBoxs(boxTilePosition + offset);
-            
-            // TODO : ajouter un référence de l'objet dans la tile
+            Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxTile[i].x, potentialBoxTile[i].y);
+            potentialBoxTile[i].SetType(ElementType.Box);
+            potentialBoxTile[i].SetItem(InstantiateBoxs(boxTilePosition + offset).GetComponent<ItemBox>());
         }
     }
-    private void InstantiateBoxs(Vector3 position)
+    private GameObject InstantiateBoxs(Vector3 position)
     {
-        Instantiate(boxPrefab, position, Quaternion.identity);
+        return Instantiate(boxPrefab, position, Quaternion.identity);
     }
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
@@ -160,7 +159,7 @@ public class LevelBuilder : MonoBehaviour
                     SetTileAsWall(i, j);
                 else
                     if (!IsNearPlayerStartPosition(i, j))
-                    potentialBoxPosition.Add(grid.GetGridObject(i, j)); // Store potential boxPositions who are not near the playerPosition
+                    potentialBoxTile.Add(grid.GetGridObject(i, j)); // Store potential boxPositions who are not near the playerPosition
             }
         }
     }

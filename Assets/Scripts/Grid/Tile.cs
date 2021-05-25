@@ -7,9 +7,9 @@ public class Tile
 {
     public int x, y;
     GenericGrid<Tile> grid;
-    public ElementType type { get; private set; }
+    public ElementType type { get;  private set; }
 
-    //TODO : Rajouter une classe Item, classe parent des objets du jeu 
+    public ItemBase item { get; private set; }
 
     public Tile(GenericGrid<Tile> grid, int x, int y, ElementType type = ElementType.Empty)
     {
@@ -21,6 +21,12 @@ public class Tile
     public override string ToString()
     {
         return type.ToString();
+    }
+
+    public void SetItem(ItemBase item)
+    {
+        this.item = item;
+        grid.OnGridObjectModified(this);
     }
 
     public void SetType(ElementType type)

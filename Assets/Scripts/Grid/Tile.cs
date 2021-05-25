@@ -9,6 +9,8 @@ public class Tile
     GenericGrid<Tile> grid;
     public ElementType type { get; private set; }
 
+    //TODO : Rajouter une classe Item, classe parent des objets du jeu 
+
     public Tile(GenericGrid<Tile> grid, int x, int y, ElementType type = ElementType.Empty)
     {
         this.grid = grid;

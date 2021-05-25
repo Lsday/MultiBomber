@@ -89,6 +89,10 @@ public class LevelBuilder : MonoBehaviour
     } 
     #endregion
 
+
+    // TODO : Ajouter un pooling system pour tous les élements destructibles (singleton)
+    // Garder une référence des boites instancié et sur quel case elle se trouve
+
     private void CreateBoxs()
     {
         int boxCount = Mathf.RoundToInt(potentialBoxPosition.Count * (1-boxPrcent/100f));
@@ -108,6 +112,8 @@ public class LevelBuilder : MonoBehaviour
         {
             Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxPosition[i].x, potentialBoxPosition[i].y);
             InstantiateBoxs(boxTilePosition + offset);
+            
+            // TODO : ajouter un référence de l'objet dans la tile
         }
     }
     private void InstantiateBoxs(Vector3 position)
@@ -269,7 +275,7 @@ public class LevelBuilder : MonoBehaviour
     private void CalculatePlayerStartPositions(int count = 1)
     {
 
-         playerStartPositions = new Vector3[10];
+        playerStartPositions = new Vector3[10];
         int width = grid.GetWidth() - 1;
         int height = grid.GetHeight() - 1;
 

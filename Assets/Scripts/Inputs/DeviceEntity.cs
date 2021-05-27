@@ -11,9 +11,9 @@ public class DeviceEntity : MonoBehaviour
     public bool connected = true;
     public byte localPlayerIndex = 0;
 
-    public PhysicalDevice inputs;
+    public PhysicalDevice inputs; // pointer to the class used to receive inputs for this player : human (keyboard/gamepad) or a bot script
 
-    private PlayerInput playerInput;
+    private PlayerInput playerInput; // pointer to the InputSystem class referencing the keyboard or gamepad used to control this player (only is case of human player)
     private Gamepad myGamepad;
 
     void Start()
@@ -24,7 +24,7 @@ public class DeviceEntity : MonoBehaviour
 
         localPlayerIndex = (byte)instancesList.Count;
 
-        name += " "+ localPlayerIndex.ToString();
+        name += " " + localPlayerIndex.ToString();
         instancesList.Add(this);
     }
 
@@ -49,6 +49,7 @@ public class DeviceEntity : MonoBehaviour
         Debug.Log("Device regained " + name+" "+ myGamepad);
     }
 
+    // TODO : not sure this function is really necessary
     void DetectGamepad()
     {
         if (playerInput.devices.Count > 0)
@@ -64,7 +65,7 @@ public class DeviceEntity : MonoBehaviour
 
     void OnControlsChanged()
     {
-        // to force refresh on anything connected to the connected players count
+        // to force refresh on anything linked to the connected players count scriptable object
         ConnectedCount.Refresh();
         DetectGamepad();
         Debug.Log("control changed " + name);

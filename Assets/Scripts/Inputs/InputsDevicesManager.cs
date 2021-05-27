@@ -5,20 +5,42 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// This class manage all the inputs devices connected to the computer
+/// a "physical" device is a keyboard or a gamepad used by a human player
+/// a "virtual" device is a bot
+/// </summary>
 public class InputsDevicesManager : MonoBehaviour
 {
     public static InputsDevicesManager instance;
 
+    PlayerInputManager inputManager;
+
+
+    /// <summary>
+    /// If disabled, humans can only use gamepads to play
+    /// </summary>
     public bool allowKeyboardPlayer = true;
 
     public GameObject physicalDevicePrefab;
     public GameObject virtualDevicePrefab;
 
+    /// <summary>
+    /// Number of physicale devices currently connected to the computer
+    /// </summary>
     public SO_Int physicalDevicesCount;
+
+    /// <summary>
+    /// Number of local players actives on this computer (humans + bots)
+    /// </summary>
     public SO_Int localPlayersCount;
+
+    /// <summary>
+    /// Total number of players (local + remote)
+    /// </summary>
     public SO_Int totalPlayersCount;
 
-    PlayerInputManager inputManager;
+    
     void Start()
     {
         transform.position = Vector3.zero;
@@ -49,7 +71,9 @@ public class InputsDevicesManager : MonoBehaviour
         //Debug.Log("OnPlayerLeft");
     }
 
-    // Get all unused devices and assign a new player input prefab to each
+    /// <summary>
+    /// Get all unused devices and assign a new player input prefab to each
+    /// </summary>
     private void DetectNewPlayers()
     {
         InputControlList<InputDevice> list = InputUser.GetUnpairedInputDevices();
@@ -74,6 +98,8 @@ public class InputsDevicesManager : MonoBehaviour
         {
             PlayersHub.instance.AddPlayer((byte)localPlayersCount.value);
         }
+
+        //TODO : déplacer ces additions dans physicalDevicePrefab, ou trouver une manière plus propre de faire ce comptage
         physicalDevicesCount.value++;
 
         localPlayersCount.value++;
@@ -89,6 +115,7 @@ public class InputsDevicesManager : MonoBehaviour
             PlayersHub.instance.AddPlayer((byte)localPlayersCount.value);
         }
 
+        //TODO : déplacer ces additions dans physicalDevicePrefab, ou trouver une manière plus propre de faire ce comptage
         localPlayersCount.value++;
         totalPlayersCount.value++;
     }

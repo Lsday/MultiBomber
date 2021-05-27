@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// This class receive messages from the input system PlayerInput class
+/// which reacts to the human players inputs from the keyboard or gamepads
+/// </summary>
 public class PhysicalDevice : MonoBehaviour
 {
     protected DeviceEntity device;

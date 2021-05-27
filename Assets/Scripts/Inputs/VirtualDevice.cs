@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class send inputs procedurally generated from a bot script
+/// </summary>
 public class VirtualDevice : PhysicalDevice
 {
     Vector2 moveVector;

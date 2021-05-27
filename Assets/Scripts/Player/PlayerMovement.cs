@@ -3,12 +3,15 @@ using Mirror;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    
-    [SyncVar]bool isRunning;
-    public float speed = 5;
 
+    #region Properties
+    [SyncVar]bool isRunning;
     PlayerEntity playerEntity;
+
+    public float speed = 5;
     public SO_Bool gameStarted;
+    #endregion
+
 
     private void Start()
     {

@@ -1,0 +1,41 @@
+- Scene Ecran d'accueil / Anim d'intro
+
+- Scene de choix mode de jeu ou options (solo, multi, options)
+
+*** à partir de ce point, chaque écran contient un bouton "back" qui permet de revenir à l'écran précédent ***
+
+-> choix jeu multi :
+
+- Scene lobby avec un avatar pour chaque joueur local du pc.
+
+Seul le joueur 1 peut agir les réglages généraux (navigation dans les menus, choix de la map, des options...), les autres ne peuvent qu'agir sur leur données personnelles (pseudo, avatar, couleur...)
+
+La liste des serveurs disponibles apparaît, ainsi qu'une option pour héberger sa propre partie.
+
+-> si le joueur 1 choisit de rejoindre un serveur, alors tous les joueurs de ce pc seront en mode "données personnelles" au sein de la partie hébergée par le serveur sélectionné
+
+-> si le joueur 1 choisit de créer une partie :
+
+- Scene de setup des joueurs : tous les joueurs sont affichés, chacun avec un panneau de réglages.
+
+*** Jusqu'à ce point précis, si un joueur branche sa manette sur l'une des machines connectées à cette partie, son Player sera pris en compte. ***
+
+Une fois que tous les joueurs sont ready, le joueur 1 a alors accès à un bouton permettant de passer à la sélection du niveau de jeu
+
+- Scene de setup de la map : l'écran permet de choisir la map de jeu ainsi que les options de la partie (durée, mode de jeu, bonus présents, etc...)
+(On peut aussi éventuellement réfléchir à un système de votes pour que tous les joueurs puissent donner leur avis sur les réglages)
+
+
+Une fois que les réglages de la map sont ok, la partie peut commencer.
+
+-> création de la map en fonction des réglages
+-> placement des Players sur la map
+-> petit message d'intro pour indiquer que la partie commence
+-> [déroulement de la partie]
+
+-> fin de la partie -> affichage de l'écran des résultats
+-> bouton "Next" pour quitter l'écran des résultats.
+
+-> si c'est une partie en plusieurs manches, retour à l'étape de création de la map, et démarrage d'une nouvelle partie
+-> si c'est la dernière manche, affichage d'une animation de victoire avec le Player concerné, puis retour à l'écran de setup de la map
+

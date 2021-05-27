@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,13 @@ public enum Direction : byte
     South = 1 << 3,
 }
 
-public class LevelBuilder : MonoBehaviour
+public struct CreateMapMessage : NetworkMessage 
+{
+    public byte mapSize;
+    public byte boxPrcent;
+};
+
+public class LevelBuilder : NetworkBehaviour
 {
     #region Properties
 
@@ -52,7 +59,7 @@ public class LevelBuilder : MonoBehaviour
     /// The size of the Map
     /// </summary>
     [Header("Map Size")]
-    [Range(3, 10)] public int mapSize;
+    [Range(3, 10)] public byte mapSize;
 
     #region Meshs
     [Header("Wall Meshes")]
@@ -70,7 +77,7 @@ public class LevelBuilder : MonoBehaviour
     /// number of boxs in the map in pourcent
     /// </summary>
     [Range(0, 100)]
-    public int boxPrcent;
+    public byte boxPrcent;
 
     public Vector3[] playerStartPositions;
 
@@ -78,25 +85,55 @@ public class LevelBuilder : MonoBehaviour
     #endregion
 
     #region Init
+
+    private void Start()
+    {
+        Debug.Log("register To CreateMap Message");
+        NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
+    }
+
+    void CreateMapCallBack(CreateMapMessage msg)
+    {
+        Debug.Log("Receive Map CallBack");
+
+        mapSize = msg.mapSize;
+        boxPrcent = msg.mapSize;
+
+        Init();
+    }
+
     private void Init()
     {
+        Debug.Log("LevelBuilderInit");
+
         int mapDimension = GetMapDimension(mapSize);
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
         CreateMeshDictionary();
-
         CalculatePlayerStartPositions(totalPlayersCount.value);
-
         CalculateWallsAndBoxsPositions();
-
         CreateWalls();
-
         CreateBoxs();
-
         AssignPlayersPositions();
-    } 
+    }
     #endregion
 
+    #region Mirror CallBacks
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+    }
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+    }
+
+    #endregion
 
     // TODO : Ajouter un pooling system pour tous les élements destructibles (singleton)
     // Garder une référence des boites instancié et sur quel case elle se trouve
@@ -115,7 +152,7 @@ public class LevelBuilder : MonoBehaviour
 
     private void CreateBoxs()
     {
-        int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1-boxPrcent/100f));
+        int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - boxPrcent / 100f));
 
         // Randomize boxs positions
         for (int i = 0; i < boxCount; i++)
@@ -279,7 +316,7 @@ public class LevelBuilder : MonoBehaviour
 
         return (byte)direction;
     }
-    private bool IsNearPlayerStartPosition(int x, int z) 
+    private bool IsNearPlayerStartPosition(int x, int z)
     {
         for (int i = 0; i < totalPlayersCount.value; i++)
         {
@@ -441,9 +478,19 @@ public class LevelBuilder : MonoBehaviour
     }
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+        if (isServer)
         {
-            Init();
+            if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+            {
+
+                //Init();
+
+                Debug.Log("Send CreateMap Message");
+                // tell the client to spanw the map
+                CreateMapMessage msg = new CreateMapMessage { mapSize = this.mapSize,boxPrcent = this.boxPrcent };
+                NetworkServer.SendToAll(msg);
+
+            }
         }
     }
 }

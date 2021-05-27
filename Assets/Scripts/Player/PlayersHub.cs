@@ -60,11 +60,11 @@ public class PlayersHub : NetworkBehaviour
 
         NetworkServer.Spawn(playerGameObject, gameObject);
 
-        UpdateTotalCount();
+        RpcUpdateTotalCount();
     }
 
     [ClientRpc]
-    public void UpdateTotalCount()
+    public void RpcUpdateTotalCount()
     {
         totalPlayersCount.value = PlayerEntity.GetInstancesCount();
     }

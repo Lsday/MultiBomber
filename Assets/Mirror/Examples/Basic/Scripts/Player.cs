@@ -72,7 +72,7 @@ namespace Mirror.Examples.Basic
         public override void OnStartServer()
         {
             base.OnStartServer();
-
+           
             // Add this to the static Players List
             playersList.Add(this);
 
@@ -106,6 +106,7 @@ namespace Mirror.Examples.Basic
         /// </summary>
         public override void OnStartClient()
         {
+           
             // Activate the main panel
             ((BasicNetManager)NetworkManager.singleton).mainPanel.gameObject.SetActive(true);
 

@@ -104,7 +104,7 @@ public class GenericGrid<TGridObject>
         else
             return default(TGridObject);
     }
-    public TGridObject GetValue(Vector3 worldPosition)
+    public TGridObject GetGridObject(Vector3 worldPosition)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);

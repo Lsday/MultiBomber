@@ -23,6 +23,8 @@ public struct CreateMapMessage : NetworkMessage
 {
     public byte mapSize;
     public byte boxPrcent;
+
+
 };
 
 public class LevelBuilder : NetworkBehaviour
@@ -32,7 +34,7 @@ public class LevelBuilder : NetworkBehaviour
     /// <summary>
     /// Grid containing the Map data
     /// </summary>
-    GenericGrid<Tile> grid;
+    public static GenericGrid<Tile> grid;
 
     /// <summary>
     /// List containing the Empty Tiles of the map
@@ -152,6 +154,8 @@ public class LevelBuilder : NetworkBehaviour
 
     private void CreateBoxs()
     {
+        if (!isServer) return;
+        
         int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - boxPrcent / 100f));
 
         // Randomize boxs positions
@@ -167,9 +171,21 @@ public class LevelBuilder : NetworkBehaviour
         // Instantiate the boxes
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
+            //calcule de la position de la boite
             Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxTile[i].x, potentialBoxTile[i].y);
-            potentialBoxTile[i].SetType(ElementType.Box);
-            potentialBoxTile[i].SetItem(InstantiateBoxs(boxTilePosition + offset).GetComponent<ItemBox>());
+
+            // Set L'enum de la tile
+            //potentialBoxTile[i].SetType(ElementType.Box);
+
+            // Créer la boite 
+            GameObject box = InstantiateBoxs(boxTilePosition + offset);
+
+            //Spanw sur le serveur 
+            NetworkServer.Spawn(box);
+
+            //Assigner la boite dans la tile
+            //potentialBoxTile[i].SetItem(box.GetComponent<ItemBox>());
+
         }
     }
     private GameObject InstantiateBoxs(Vector3 position)
@@ -482,13 +498,13 @@ public class LevelBuilder : NetworkBehaviour
         {
             if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
             {
-
-                //Init();
-
                 Debug.Log("Send CreateMap Message");
-                // tell the client to spanw the map
-                CreateMapMessage msg = new CreateMapMessage { mapSize = this.mapSize,boxPrcent = this.boxPrcent };
+                CreateMapMessage msg = new CreateMapMessage { mapSize = this.mapSize, boxPrcent = this.boxPrcent };
                 NetworkServer.SendToAll(msg);
+            }
+
+            if (GUI.Button(new Rect(600, 10, 200, 25), "Destroy Box"))
+            {
 
             }
         }

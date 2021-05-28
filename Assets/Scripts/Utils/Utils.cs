@@ -4,6 +4,10 @@ using TMPro;
 
 public static class Utils
 {
+    public static int RoundedSign(float value, float threshold = 0.001f)
+    {
+        return (value < -threshold ? -1 : value > threshold ? 1 : 0);
+    }
     public static TextMeshPro CreateWorldText(string name, string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontsize = 40, Color color = default, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignmentOptions textAlignment = TextAlignmentOptions.Center, int sortingOrder = 5000)
     {
         if (color == null) color = Color.white;

@@ -73,11 +73,15 @@ public class PlayerMovement : NetworkBehaviour
             {
                 UpdateTileCoordinates();
                 lastPosition = transform.position;
+                isRunning = true;
+                playerEntity.animator.SetBool("IsRunning", isRunning);
+            }
+            else if (isRunning)
+            {
+                isRunning = false;
+                playerEntity.animator.SetBool("IsRunning", isRunning);
             }
         }
-
-        
-       
     }
 
     private void Move(float h, float v)
@@ -86,24 +90,38 @@ public class PlayerMovement : NetworkBehaviour
         ComputeMovementLimits();
 
         lastPosition = transform.position;
-
+        Vector3 newPosition = lastPosition;
+        float travelDistance = (Time.deltaTime * speed);
         Vector3 dir = new Vector3(h, 0, v);
-        lastPosition += dir.normalized * (Time.deltaTime * speed);
+        newPosition += dir.normalized * travelDistance;
 
-        lastPosition.x = Mathf.Clamp(lastPosition.x, movementClampLow.x, movementClampHigh.x);
-        lastPosition.z = Mathf.Clamp(lastPosition.z, movementClampLow.z, movementClampHigh.z);
+        newPosition = ComputeCorners(newPosition, dir , travelDistance);
 
-        transform.position = lastPosition;
+        newPosition.x = Mathf.Clamp(newPosition.x, movementClampLow.x, movementClampHigh.x);
+        newPosition.z = Mathf.Clamp(newPosition.z, movementClampLow.z, movementClampHigh.z);
+
+        transform.position = newPosition;
     }
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
         if (LevelBuilder.grid != null)
         {
-            Gizmos.color = Color.red;
+            
             Gizmos.DrawWireCube(currentTileCenter, Vector3.one*0.95f);
         }
-        
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(debugPivot, 0.5f);
+        Gizmos.DrawLine(transform.position, transform.position + debugDir);
+
+       
+        Gizmos.color = pivotWall ? Color.red : Color.green;
+        Gizmos.DrawWireSphere(testWallPivot, 0.49f);
+
+        Gizmos.color = destWall ? Color.magenta : Color.yellow;
+        Gizmos.DrawWireSphere(testWallDest, 0.4f);
     }
 
     private void UpdateTileCoordinates()
@@ -155,5 +173,81 @@ public class PlayerMovement : NetworkBehaviour
         movementClampHigh = currentTileCenter + maxOffset;
     }
 
+    Vector3 debugPivot;
+    Vector3 debugDir;
+    Vector3 testWallPivot;
+    Vector3 testWallDest;
+
+    bool pivotWall;
+    bool destWall;
+    private Vector3 ComputeCorners(Vector3 position , Vector3 travelDirection , float travelDistance)
+    {
+        Vector3 offset = position - currentTileCenter;
+
+        int posSignX = Utils.RoundedSign(offset.x);
+        int posSignZ = Utils.RoundedSign(offset.z);
+
+        int dirSignX = Utils.RoundedSign(travelDirection.x);
+        int dirSignZ = Utils.RoundedSign(travelDirection.z);
+
+        bool wallPivot = LevelBuilder.grid.GetGridObject(currentTileX + posSignX, currentTileY + posSignZ).type >= ElementType.Block;
+        bool wallDest = LevelBuilder.grid.GetGridObject(currentTileX + dirSignX, currentTileY + dirSignZ).type >= ElementType.Block;
+
+        
+
+        testWallPivot = LevelBuilder.grid.GetGridObjectWorldCenter(currentTileX + posSignX, currentTileY + posSignZ);
+        testWallDest = LevelBuilder.grid.GetGridObjectWorldCenter(currentTileX + dirSignX, currentTileY + dirSignZ);
+
+        debugDir = Vector3.zero;
+        debugPivot = Vector3.zero;
+        pivotWall = wallPivot;
+        destWall = wallDest;
+
+        debugDir = travelDirection;
+        if (wallPivot && wallDest && (posSignX != dirSignX && posSignZ != dirSignZ) ) return position;
+
+        Vector3 newPosition = position;
+        
+        if (posSignX != 0 && posSignZ != 0)
+        {
+            float cellSize = LevelBuilder.grid.GetCellsize();
+            float radius = cellSize * 0.5f;
+            
+            Vector3 pivot = currentTileCenter + new Vector3(radius * posSignX, 0, radius * posSignZ);
+
+            float distance = Vector3.Distance(position, pivot);
+            Vector3 moveDirection = travelDirection;
+
+            if (!pivotWall && destWall)
+            {
+                moveDirection.x = posSignX * (Mathf.Abs(offset.x) > Mathf.Abs(offset.z) ? 4 : 1);
+                moveDirection.z = posSignZ * (Mathf.Abs(offset.x) < Mathf.Abs(offset.z) ? 4 : 1);
+
+            }else if(pivotWall && !destWall)
+            {
+                Vector3 destination = LevelBuilder.grid.GetGridObjectWorldCenter(currentTileX + dirSignX, currentTileY + dirSignZ);
+
+                moveDirection = (destination - newPosition);
+            }
+
+
+            if (distance < radius)
+            {
+                Vector3 pushDirection = (position - pivot).normalized;
+
+                newPosition = pivot + pushDirection * radius;
+
+                moveDirection = (newPosition - position);
+            }
+
+
+            debugDir = moveDirection;
+            newPosition = position + moveDirection.normalized * travelDistance;
+
+            debugPivot = pivot;
+        }
+        
+        return newPosition;
+    }
 }
 

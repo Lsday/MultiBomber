@@ -58,11 +58,6 @@ public class Tile
         type = ElementType.Empty;
         grid.OnGridObjectModified(this);
     }
-    public void GetType(ElementType type)
-    {
-        this.type = type;
-        grid.OnGridObjectModified(this);
-    }
 }
 
 public enum ElementType : byte

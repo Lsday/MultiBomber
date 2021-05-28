@@ -148,7 +148,8 @@ public class LevelBuilder : NetworkBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            PlayerEntity.instancesList[i].transform.localPosition = offset + playerStartPositions[i] * size;
+            // send the position to the PlayerMovement script assigned to this player entity
+            PlayerEntity.instancesList[i].SendMessage("SetWorldPosition", playerStartPositions[i] * size + offset );
         }
     }
 

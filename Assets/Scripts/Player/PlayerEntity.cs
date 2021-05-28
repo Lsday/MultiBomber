@@ -107,6 +107,7 @@ public class PlayerEntity : NetworkBehaviour
         ApplyColor();
     }
 
+
     void ApplyColor()
     {
         avatarMaterial.color = defaultColor;

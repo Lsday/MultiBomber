@@ -8,15 +8,22 @@ public abstract class ItemBase : NetworkBehaviour
 {
     public ElementType type;
     Tile parentTile;
-    private bool isAlreadySpawned;
+    private bool isOnMap;
+    public bool isNetworkSpawned;
 
-    public override void OnStartClient()
+    private void Awake()
     {
-        base.OnStartClient();
+        AutoSpawn();
+    }
+
+    private void Start()
+    {
         parentTile = LevelBuilder.grid.GetGridObject(transform.position);
         parentTile.SetTile(this);
         //parentTile.SetType(type);
-        isAlreadySpawned = true;
+       
+        AutoSpawn();
+
     }
 
     private void OnDisable()
@@ -26,10 +33,11 @@ public abstract class ItemBase : NetworkBehaviour
             RpcDisableObject();
         }
 
-        parentTile.ClearTile();
+        parentTile?.ClearTile();
+        isOnMap = false;
 
     }
-    
+
     [ClientRpc]
     private void RpcDisableObject()
     {
@@ -44,17 +52,35 @@ public abstract class ItemBase : NetworkBehaviour
 
     private void OnEnable()
     {
-        if (isAlreadySpawned)
-        {
+        AutoSpawn();
+        if (isOnMap) return;
+
+        isOnMap = true; 
+
+        
+
+        
             parentTile = LevelBuilder.grid.GetGridObject(transform.position);
 
-            parentTile.SetTile(this);
+            parentTile?.SetTile(this);
 
             if (isServer)
             {
                 RpcEnableObject();
             }
 
+       
+    }
+
+    public void AutoSpawn(bool forceSpawn = false)
+    {
+        if (isServer || forceSpawn)
+        {
+            if (!isNetworkSpawned)
+            {
+                NetworkServer.Spawn(gameObject);
+                isNetworkSpawned = true;
+            }
         }
     }
 

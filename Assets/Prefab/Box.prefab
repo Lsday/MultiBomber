@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 9210544965660074613}
   - component: {fileID: 4982475028094531313}
   - component: {fileID: -3115679480132724574}
+  - component: {fileID: -1600841224754774628}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -146,3 +147,25 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   type: 250
+  isNetworkSpawned: 0
+--- !u!114 &-1600841224754774628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4546237658697349989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 0
+  interpolateScale: 1
+  syncScale: 1

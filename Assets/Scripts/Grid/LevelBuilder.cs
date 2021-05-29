@@ -23,9 +23,15 @@ public struct CreateMapMessage : NetworkMessage
 {
     public byte mapSize;
     public byte boxPrcent;
-
-
 };
+public struct ClearMapMessage : NetworkMessage
+{
+};
+
+public struct RegisterBoxsMessage : NetworkMessage
+{
+};
+
 
 public class LevelBuilder : NetworkBehaviour
 {
@@ -90,28 +96,31 @@ public class LevelBuilder : NetworkBehaviour
 
     private void Start()
     {
-        Debug.Log("register To CreateMap Message");
+        //Debug.Log("Register To CreateMap Message");
         NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
+        NetworkClient.RegisterHandler<ClearMapMessage>(ClearMap);
+
+        CreateMeshDictionary();
     }
 
     void CreateMapCallBack(CreateMapMessage msg)
     {
-        Debug.Log("Receive Map CallBack");
+        //Debug.Log("Receive Map CallBack");
 
         mapSize = msg.mapSize;
-        boxPrcent = msg.mapSize;
+        boxPrcent = msg.boxPrcent;
 
         Init();
+        
     }
 
     private void Init()
     {
-        Debug.Log("LevelBuilderInit");
-
         int mapDimension = GetMapDimension(mapSize);
+
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
-        CreateMeshDictionary();
+       
         CalculatePlayerStartPositions(totalPlayersCount.value);
         CalculateWallsAndBoxsPositions();
         CreateWalls();
@@ -156,7 +165,7 @@ public class LevelBuilder : NetworkBehaviour
     private void CreateBoxs()
     {
         if (!isServer) return;
-        
+
         int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - boxPrcent / 100f));
 
         // Randomize boxs positions
@@ -169,30 +178,27 @@ public class LevelBuilder : NetworkBehaviour
         // Add offset to center the box on the middle of the tile 
         Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
 
-        // Instantiate the boxes
+        // Instantiate boxs
+        PoolingSystem.Instance.Init();
+
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
-            //calcule de la position de la boite
+            //Calculate Box Position
             Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxTile[i].x, potentialBoxTile[i].y);
 
-            // Set L'enum de la tile
-            //potentialBoxTile[i].SetType(ElementType.Box);
-
-            // Créer la boite 
-            GameObject box = InstantiateBoxs(boxTilePosition + offset);
-
-            //Spanw sur le serveur 
-            NetworkServer.Spawn(box);
-
-            //Assigner la boite dans la tile
-            //potentialBoxTile[i].SetItem(box.GetComponent<ItemBox>());
-
+            GameObject box = PoolingSystem.Instance.GetPoolObject();
+            if (box == null)
+            {
+                Debug.Log("box = Null");
+            }
+            box.transform.position = boxTilePosition + offset;
+           
+          
         }
+
+        NetworkServer.SendToAll(new RegisterBoxsMessage { });
     }
-    private GameObject InstantiateBoxs(Vector3 position)
-    {
-        return Instantiate(boxPrefab, position, Quaternion.identity);
-    }
+  
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
         return new Tile(grid, x, y);
@@ -203,6 +209,7 @@ public class LevelBuilder : NetworkBehaviour
     }
     private void CreateMeshDictionary()
     {
+
         // O BLOCKS
         wallShapes.Add(0, new MeshShape { mesh = block_O, rotation = 0 }); // ALL EMPTY
 
@@ -493,6 +500,20 @@ public class LevelBuilder : NetworkBehaviour
         }
 
     }
+
+    private void ClearMap(ClearMapMessage msg)
+    {
+        ItemBox[] boxs = FindObjectsOfType<ItemBox>();
+
+        for (int i = 0; i < boxs.Length; i++)
+        {
+            GameObject temp = boxs[i].gameObject;
+            temp.SetActive(false);
+        }
+
+        potentialBoxTile.Clear();
+        wallTiles.Clear();
+    }
     private void OnGUI()
     {
         if (isServer)
@@ -504,9 +525,11 @@ public class LevelBuilder : NetworkBehaviour
                 NetworkServer.SendToAll(msg);
             }
 
-            if (GUI.Button(new Rect(600, 10, 200, 25), "Destroy Box"))
+            if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
             {
-
+                
+                ClearMapMessage msg = new ClearMapMessage {};
+                NetworkServer.SendToAll(msg);
             }
         }
     }

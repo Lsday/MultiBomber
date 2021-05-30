@@ -98,7 +98,11 @@ public class PlayerMovement : NetworkBehaviour
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
         float travelDistance = (Time.deltaTime * speed);
-        Vector3 dir = new Vector3(h, 0, v);
+
+        int moveX = Utils.RoundedSign(h);
+        int moveZ = Utils.RoundedSign(v);
+
+        Vector3 dir = new Vector3(moveX, 0, moveZ);
 
         newPosition += dir.normalized * travelDistance;
 
@@ -106,9 +110,37 @@ public class PlayerMovement : NetworkBehaviour
 
         newPosition.x = Mathf.Clamp(newPosition.x, movementClampLow.x, movementClampHigh.x);
         newPosition.z = Mathf.Clamp(newPosition.z, movementClampLow.z, movementClampHigh.z);
-
-
+        
         transform.position = newPosition;
+
+        // rotation
+        dir = (newPosition - lastPosition);
+        int signX = Utils.RoundedSign(dir.x);
+        int signZ = Utils.RoundedSign(dir.z);
+
+        if (signX == 0 && signZ == 0)
+        {
+            signX = Utils.RoundedSign(h);
+            signZ = Utils.RoundedSign(v);
+        }
+        else
+        {
+            if (signX != moveX)
+            {
+                signX = 0;
+            }
+
+            if (signZ != moveZ)
+            {
+                signZ = 0;
+            }
+        }
+        
+        transform.forward = new Vector3(signX,0,signZ).normalized;
+        
+        ////
+        ///
+
     }
 
     private void OnDrawGizmos()
@@ -202,6 +234,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         dbgCol = Color.black;
 
+        debugDir = travelDirection;
+
         if (grid == null) return position;
 
         Vector3 offset = position - currentTileCenter;
@@ -213,25 +247,41 @@ public class PlayerMovement : NetworkBehaviour
         int posSignZ = Utils.RoundedSign(offset.z);
 
         // the player is perfectly aligned on an axis, no turn is possible in this case
-        if (posSignX == 0 || posSignZ == 0) return position;
-
-        // sign of the travel direction on each axis
-        int dirSignX = Utils.RoundedSign(travelDirection.x);
-        int dirSignZ = Utils.RoundedSign(travelDirection.z);
-
+        if (posSignX == 0 || posSignZ == 0)
+        {
+            dbgCol = Color.white;
+            return position;
+        }
         // detect if there is a wall to turn around it 
         // true = a blocking wall is present
         // false = the tile is empty
         bool blockingPivotTile = grid.GetGridObject(currentTileX + posSignX, currentTileY + posSignZ).type >= ElementType.Block;
 
+        
+        // sign of the travel direction on each axis
+        int dirSignX = Utils.RoundedSign(travelDirection.x);
+        int dirSignZ = Utils.RoundedSign(travelDirection.z);
+
         // detect is the destination tile is blocking or not
         // true = blocking
         // false = free
-
         bool blockingDestTile = grid.GetGridObject(currentTileX + dirSignX, currentTileY + dirSignZ).type >= ElementType.Block;
 
+        
+        // detect blocking wall in each axis
         bool blockingX = grid.GetGridObject(currentTileX + dirSignX, currentTileY).type >= ElementType.Block;
         bool blockingZ = grid.GetGridObject(currentTileX, currentTileY + dirSignZ).type >= ElementType.Block;
+
+
+        // move freely if if no pivot tile is present
+        bool checkAreaX = grid.GetGridObject(currentTileX + posSignX, currentTileY).type >= ElementType.Block;
+        bool checkAreaZ = grid.GetGridObject(currentTileX, currentTileY + posSignZ).type >= ElementType.Block;
+        if (!blockingPivotTile && !checkAreaX && !checkAreaZ)
+        {
+            dbgCol = Color.magenta;
+            return position;
+        }
+
 
         testWallPivot = grid.GetGridObjectWorldCenter(currentTileX + posSignX, currentTileY + posSignZ);
         testWallDest = grid.GetGridObjectWorldCenter(currentTileX + dirSignX, currentTileY + dirSignZ);
@@ -241,18 +291,15 @@ public class PlayerMovement : NetworkBehaviour
         pivotWall = blockingPivotTile;
         destWall = blockingDestTile;
 
-        debugDir = travelDirection;
-
 
         Vector3 moveDirection = travelDirection;
-        dbgCol = Color.magenta;
+        dbgCol = Color.grey;
         // no turn is possible here, exit the function
         if (blockingPivotTile && blockingDestTile && (posSignX != dirSignX && posSignZ != dirSignZ))
         {
             dbgCol = Color.yellow;
             return position;
         }
-
 
         Vector3 newPosition = position;
 
@@ -286,8 +333,6 @@ public class PlayerMovement : NetworkBehaviour
                 moveDirection.x = signX * (absX > absZ ? 1 : 0);
                 moveDirection.z = signZ * (absX < absZ ? 1 : 0);
             }
-            
-
         }
         else if(blockingPivotTile && !blockingDestTile)
         {
@@ -323,7 +368,6 @@ public class PlayerMovement : NetworkBehaviour
 
         // compute the new position according to the defined direction
         newPosition = startPosition + moveDirection.normalized * travelDistance;
-
 
         intersect = newPosition;
 

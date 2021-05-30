@@ -70,17 +70,14 @@ public class GenericGrid<TGridObject>
     public int GetHeight() => height;
     public float GetCellsize() => cellSize;
     public float GetCellCenterOffset() => cellSize * 0.5f;
-
     public Vector3 GetGridObjectWorldPosition(int x, int y)
     {
         return new Vector3(x, 0, y) * cellSize + originPosition;
     }
-
     public Vector3 GetGridObjectWorldCenter(int x, int y)
     {
         return new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize + originPosition;
     }
-
     public void GetXY(Vector3 worldPosition, out int x, out int y)
     {
 
@@ -116,7 +113,6 @@ public class GenericGrid<TGridObject>
         GetXY(worldPosition, out x, out y);
         return GetGridObject(x, y);
     }
-
     public void OnGridObjectModified(TGridObject GridObject)
     {
         if (showDebug)
@@ -130,6 +126,17 @@ public class GenericGrid<TGridObject>
             }
         }
         
+    }
+
+    public void ClearGridDebug()
+    {
+        for (int x = 0; x < gridArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridArray.GetLength(1); y++)
+            {
+                GameObject.Destroy(debugTextArray[x, y].gameObject);
+            }
+        }
     }
 
 

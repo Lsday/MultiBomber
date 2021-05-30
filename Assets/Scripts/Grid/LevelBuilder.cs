@@ -19,19 +19,17 @@ public enum Direction : byte
     South = 1 << 3,
 }
 
-public struct CreateMapMessage : NetworkMessage 
+#region NetworkMessages
+
+public struct CreateMapMessage : NetworkMessage
 {
     public byte mapSize;
     public byte boxPrcent;
 };
-public struct ClearMapMessage : NetworkMessage
-{
-};
+public struct ClearMapMessage : NetworkMessage {};
+public struct RegisterBoxsMessage : NetworkMessage {};
 
-public struct RegisterBoxsMessage : NetworkMessage
-{
-};
-
+#endregion
 
 public class LevelBuilder : NetworkBehaviour
 {
@@ -96,58 +94,38 @@ public class LevelBuilder : NetworkBehaviour
 
     private void Start()
     {
-        //Debug.Log("Register To CreateMap Message");
         NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
-        NetworkClient.RegisterHandler<ClearMapMessage>(ClearMap);
+        NetworkClient.RegisterHandler<ClearMapMessage>(ClearMapCallBack);
 
         CreateMeshDictionary();
-    }
-
-    void CreateMapCallBack(CreateMapMessage msg)
-    {
-        //Debug.Log("Receive Map CallBack");
-
-        mapSize = msg.mapSize;
-        boxPrcent = msg.boxPrcent;
-
-        Init();
-        
     }
 
     private void Init()
     {
         int mapDimension = GetMapDimension(mapSize);
+        ClearGrid();
 
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
-       
+
         CalculatePlayerStartPositions(totalPlayersCount.value);
         CalculateWallsAndBoxsPositions();
         CreateWalls();
         CreateBoxs();
         AssignPlayersPositions();
     }
+
+    private static void ClearGrid()
+    {
+        if (grid != null)
+        {
+            grid.ClearGridDebug();
+            grid = null;
+            GC.Collect();
+            Resources.UnloadUnusedAssets();
+        }
+    }
     #endregion
-
-    #region Mirror CallBacks
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-    }
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-    }
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-    }
-
-    #endregion
-
-    // TODO : Ajouter un pooling system pour tous les élements destructibles (singleton)
-    // Garder une référence des boites instancié et sur quel case elle se trouve
 
     private void AssignPlayersPositions()
     {
@@ -161,7 +139,6 @@ public class LevelBuilder : NetworkBehaviour
             PlayerEntity.instancesList[i].SendMessage("SetWorldPosition", playerStartPositions[i] * size + offset );
         }
     }
-
     private void CreateBoxs()
     {
         if (!isServer) return;
@@ -178,27 +155,21 @@ public class LevelBuilder : NetworkBehaviour
         // Add offset to center the box on the middle of the tile 
         Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
 
-        // Instantiate boxs
-        PoolingSystem.Instance.Init();
-
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
             //Calculate Box Position
-            Vector3 boxTilePosition = grid.GetGridObjectWorldPosition(potentialBoxTile[i].x, potentialBoxTile[i].y);
+            Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
 
-            GameObject box = PoolingSystem.Instance.GetPoolObject();
-            if (box == null)
-            {
-                Debug.Log("box = Null");
-            }
-            box.transform.position = boxTilePosition + offset;
-           
-          
+            ItemBase item = GameManager.instance.poolingSystem.GetPoolObject(ItemsType.BOX);
+            //item.GetComponent<NetworkTransform>().ServerTeleport(boxTilePosition + offset);
+            item.Teleport(boxTilePosition);
+
+            //item.GetComponent<ItemBox>().PlaceOnTile(potentialBoxTile[i]);
+
         }
 
-        NetworkServer.SendToAll(new RegisterBoxsMessage { });
+       //NetworkServer.SendToAll(new RegisterBoxsMessage { });
     }
-  
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
         return new Tile(grid, x, y);
@@ -500,8 +471,17 @@ public class LevelBuilder : NetworkBehaviour
         }
 
     }
+    private void CreateMapCallBack(CreateMapMessage msg)
+    {
+        //Debug.Log("Receive Map CallBack");
 
-    private void ClearMap(ClearMapMessage msg)
+        mapSize = msg.mapSize;
+        boxPrcent = msg.boxPrcent;
+
+        Init();
+
+    }
+    private void ClearMapCallBack(ClearMapMessage msg)
     {
         ItemBox[] boxs = FindObjectsOfType<ItemBox>();
 
@@ -513,23 +493,26 @@ public class LevelBuilder : NetworkBehaviour
 
         potentialBoxTile.Clear();
         wallTiles.Clear();
+        ClearGrid();
     }
+
     private void OnGUI()
     {
         if (isServer)
         {
             if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
             {
-                Debug.Log("Send CreateMap Message");
-                CreateMapMessage msg = new CreateMapMessage { mapSize = this.mapSize, boxPrcent = this.boxPrcent };
-                NetworkServer.SendToAll(msg);
+
+                //NetworkServer.SendToAll(new ClearMapMessage { });
+
+                //Debug.Log("Send CreateMap Message");
+
+                NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPrcent = this.boxPrcent });
             }
 
             if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
             {
-                
-                ClearMapMessage msg = new ClearMapMessage {};
-                NetworkServer.SendToAll(msg);
+                NetworkServer.SendToAll(new ClearMapMessage { });
             }
         }
     }

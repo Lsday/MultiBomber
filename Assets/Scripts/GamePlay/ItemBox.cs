@@ -6,4 +6,6 @@ public class ItemBox : ItemBase
 {
 
 
+    /// Ajouter des bonus
+
 }

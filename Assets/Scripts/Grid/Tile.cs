@@ -1,14 +1,18 @@
 using System;
+using Mirror;
 
 [Serializable]
-public class Tile
+public class Tile 
 {
     #region Properties
+
     public int x, y;
 
     GenericGrid<Tile> grid;
     public ElementType type { get; private set; }
     public ItemBase item { get; private set; }
+
+    public bool IsDirty => throw new NotImplementedException();
 
     public byte temperature;
     #endregion
@@ -20,6 +24,7 @@ public class Tile
         this.x = x;
         this.y = y;
     } 
+
     #endregion
 
     public override string ToString()
@@ -58,8 +63,11 @@ public class Tile
         type = ElementType.Empty;
         grid.OnGridObjectModified(this);
     }
+
 }
 
+
+//TODO AJOUTER DES FLAGS
 public enum ElementType : byte
 {
     Empty = 0,

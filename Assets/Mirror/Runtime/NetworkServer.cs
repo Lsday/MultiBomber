@@ -984,8 +984,8 @@ namespace Mirror
             foreach (NetworkIdentity identity in NetworkIdentity.spawned.Values)
             {
                 // try with far away ones in ummorpg!
-                if (identity.gameObject.activeSelf) //TODO this is different
-                {
+                //if (identity.gameObject.activeSelf) //TODO this is different
+                //{
                     // Debug.Log("Sending spawn message for current server objects name='" + identity.name + "' netId=" + identity.netId + " sceneId=" + identity.sceneId.ToString("X"));
 
                     // we need to support three cases:
@@ -1032,7 +1032,7 @@ namespace Mirror
                             identity.AddObserver(conn);
                         }
                     }
-                }
+                //}
             }
 
             // let connection know that we finished spawning, so it can call

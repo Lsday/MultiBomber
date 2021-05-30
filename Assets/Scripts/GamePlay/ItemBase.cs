@@ -8,39 +8,46 @@ public abstract class ItemBase : NetworkBehaviour
 {
     public ElementType type;
     Tile parentTile;
-    private bool isOnMap;
-    public bool isNetworkSpawned;
+    NetworkTransform networkTransform;
+
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        gameObject.SetActive(false);
+    }
+
+    #region UnityCallabsk
 
     private void Awake()
     {
-        AutoSpawn();
+        networkTransform = GetComponent<NetworkTransform>();
     }
-
-    private void Start()
+    private void OnEnable()
     {
-        parentTile = LevelBuilder.grid.GetGridObject(transform.position);
-        parentTile.SetTile(this);
-        //parentTile.SetType(type);
-       
-        AutoSpawn();
-
+        if (isServer)
+        {
+            RpcEnableObject();
+        }
     }
 
     private void OnDisable()
     {
         if (isServer)
         {
-            RpcDisableObject();
+          RpcDisableObject();
         }
 
+        RemoveFromTile();
         parentTile?.ClearTile();
-        isOnMap = false;
-
     }
+    #endregion
 
+    #region Mirror Messages
     [ClientRpc]
     private void RpcDisableObject()
     {
+       
         gameObject.SetActive(false);
     }
 
@@ -48,43 +55,56 @@ public abstract class ItemBase : NetworkBehaviour
     private void RpcEnableObject()
     {
         gameObject.SetActive(true);
+    } 
+    #endregion
+
+    public void PlaceOnTile()
+    {
+        parentTile = LevelBuilder.grid.GetGridObject(transform.position);
+        parentTile?.SetTile(this);
     }
 
-    private void OnEnable()
+    public void PlaceOnTile(Vector3 position)
     {
-        AutoSpawn();
-        if (isOnMap) return;
-
-        isOnMap = true; 
-
-        
-
-        
-            parentTile = LevelBuilder.grid.GetGridObject(transform.position);
-
-            parentTile?.SetTile(this);
-
-            if (isServer)
-            {
-                RpcEnableObject();
-            }
-
-       
+        parentTile = LevelBuilder.grid.GetGridObject(position);
+        parentTile?.SetTile(this);
     }
 
-    public void AutoSpawn(bool forceSpawn = false)
+    [ClientRpc]
+    public void RpcPlaceOnTile(Vector3 position)
     {
-        if (isServer || forceSpawn)
+        parentTile = LevelBuilder.grid.GetGridObject(position);
+        parentTile?.SetTile(this);
+    }
+
+    public void PlaceOnTile(Tile tile)
+    {
+        parentTile = tile;
+        parentTile?.SetTile(this);
+    }
+
+    public void RemoveFromTile()
+    {
+        parentTile = null;
+        parentTile?.SetTile(null);
+    }
+
+   
+    public void Teleport(Vector3 position)
+    {
+        if (isServer)
         {
-            if (!isNetworkSpawned)
-            {
-                NetworkServer.Spawn(gameObject);
-                isNetworkSpawned = true;
-            }
+            networkTransform.ServerTeleport(position);
         }
+        else
+        {
+            networkTransform.enabled = false;
+            transform.position = position;
+            networkTransform.enabled = true;
+        }
+
+        RpcPlaceOnTile(position);
     }
-
-
 
 
 

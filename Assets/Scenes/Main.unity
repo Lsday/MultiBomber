@@ -167,7 +167,7 @@ MonoBehaviour:
   block_U: {fileID: 0}
   block_O: {fileID: 4300010, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-  boxPrcent: 59
+  boxPrcent: 20
   playerStartPositions: []
   blockMaterial: {fileID: 2100000, guid: c2b27b40d102e86488799738633bc451, type: 2}
 --- !u!4 &618848640

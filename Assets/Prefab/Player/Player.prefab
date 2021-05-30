@@ -110,7 +110,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  speed: 1
+  speed: 4
+  cornerSliding: 0.3
   gameStarted: {fileID: 11400000, guid: a20b66596b11f3a41a957844de20d546, type: 2}
 --- !u!114 &161878465008676798
 MonoBehaviour:

@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneId: 0
   serverOnly: 0
-  visible: 0
+  visible: 2
   m_AssetId: 
   hasSpawned: 0
 --- !u!114 &-3115679480132724574

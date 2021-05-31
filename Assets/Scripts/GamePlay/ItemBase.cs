@@ -4,25 +4,21 @@ using System.Collections;
 using UnityEngine;
 
 
-public abstract class ItemBase : NetworkBehaviour
+public abstract class ItemBase : PoolableObject
 {
     public ElementType type;
     Tile parentTile;
-    NetworkTransform networkTransform;
-
+   
+    // TODO : ne plus avoir de référence directe à Levelbuilder ou grid
 
     public override void OnStartClient()
     {
         base.OnStartClient();
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     #region UnityCallabsk
 
-    private void Awake()
-    {
-        networkTransform = GetComponent<NetworkTransform>();
-    }
     private void OnEnable()
     {
         if (isServer)
@@ -47,14 +43,15 @@ public abstract class ItemBase : NetworkBehaviour
     [ClientRpc]
     private void RpcDisableObject()
     {
-       
-        gameObject.SetActive(false);
+        Disable();
+        //gameObject.SetActive(false);
     }
 
     [ClientRpc]
     private void RpcEnableObject()
     {
-        gameObject.SetActive(true);
+        Enable();
+        //gameObject.SetActive(true);
     } 
     #endregion
 
@@ -73,7 +70,7 @@ public abstract class ItemBase : NetworkBehaviour
     [ClientRpc]
     public void RpcPlaceOnTile(Vector3 position)
     {
-        parentTile = LevelBuilder.grid.GetGridObject(position);
+        parentTile = LevelBuilder.grid?.GetGridObject(position);
         parentTile?.SetTile(this);
     }
 
@@ -85,27 +82,25 @@ public abstract class ItemBase : NetworkBehaviour
 
     public void RemoveFromTile()
     {
-        parentTile = null;
         parentTile?.SetTile(null);
+        parentTile = null;
     }
 
-   
-    public void Teleport(Vector3 position)
+    public override void Teleport(Vector3 position)
     {
+        base.Teleport(position);
+
+        if (LevelBuilder.grid == null) return;
+
         if (isServer)
         {
-            networkTransform.ServerTeleport(position);
+            RpcPlaceOnTile(position);
         }
         else
         {
-            networkTransform.enabled = false;
-            transform.position = position;
-            networkTransform.enabled = true;
+            PlaceOnTile(position);
         }
-
-        RpcPlaceOnTile(position);
     }
-
 
 
 }

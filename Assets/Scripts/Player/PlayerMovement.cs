@@ -113,7 +113,7 @@ public class PlayerMovement : NetworkBehaviour
         
         transform.position = newPosition;
 
-        // rotation
+        // orientation
         dir = (newPosition - lastPosition);
         int signX = Utils.RoundedSign(dir.x);
         int signZ = Utils.RoundedSign(dir.z);
@@ -221,6 +221,7 @@ public class PlayerMovement : NetworkBehaviour
         movementClampHigh = currentTileCenter + maxOffset;
     }
 
+    //TODO : remove debug
     Vector3 debugPivot;
     Vector3 debugDir;
     Vector3 testWallPivot;
@@ -228,28 +229,27 @@ public class PlayerMovement : NetworkBehaviour
     Vector3 intersect;
     Color dbgCol;
 
-    bool pivotWall;
-    bool destWall;
     private Vector3 ComputeCorners(Vector3 startPosition, Vector3 position , Vector3 travelDirection , float travelDistance)
     {
-        dbgCol = Color.black;
+        dbgCol = Color.black;//TODO : remove debug
 
-        debugDir = travelDirection;
+        debugDir = travelDirection;//TODO : remove debug
 
         if (grid == null) return position;
 
+        // offset between the center of the ciurrent tile and the player position
         Vector3 offset = position - currentTileCenter;
 
         // get position sign within the Tile
         // posSignX positive = the player is on the right side of the Tile
-        // posSignZ positiove = the plyaer is on the upper side of the tile
+        // posSignZ positive = the player is on the upper side of the tile
         int posSignX = Utils.RoundedSign(offset.x);
         int posSignZ = Utils.RoundedSign(offset.z);
 
         // the player is perfectly aligned on an axis, no turn is possible in this case
         if (posSignX == 0 || posSignZ == 0)
         {
-            dbgCol = Color.white;
+            dbgCol = Color.white;//TODO : remove debug
             return position;
         }
         // detect if there is a wall to turn around it 
@@ -257,47 +257,41 @@ public class PlayerMovement : NetworkBehaviour
         // false = the tile is empty
         bool blockingPivotTile = grid.GetGridObject(currentTileX + posSignX, currentTileY + posSignZ).type >= ElementType.Block;
 
-        
-        // sign of the travel direction on each axis
-        int dirSignX = Utils.RoundedSign(travelDirection.x);
-        int dirSignZ = Utils.RoundedSign(travelDirection.z);
-
-        // detect is the destination tile is blocking or not
-        // true = blocking
-        // false = free
-        bool blockingDestTile = grid.GetGridObject(currentTileX + dirSignX, currentTileY + dirSignZ).type >= ElementType.Block;
-
-        
-        // detect blocking wall in each axis
-        bool blockingX = grid.GetGridObject(currentTileX + dirSignX, currentTileY).type >= ElementType.Block;
-        bool blockingZ = grid.GetGridObject(currentTileX, currentTileY + dirSignZ).type >= ElementType.Block;
-
-
         // move freely if if no pivot tile is present
         bool checkAreaX = grid.GetGridObject(currentTileX + posSignX, currentTileY).type >= ElementType.Block;
         bool checkAreaZ = grid.GetGridObject(currentTileX, currentTileY + posSignZ).type >= ElementType.Block;
         if (!blockingPivotTile && !checkAreaX && !checkAreaZ)
         {
-            dbgCol = Color.magenta;
+            dbgCol = Color.magenta;//TODO : remove debug
             return position;
         }
 
+        // sign of the travel direction on each axis
+        int dirSignX = Utils.RoundedSign(travelDirection.x);
+        int dirSignZ = Utils.RoundedSign(travelDirection.z);
 
+        // detect is the destination tile is blocking or not
+        bool blockingDestTile = grid.GetGridObject(currentTileX + dirSignX, currentTileY + dirSignZ).type >= ElementType.Block;
+
+        // detect blocking wall in each axis
+        bool blockingX = grid.GetGridObject(currentTileX + dirSignX, currentTileY).type >= ElementType.Block;
+        bool blockingZ = grid.GetGridObject(currentTileX, currentTileY + dirSignZ).type >= ElementType.Block;
+
+        //**********************************
+        //TODO : remove debug
         testWallPivot = grid.GetGridObjectWorldCenter(currentTileX + posSignX, currentTileY + posSignZ);
         testWallDest = grid.GetGridObjectWorldCenter(currentTileX + dirSignX, currentTileY + dirSignZ);
 
         debugDir = Vector3.zero;
         debugPivot = Vector3.zero;
-        pivotWall = blockingPivotTile;
-        destWall = blockingDestTile;
-
+        //**********************************
 
         Vector3 moveDirection = travelDirection;
-        dbgCol = Color.grey;
+        dbgCol = Color.grey;//TODO : remove debug
         // no turn is possible here, exit the function
         if (blockingPivotTile && blockingDestTile && (posSignX != dirSignX && posSignZ != dirSignZ))
         {
-            dbgCol = Color.yellow;
+            dbgCol = Color.yellow;//TODO : remove debug
             return position;
         }
 
@@ -306,6 +300,7 @@ public class PlayerMovement : NetworkBehaviour
         float cellSize = grid.GetCellsize();
         float radius = cellSize * 0.5f;
 
+        // is the player input direction is only on one axis (true) or diagonal (false)
         bool singleAxis = dirSignX != 0 ^ dirSignZ != 0;
 
         // calculate the corner position around which the player will turn
@@ -313,7 +308,7 @@ public class PlayerMovement : NetworkBehaviour
         
         if (!blockingPivotTile && blockingDestTile)
         {
-            dbgCol = Color.red;
+            dbgCol = Color.red; //TODO : remove debug
             // if the input direction (dirSign) is the same as the automatically detected direction (posSign)
             // then follow the detected direction (posSign), else the input direction has priority if it is not zero
             int signX = (posSignX == dirSignX || dirSignX == 0) ? posSignX : dirSignX;
@@ -325,6 +320,7 @@ public class PlayerMovement : NetworkBehaviour
             // force the direction to follow the major axis
             if (singleAxis)
             {
+                // auto sliding is active only when moving on a single axis against a corner
                 moveDirection.x = signX * (absX > absZ ? (absX > cornerSliding ? 1 : 0) : 0);
                 moveDirection.z = signZ * (absX < absZ ? (absZ > cornerSliding ? 1 : 0) : 0);
             }
@@ -336,8 +332,8 @@ public class PlayerMovement : NetworkBehaviour
         }
         else if(blockingPivotTile && !blockingDestTile)
         {
-            dbgCol = Color.green;
-            
+            dbgCol = Color.green; //TODO : remove debug
+
             // if the destination tile is free, set the movement vector in its direction
             Vector3 destination = grid.GetGridObjectWorldCenter(currentTileX + dirSignX, currentTileY + dirSignZ);
 
@@ -352,7 +348,7 @@ public class PlayerMovement : NetworkBehaviour
         //else if(blockingPivotTile && blockingDestTile && Mathf.Abs(dirSignX - posSignX) < 2 && Mathf.Abs(dirSignZ - posSignZ) < 2)
         else if (blockingPivotTile && blockingDestTile )
         {
-            dbgCol = Color.blue;
+            dbgCol = Color.blue; //TODO : remove debug
             // if both pivot and destination tiles are blocking
             // force the direction on the major axis (to prevent slowdown while moving in diagonal against walls)
             moveDirection.x = (blockingX ? (posSignX == dirSignX) ? 0 : dirSignX : dirSignX) * 1.05f; // add 5% to prevent locking when moving perfectly in diagonal against a corner
@@ -361,7 +357,8 @@ public class PlayerMovement : NetworkBehaviour
         else if (posSignX != 0 && posSignZ != 0)
         {
             // moving diagonally
-            dbgCol = Color.cyan;
+            dbgCol = Color.cyan; //TODO : remove debug
+
             moveDirection.x = blockingX ? (posSignX == dirSignX) ? 0 : dirSignX : dirSignX;
             moveDirection.z = blockingZ ? (posSignZ == dirSignZ) ? 0 : dirSignZ : dirSignZ;
         }
@@ -369,7 +366,11 @@ public class PlayerMovement : NetworkBehaviour
         // compute the new position according to the defined direction
         newPosition = startPosition + moveDirection.normalized * travelDistance;
 
+        //**********************************
+        //TODO : remove debug
         intersect = newPosition;
+        //**********************************
+
 
         // test if the new position is below the corners radius threshold
         float distance = Vector3.Distance(newPosition, pivot);
@@ -383,10 +384,11 @@ public class PlayerMovement : NetworkBehaviour
             newPosition = startPosition + (newPosition - startPosition).normalized * travelDistance;
         }
 
+        //**********************************
+        //TODO : remove debug
         debugDir = moveDirection;
-            
         debugPivot = pivot;
- 
+        //**********************************
         
         return newPosition;
     }

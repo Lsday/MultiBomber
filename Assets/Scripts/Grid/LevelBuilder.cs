@@ -487,8 +487,9 @@ public class LevelBuilder : NetworkBehaviour
 
         for (int i = 0; i < boxs.Length; i++)
         {
-            GameObject temp = boxs[i].gameObject;
-            temp.SetActive(false);
+            boxs[i].Disable();
+            //GameObject temp = boxs[i].gameObject;
+            //temp.SetActive(false);
         }
 
         potentialBoxTile.Clear();

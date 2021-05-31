@@ -40,10 +40,7 @@ public class PoolingSystem : NetworkBehaviour
             for (int i = 0; i < amountToPool; i++)
             {
                 obj = Instantiate(objectToPool).GetComponent<ItemBase>();
-                obj.gameObject.SetActive(false);
                 pooledObjects[ItemsType.BOX].Add(obj);
-                obj.transform.position = new Vector3(0, -10, 0);
-                NetworkServer.Spawn(obj.gameObject);
             }
         }
         
@@ -53,9 +50,9 @@ public class PoolingSystem : NetworkBehaviour
     {
         for (int i = 0; i < amountToPool; i++)
         {
-            if (!pooledObjects[type][i].gameObject.activeInHierarchy)
+            if (!pooledObjects[type][i].isActive)
             {
-                pooledObjects[type][i].gameObject.SetActive(true);
+                pooledObjects[type][i].Enable();
                 return pooledObjects[type][i];
             }
         }

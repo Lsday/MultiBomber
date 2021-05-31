@@ -18,11 +18,12 @@ public class Tile
     #endregion
 
     #region Constructor
-    public Tile(GenericGrid<Tile> grid, int x, int y, ElementType type = ElementType.Empty)
+    public Tile(GenericGrid<Tile> grid, int x, int y)
     {
         this.grid = grid;
         this.x = x;
         this.y = y;
+        this.type = ElementType.Empty;
     } 
 
     #endregion
@@ -68,21 +69,23 @@ public class Tile
 
 
 //TODO AJOUTER DES FLAGS
-public enum ElementType : byte
+[Flags]
+public enum ElementType : int
 {
-    Empty = 0,
-    Player = 1,
-    FutureItemSpawn = 29,
-    Item = 30,
-    Fire = 100,
-    Block = 128, // tous les éléments après celui-ci sont identifiés comme bloquants
+    None = 0,
+    Empty = 1 ,
+    Player = 1 << 1 ,
+    FutureItemSpawn = 1 << 2,
+    Item = 1 << 3,
+    Fire = 1 << 4,
+    Block = 1 << 5, // tous les éléments après celui-ci sont identifiés comme bloquants
 
-    Bomb = 150,
-    Explosion = 160,
-    ExplodingElement = 161,
-    Weight = 170,
+    Bomb = 1 << 6,
+    Explosion = 1 << 7,
+    ExplodingElement = 1 << 8 ,
+    Weight = 1 << 9,
 
-    Box = 250,
-    Wall = 255
+    Box = 1 << 10,
+    Wall = 1 << 11
 }
 

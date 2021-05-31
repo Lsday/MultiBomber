@@ -297,7 +297,7 @@ public class LevelBuilder : NetworkBehaviour
         // EAST
         if (tile.x + 1 < grid.GetWidth())
             if (grid.GetGridObject(tile.x + 1, tile.y).type == ElementType.Wall)
-                direction |= Direction.East;
+                 direction |= Direction.East;
 
         //SOUTH
         if (tile.y - 1 >= 0)

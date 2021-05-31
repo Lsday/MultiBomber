@@ -57,4 +57,22 @@ public static class Utils
         return GetMouseWorldPosition3D(Input.mousePosition, Camera.main);
     }
 
+    public static ElementType SetFlag(ElementType a, ElementType b)
+    {
+        return a | b;
+    }
+    public static ElementType UnsetFlag(ElementType a, ElementType b)
+    {
+        return a & (~b);
+    }
+    // Works with "None" as well
+    public static bool HasFlag(ElementType a, ElementType b)
+    {
+        return (a & b) == b;
+    }
+    public static ElementType ToogleFlag(ElementType a, ElementType b)
+    {
+        return a ^ b;
+    }
+
 }

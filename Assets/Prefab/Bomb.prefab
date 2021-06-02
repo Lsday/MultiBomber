@@ -207,6 +207,7 @@ MonoBehaviour:
   activeState: 0
   type: 64
   playerIdentity: {fileID: 0}
+  bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}
 --- !u!1 &5312718094065896333
 GameObject:
   m_ObjectHideFlags: 0

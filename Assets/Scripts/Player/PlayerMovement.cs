@@ -182,6 +182,7 @@ public class PlayerMovement : NetworkBehaviour
             if(majorTile != null && majorTile.type == ElementType.Player)
             {
                 majorTile.SetType(ElementType.Empty);
+                majorTile.ClearPlayer();
             }
 
             Vector3 worldPosition = transform.position;
@@ -195,6 +196,7 @@ public class PlayerMovement : NetworkBehaviour
                 if(majorTile.type == ElementType.Empty)
                 {
                     majorTile.SetType(ElementType.Player);
+                    majorTile.SetPlayer(playerEntity);
                 }
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
             }

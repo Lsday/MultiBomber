@@ -1,4 +1,4 @@
-﻿internal interface IKillable
+﻿public interface IKillable
 {
     public void Kill();
 }

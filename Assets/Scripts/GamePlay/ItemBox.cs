@@ -2,14 +2,16 @@
 using UnityEngine;
 
 
-public class ItemBox : ItemBase, IKillable
+public class ItemBox : ItemBase, IDestroyable
 {
+    public ScriptableAction DropBehaviour;
 
-    ScriptableAction bonusAction;
-
-    public void Kill()
+    public void Destroy()
     {
-        Debug.Log(gameObject.name + " isDead");
-        
+        Debug.Log(gameObject.name + "  Box Destroyed");
+
+        //DropBehaviour.PerformAction(gameObject);
+
+        Disable();
     }
 }

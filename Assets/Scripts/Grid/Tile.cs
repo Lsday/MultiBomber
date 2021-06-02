@@ -12,7 +12,9 @@ public class Tile
     public ElementType type { get; private set; }
     public ItemBase item { get; private set; }
 
-    public bool IsDirty => throw new NotImplementedException();
+    public PlayerEntity playerEntity{ get; private set; }
+
+public bool IsDirty => throw new NotImplementedException();
 
     public byte temperature;
     #endregion
@@ -27,6 +29,16 @@ public class Tile
     } 
 
     #endregion
+
+    public void SetPlayer(PlayerEntity playerEntity)
+    {
+        this.playerEntity = playerEntity;
+    }
+
+    public void ClearPlayer()
+    {
+        this.playerEntity = null;
+    }
 
     public override string ToString()
     {

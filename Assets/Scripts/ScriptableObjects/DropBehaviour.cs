@@ -2,7 +2,7 @@
 
 
 [CreateAssetMenu(menuName = "ScriptableAction/LootAction", fileName = "LootAction")]
-public class DropAction : ScriptableAction
+public class DropBehaviour : ScriptableAction
 {
     [SerializeField, TextArea(5, 10)]
     protected string description;

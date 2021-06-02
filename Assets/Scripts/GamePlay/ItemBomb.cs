@@ -21,9 +21,8 @@ public class ItemBomb : ItemBase
     public NetworkIdentity playerIdentity;
     Timer timer;
 
-    public int bombeRadius;
-
-    ScriptableAction bombBehaviour;
+    
+    public BombBehaviour bombBehaviour;
 
     public void Init()
     {
@@ -53,62 +52,148 @@ public class ItemBomb : ItemBase
 
     private void BombExplosion()
     {
-        // Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
+
+         bombBehaviour.PerformAction(gameObject);
+
+        #region version 1
+        //Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
         //for (int i = 0; i < directions.Length; i++)
         //{
-        //    int power = 0;
+        //    int distance = 0;
 
-        //    for (int j = 0; j < bombeRadius; j++)
+        //    for (int j = 0; j < bombBehaviour.bombRadius; j++)
         //    {
+        //        Tile tile = LevelBuilder.grid.GetGridObject(parentTile.x + directions[i].x, parentTile.y + directions[i].z);
 
-        //        if (LevelBuilder.grid.GetGridObject(parentTile.x + directions[i].x, parentTile.y + directions[i].z).item is IKillable)
+        //        if (tile.item is IDestroyable)
         //        {
-        //            power++;
+        //            distance++;
+        //            ((IDestroyable)tile.item).Destroy();
         //            break;
         //        }
 
-        //        if (LevelBuilder.grid.GetGridObject(parentTile.x + directions[i].x, parentTile.y + directions[i].z).type == ElementType.Wall)
+        //        if (tile.playerEntity != null)
         //        {
+        //            distance++;
+        //            ((IKillable)tile.playerEntity).Kill();
         //            break;
         //        }
+
+        //        if (tile.type == ElementType.Wall)
+        //            break;
         //        else
+        //            distance++;
+
+        //    }
+        //} 
+        #endregion
+
+
+        #region Version2
+        //////Tile[] tiles = new Tile[4];
+        //////int[] distanceOfflames = {0,0,0,0};
+
+        //////for (int i = 1; i <= bombeRadius; i++)
+        //////{
+
+        //////    tiles[0] = LevelBuilder.grid.GetGridObject(parentTile.x - i, parentTile.y); // LEFT 
+        //////    tiles[1] = LevelBuilder.grid.GetGridObject(parentTile.x + i, parentTile.y); // RIGHT
+        //////    tiles[2] = LevelBuilder.grid.GetGridObject(parentTile.x, parentTile.y - i); // BOT
+        //////    tiles[3] = LevelBuilder.grid.GetGridObject(parentTile.x, parentTile.y + i); // TOP
+
+        //////    for (int j = 0; j < tiles.Length; i++)
+        //////    {
+        //////        CheckNearbyTile(tiles[i]);
+        //////    }
+        //////} 
+
+
+
+        //    if (tiles[0].item is IDestroyable || tiles[0].type is ElementType.Wall || tiles[0].playerEntity != null)
+        //    {
+        //        if (tiles[0].type is ElementType.Wall)
         //        {
-        //            power++;
+        //            // DO STUFF
         //        }
+        //        if (tiles[0].item is IDestroyable)
+        //        {
+        //            ((IDestroyable)tiles[0].item).Destroy();
+        //        }
+        //        if (tiles[0].playerEntity != null)
+        //        {
+        //            ((IKillable)tiles[0].playerEntity).Kill();
+        //        }
+        //        distanceOfflames[0] = Mathf.Abs(parentTile.x - tiles[0].x);
+        //    }
+        //    if (tiles[1].item is IDestroyable || tiles[1].type is ElementType.Wall || tiles[1].playerEntity != null)
+        //    {
+        //        if (tiles[1].type is ElementType.Wall)
+        //        {
+        //            // DO STUFF
+        //        }
+        //        if (tiles[1].item is IDestroyable)
+        //        {
+        //            ((IDestroyable)tiles[1].item).Destroy();
+        //        }
+        //        if (tiles[1].playerEntity != null)
+        //        {
+        //            ((IKillable)tiles[1].playerEntity).Kill();
+        //        }
+        //        distanceOfflames[1] = Mathf.Abs(parentTile.x - tiles[1].x);
+        //    }
+        //    if (tiles[2].item is IDestroyable || tiles[2].type is ElementType.Wall || tiles[2].playerEntity != null)
+        //    {
+        //        if (tiles[2].type is ElementType.Wall)
+        //        {
+        //            // DO STUFF
+        //        }
+        //        if (tiles[2].item is IDestroyable)
+        //        {
+        //            ((IDestroyable)tiles[2].item).Destroy();
+        //        }
+        //        if (tiles[2].playerEntity != null)
+        //        {
+        //            ((IKillable)tiles[2].playerEntity).Kill();
+        //        }
+        //        distanceOfflames[2] = Mathf.Abs(parentTile.y - tiles[2].y);
+        //    }
+        //    if (tiles[3].item is IDestroyable || tiles[3].type is ElementType.Wall || tiles[3].playerEntity != null)
+        //    {
+        //        if (tiles[3].type is ElementType.Wall)
+        //        {
+        //            // DO STUFF
+        //        }
+        //        if (tiles[3].item is IDestroyable)
+        //        {
+        //            ((IDestroyable)tiles[3].item).Destroy();
+        //        }
+        //        if (tiles[3].playerEntity != null)
+        //        {
+        //            ((IKillable)tiles[3].playerEntity).Kill();
+        //        }
+        //        distanceOfflames[3] = Mathf.Abs(parentTile.y - tiles[3].y);
         //    }
         //}
-
-
-
-        for (int i = 1; i <= bombeRadius; i++)
-        {
-
-            if (LevelBuilder.grid.GetGridObject(parentTile.x - i, parentTile.y) is IKillable)
-            {
-
-            }
-
-            if (LevelBuilder.grid.GetGridObject(parentTile.x + i, parentTile.y) is IKillable)
-            {
-
-            }
-
-            if (LevelBuilder.grid.GetGridObject(parentTile.x, parentTile.y - i) is IKillable)
-            {
-
-            }
-
-            if (LevelBuilder.grid.GetGridObject(parentTile.x, parentTile.y + i) is IKillable)
-            {
-
-            }
-        }
-
-
-        
-
-
+        #endregion
 
         Disable();
     }
+
+    #region MyRegion
+    //private static void CheckNearbyTile(Tile tile)
+    //{
+    //    if (tile.type is ElementType.Wall)
+    //    {
+    //        // DO STUFF
+    //    }
+    //    if (tile.item is IDestroyable)
+    //    {
+    //        ((IDestroyable)tile.item).Destroy();
+    //    }
+    //    if (tile.playerEntity != null)
+    //    {
+    //        ((IKillable)tile.playerEntity).Kill();
+    //    }
+    //} 
+    #endregion
 }

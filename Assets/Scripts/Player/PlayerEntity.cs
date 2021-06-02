@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-public class PlayerEntity : NetworkBehaviour
+public class PlayerEntity : NetworkBehaviour, IKillable
 {
     #region Static declarations
     public static List<PlayerEntity> instancesList = new List<PlayerEntity>();
@@ -121,6 +121,11 @@ public class PlayerEntity : NetworkBehaviour
     {
         defaultColor = newColor;
         ApplyColor();
+    }
+
+    public void Kill()
+    {
+        Debug.Log(hubIdentity.name + "  Player is Dead");
     }
     #endregion
 }

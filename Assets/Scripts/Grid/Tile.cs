@@ -41,8 +41,12 @@ public class Tile
     public void SetTile(ItemBase item)
     {
         this.item = item;
-        if(item != null) type = item.type;
-        grid.OnGridObjectModified(this);
+        if (item != null)
+        {
+            type = item.type;
+            grid.OnGridObjectModified(this);
+        }
+       
     }
     public void SetItem(ItemBase item)
     {

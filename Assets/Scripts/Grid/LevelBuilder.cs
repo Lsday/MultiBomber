@@ -27,7 +27,7 @@ public struct CreateMapMessage : NetworkMessage
     public byte boxPrcent;
 };
 public struct ClearMapMessage : NetworkMessage {};
-public struct RegisterBoxsMessage : NetworkMessage {};
+
 
 #endregion
 
@@ -160,7 +160,7 @@ public class LevelBuilder : NetworkBehaviour
             //Calculate Box Position
             Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
 
-            ItemBase item = GameManager.instance.poolingSystem.GetPoolObject(ItemsType.BOX);
+            ItemBase item = PoolingSystem.instance.GetPoolObject(ItemsType.BOX);
             //item.GetComponent<NetworkTransform>().ServerTeleport(boxTilePosition + offset);
             item.Teleport(boxTilePosition);
 

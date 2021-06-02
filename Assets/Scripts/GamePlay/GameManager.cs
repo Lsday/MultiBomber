@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public LevelBuilder levelBuilder;
-    public PoolingSystem poolingSystem;
+   
 
 
     private void Awake()
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
         NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
 
         levelBuilder = GetComponent<LevelBuilder>();
-        poolingSystem = GetComponent<PoolingSystem>();
+       
        
     }
 

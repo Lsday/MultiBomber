@@ -96,9 +96,9 @@ GameObject:
   - component: {fileID: 5312718094065538987}
   - component: {fileID: 5312718094060114507}
   - component: {fileID: 2432754620879918006}
-  - component: {fileID: 1594241579078418531}
-  - component: {fileID: 5287005607426260072}
   - component: {fileID: -4968927354457138858}
+  - component: {fileID: 5287005607426260072}
+  - component: {fileID: 2557602050653326478}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -155,35 +155,6 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &1594241579078418531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5312718094065896331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cae1f0003e31292489d7919680f601db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  playerIdentity: {fileID: 0}
---- !u!114 &5287005607426260072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5312718094065896331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89104537a8ddb374095192a8af2128ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 3
-  triggerWhenDestroy: 0
 --- !u!114 &-4968927354457138858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +176,37 @@ MonoBehaviour:
   compressRotation: 0
   interpolateScale: 0
   syncScale: 0
+--- !u!114 &5287005607426260072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312718094065896331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89104537a8ddb374095192a8af2128ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 3
+  triggerWhenDestroy: 0
+--- !u!114 &2557602050653326478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312718094065896331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e6480c3bc99c449963520ffa285de9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  activeState: 0
+  type: 64
+  playerIdentity: {fileID: 0}
 --- !u!1 &5312718094065896333
 GameObject:
   m_ObjectHideFlags: 0

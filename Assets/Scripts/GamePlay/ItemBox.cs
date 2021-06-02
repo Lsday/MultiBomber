@@ -2,10 +2,14 @@
 using UnityEngine;
 
 
-public class ItemBox : ItemBase
+public class ItemBox : ItemBase, IKillable
 {
 
+    ScriptableAction bonusAction;
 
-    /// Ajouter des bonus
-
+    public void Kill()
+    {
+        Debug.Log(gameObject.name + " isDead");
+        
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class PhysicalDevice : MonoBehaviour
 {
     protected DeviceEntity device;
     protected PlayerInput playerInput;
+    public static Action OnSpacePressed;
+
     public virtual void Start()
     {
         device = GetComponent<DeviceEntity>();
@@ -30,9 +33,12 @@ public class PhysicalDevice : MonoBehaviour
         return playerInput.actions["Move"].ReadValue<Vector2>();
     }
 
+    
+
     public virtual void OnDropBomb(InputValue value)
     {
-        // call drop bomb function
-        Debug.Log("Drop Bomb");
+        Debug.Log("Space BAr Pressed");
+        OnSpacePressed?.Invoke();
+
     }
 }

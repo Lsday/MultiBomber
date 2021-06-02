@@ -103,7 +103,7 @@ public class PoolableObject : NetworkBehaviour
         }
     }
 
-    public void Enable()
+    public virtual void Enable()
     {
         if (!activeState)
         {
@@ -124,7 +124,7 @@ public class PoolableObject : NetworkBehaviour
         }
     }
 
-    public void Disable()
+    public virtual void Disable()
     {
         if (activeState)
         {

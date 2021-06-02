@@ -7,15 +7,7 @@ using UnityEngine;
 public abstract class ItemBase : PoolableObject
 {
     public ElementType type;
-    Tile parentTile;
-   
-    // TODO : ne plus avoir de référence directe à Levelbuilder ou grid
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        //gameObject.SetActive(false);
-    }
+    public Tile parentTile { get; private set; }
 
     #region UnityCallabsk
 
@@ -31,7 +23,7 @@ public abstract class ItemBase : PoolableObject
     {
         if (isServer)
         {
-          RpcDisableObject();
+            RpcDisableObject();
         }
 
         RemoveFromTile();
@@ -52,7 +44,14 @@ public abstract class ItemBase : PoolableObject
     {
         Enable();
         //gameObject.SetActive(true);
-    } 
+    }
+
+    [ClientRpc]
+    public void RpcPlaceOnTile(Vector3 position)
+    {
+        parentTile = LevelBuilder.grid?.GetGridObject(position);
+        parentTile?.SetTile(this);
+    }
     #endregion
 
     public void PlaceOnTile()
@@ -67,13 +66,6 @@ public abstract class ItemBase : PoolableObject
         parentTile?.SetTile(this);
     }
 
-    [ClientRpc]
-    public void RpcPlaceOnTile(Vector3 position)
-    {
-        parentTile = LevelBuilder.grid?.GetGridObject(position);
-        parentTile?.SetTile(this);
-    }
-
     public void PlaceOnTile(Tile tile)
     {
         parentTile = tile;
@@ -84,6 +76,12 @@ public abstract class ItemBase : PoolableObject
     {
         parentTile?.SetTile(null);
         parentTile = null;
+    }
+    public override void Disable()
+    {
+        parentTile?.ClearTile();
+        base.Disable();
+
     }
 
     public override void Teleport(Vector3 position)

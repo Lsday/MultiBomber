@@ -12,7 +12,9 @@ public class Tile
     public ElementType type { get; private set; }
     public ItemBase item { get; private set; }
 
-    public bool IsDirty => throw new NotImplementedException();
+    public PlayerEntity playerEntity{ get; private set; }
+
+public bool IsDirty => throw new NotImplementedException();
 
     public byte temperature;
     #endregion
@@ -28,6 +30,16 @@ public class Tile
 
     #endregion
 
+    public void SetPlayer(PlayerEntity playerEntity)
+    {
+        this.playerEntity = playerEntity;
+    }
+
+    public void ClearPlayer()
+    {
+        this.playerEntity = null;
+    }
+
     public override string ToString()
     {
         return type.ToString();
@@ -41,8 +53,12 @@ public class Tile
     public void SetTile(ItemBase item)
     {
         this.item = item;
-        if(item != null) type = item.type;
-        grid.OnGridObjectModified(this);
+        if (item != null)
+        {
+            type = item.type;
+            grid.OnGridObjectModified(this);
+        }
+       
     }
     public void SetItem(ItemBase item)
     {

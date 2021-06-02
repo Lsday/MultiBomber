@@ -2,10 +2,16 @@
 using UnityEngine;
 
 
-public class ItemBox : ItemBase
+public class ItemBox : ItemBase, IDestroyable
 {
+    public ScriptableAction DropBehaviour;
 
+    public void Destroy()
+    {
+        Debug.Log(gameObject.name + "  Box Destroyed");
 
-    /// Ajouter des bonus
+        //DropBehaviour.PerformAction(gameObject);
 
+        Disable();
+    }
 }

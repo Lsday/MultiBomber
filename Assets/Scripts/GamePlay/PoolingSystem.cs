@@ -13,14 +13,28 @@ public enum ItemsType
     BONUS
 }
 
+
+
 public class PoolingSystem : NetworkBehaviour
 {
+    public static PoolingSystem instance;
     public Dictionary<ItemsType, List<ItemBase>> pooledObjects = new Dictionary<ItemsType, List<ItemBase>>();
     //public List<ItemBase> pooledObjects  = new List<ItemBase>();
-    public GameObject objectToPool;
-    public int amountToPool;
-    public Transform parentObject;
 
+    #region Box
+    public GameObject boxPrefabToPool;
+    public int boxAmountToPool;
+    #endregion
+
+    #region Bomb
+    public GameObject bombPrefabToPool;
+    public int bombAmountToPool; 
+    #endregion
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -37,10 +51,16 @@ public class PoolingSystem : NetworkBehaviour
         if (isServer)
         {
             ItemBase obj;
-            for (int i = 0; i < amountToPool; i++)
+            for (int i = 0; i < boxAmountToPool; i++)
             {
-                obj = Instantiate(objectToPool).GetComponent<ItemBase>();
+                obj = Instantiate(boxPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOX].Add(obj);
+            }
+
+            for (int i = 0; i < bombAmountToPool; i++)
+            {
+                obj = Instantiate(bombPrefabToPool).GetComponent<ItemBase>();
+                pooledObjects[ItemsType.BOMB].Add(obj);
             }
         }
         
@@ -48,7 +68,7 @@ public class PoolingSystem : NetworkBehaviour
 
     public ItemBase GetPoolObject(ItemsType type)
     {
-        for (int i = 0; i < amountToPool; i++)
+        for (int i = 0; i < boxAmountToPool; i++)
         {
             if (!pooledObjects[type][i].isActive)
             {

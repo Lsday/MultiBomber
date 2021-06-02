@@ -6,48 +6,51 @@ using UnityEngine;
 
 public class BombDropper : NetworkBehaviour
 {
-//    public NetworkIdentity playerIdentity;
-//    public GameObject bombPrefab;
-//    [SyncVar] public byte bombCounter = 1;
-
-
-//    private void Start()
-//    {
-//        playerIdentity = GetComponent<NetworkIdentity>();
-//    }
-//    //private void Update()
-//    //{
-    //    if (isLocalPlayer)
-    //    {
-    //        if (Input.GetKeyDown(KeyCode.Space) && bombCounter > 0)
-    //        {
-    //            CmdDropBomb();
-    //        }
-    //    }
-    //}
-
-    //[Command]
-    //private void CmdDropBomb()
-    //{
-    //    Vector3 spawnpos = transform.position + transform.forward;
-    //    GameObject bomb = Instantiate(bombPrefab, spawnpos, Quaternion.identity);
-
-    //    Bomb bombScript = bomb.GetComponent<Bomb>();
-    //    bombScript.playerIdentity = this.playerIdentity;
-    //    bombScript.Init(playerIdentity);
-
-    //    NetworkServer.Spawn(bomb);
-    //    RemoveBomb(1);
-
-    //}
-
+    public PlayerEntity playerEntity;
+    public GameObject bombPrefab;
    
+    private void Start()
+    {
+        playerEntity = GetComponent<PlayerEntity>();
+        PhysicalDevice.OnSpacePressed += PlaceBomb;
+    }
+
+    public void PlaceBomb()
+    {
+        if (playerEntity.hubIdentity.isLocalPlayer)
+        {
+            if (isServer)
+            {
+                DropBomb();
+            }
+            else
+                CmdDropBomb();
+        }
+    }
+
+    [Command]
+    private void CmdDropBomb()
+    {
+        DropBomb();
+    }
+
+
+    private void DropBomb()
+    {
+        ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
+        int x, y;
+        LevelBuilder.grid.GetXY(transform.position, out x, out y);
+        bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(x, y));
+        bomb.Init();
+    }
+
+
     //void AddBomb(byte count)
     //{
     //    bombCounter += count;
     //}
 
-    
+
     //void RemoveBomb(byte count)
     //{
     //    bombCounter -= count;

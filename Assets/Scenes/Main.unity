@@ -265,9 +265,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  objectToPool: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-  amountToPool: 100
-  parentObject: {fileID: 0}
+  boxPrefabToPool: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
+  boxAmountToPool: 100
+  bombPrefabToPool: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
+  bombAmountToPool: 100
 --- !u!114 &618848645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,7 +282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelBuilder: {fileID: 0}
-  poolingSystem: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,8 @@ public class ItemBomb : ItemBase, IDestroyable
     Timer timer;
     bool alreadyTriggered;
 
+    public int bombPower = 1;
+
 
     public BombBehaviour bombBehaviour;
 
@@ -36,25 +38,31 @@ public class ItemBomb : ItemBase, IDestroyable
         //alreadySetToExplose = false;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         Debug.Log( "Bomb " + netId + " Disabled");
 
         if (timer != null)
-            timer.onTimerEnd -= Triggerbomb;
+            timer.onTimerEnd -= TriggerBomb;
+
+        base.OnDisable();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         Debug.Log("Bomb " + netId + " Enabled");
 
+        base.OnEnable();
+
         timer = GetComponent<Timer>();
         timer.Init();
-        timer.onTimerEnd += Triggerbomb;
+        timer.onTimerEnd += TriggerBomb;
         alreadyTriggered = false;
+
+     
     }
 
-    private void Triggerbomb()
+    private void TriggerBomb()
     {
         Debug.Log("Bomb " + netId + " Trigger");
          alreadyTriggered = true;

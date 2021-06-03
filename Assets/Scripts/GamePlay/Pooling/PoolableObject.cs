@@ -108,7 +108,6 @@ public class PoolableObject : NetworkBehaviour
         if (!activeState)
         {
             name = dbgName + netId +" Enabled";
-            //dbgName = name;
             if (!componentsScanned) ScanComponents();
 
             for (int i = 0; i < components.Length; i++)

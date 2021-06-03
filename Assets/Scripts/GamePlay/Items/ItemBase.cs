@@ -11,7 +11,7 @@ public abstract class ItemBase : PoolableObject
 
     #region UnityCallabsk
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (isServer)
         {
@@ -19,7 +19,7 @@ public abstract class ItemBase : PoolableObject
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if (isServer)
         {

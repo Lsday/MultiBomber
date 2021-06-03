@@ -12,7 +12,7 @@ public class PhysicalDevice : MonoBehaviour
 {
     protected DeviceEntity device;
     protected PlayerInput playerInput;
-    public static Action OnSpacePressed;
+    public Action onDropBombAction;
 
     public virtual void Start()
     {
@@ -38,7 +38,7 @@ public class PhysicalDevice : MonoBehaviour
     public virtual void OnDropBomb(InputValue value)
     {
         Debug.Log("Space BAr Pressed");
-        OnSpacePressed?.Invoke();
+        onDropBombAction?.Invoke();
 
     }
 }

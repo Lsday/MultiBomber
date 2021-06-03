@@ -78,6 +78,15 @@ public class GenericGrid<TGridObject>
     {
         return new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize + originPosition;
     }
+
+    public Vector3 GetGridObjectWorldCenter(Vector3 worldPosition)
+    {
+        int x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
+        int y = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
+
+        return new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize + originPosition;
+    }
+
     public void GetXY(Vector3 worldPosition, out int x, out int y)
     {
 

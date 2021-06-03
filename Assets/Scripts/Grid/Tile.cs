@@ -94,6 +94,7 @@ public enum ElementType : int
     FutureItemSpawn = 1 << 2,
     Item = 1 << 3,
     Fire = 1 << 4,
+
     Block = 1 << 5, // tous les éléments après celui-ci sont identifiés comme bloquants
 
     Bomb = 1 << 6,

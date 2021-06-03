@@ -12,7 +12,29 @@ public class BombDropper : NetworkBehaviour
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
-        PhysicalDevice.OnSpacePressed += PlaceBomb;
+        LinkInputActions();
+    }
+
+    private void OnEnable()
+    {
+        LinkInputActions();
+    }
+
+    void LinkInputActions()
+    {
+        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
+        {
+            playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
+            playerEntity.controllerDevice.inputs.onDropBombAction += PlaceBomb;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
+        {
+            playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
+        }
     }
 
     public void PlaceBomb()
@@ -37,10 +59,15 @@ public class BombDropper : NetworkBehaviour
 
     private void DropBomb()
     {
-        ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
-        int x, y;
-        LevelBuilder.grid.GetXY(transform.position, out x, out y);
-        bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(x, y));
+        Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
+
+        if(tile.type < ElementType.Block)
+        {
+            ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
+
+            bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
+        }
+        
         //bomb.Init();
     }
 

@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "ScriptableAction/BombBehaviour", fileName = "BombBehaviour")]
+[CreateAssetMenu(menuName = "ScriptableAction/Bomb Behaviour", fileName = "BombBehaviour")]
 public class BombBehaviour : ScriptableAction<ItemBase>
 {
     [SerializeField, TextArea(5, 10)]
     protected string description;
-
-    public GameObject flameParticles;
 
     public override void PerformAction(ItemBase obj)
     {
@@ -20,16 +18,14 @@ public class BombBehaviour : ScriptableAction<ItemBase>
         {
             Tile tile = LevelBuilder.grid.GetGridObject(bomb.parentTile.x + directions[i].x , bomb.parentTile.y + directions[i].z );
 
-            if (tile.type < ElementType.Block)
+            if (tile.type < ElementType.Block || tile.item is IDestroyable)
             {
+                // this direction is free
                 direction |= (Direction)Mathf.Pow(2, i);
             }
-
         }
 
         bomb.explosionDirection = direction;
-
-
 
     }
 }

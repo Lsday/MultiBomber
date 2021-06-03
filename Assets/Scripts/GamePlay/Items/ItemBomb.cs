@@ -26,7 +26,7 @@ public class ItemBomb : ItemBase, IDestroyable
 
 
     public BombBehaviour bombBehaviour;
-    public DropBehaviour dropBehaviour;
+    public BombDropBehaviour dropBehaviour;
 
     public Direction explosionDirection;
 
@@ -49,6 +49,9 @@ public class ItemBomb : ItemBase, IDestroyable
         if (timer != null)
             timer.onTimerEnd -= TriggerBomb;
 
+        explosionDirection = Direction.None;
+        alreadyTriggered = false;
+
         base.OnDisable();
     }
 
@@ -58,18 +61,17 @@ public class ItemBomb : ItemBase, IDestroyable
 
         base.OnEnable();
 
-        timer = GetComponent<Timer>();
+        if(timer == null) timer = GetComponent<Timer>();
+
         timer.Init();
         timer.onTimerEnd += TriggerBomb;
-        alreadyTriggered = false;
 
-     
+        alreadyTriggered = false;
     }
 
     private void TriggerBomb()
     {
-        //Debug.Log("Bomb " + netId + " Trigger");
-         alreadyTriggered = true;
+        alreadyTriggered = true;
 
         if (isServer)
         {
@@ -79,7 +81,6 @@ public class ItemBomb : ItemBase, IDestroyable
 
     private void BombExplosion()
     {
-       // Debug.Log("Bomb " + netId + " Explode");
 
         bombBehaviour.PerformAction(this);
         dropBehaviour.PerformAction(this);
@@ -87,15 +88,12 @@ public class ItemBomb : ItemBase, IDestroyable
         Disable();
     }
 
-    public void Destroy()
+    public void Destroy(float delay = 0f)
     {
         if (alreadyTriggered) return;
         alreadyTriggered = true;
 
-        //Triggerbomb();
-       
-        timer.DelayedStart(0.1f);
-
+        timer.DelayedStart(delay);
     }
 
    

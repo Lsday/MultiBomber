@@ -13,8 +13,15 @@ public class Timer : MonoBehaviour
 
     public void DelayedStart(float duration)
     {
-        StopAllCoroutines();
-        StartCoroutine(StartTimer(duration));
+        if (Mathf.Approximately(duration, 0))
+        {
+            EndTimerEarly();
+        }
+        else
+        {
+            StopAllCoroutines();
+            StartCoroutine(StartTimer(duration));
+        }
     } 
 
     private  IEnumerator StartTimer(float duration)
@@ -22,8 +29,6 @@ public class Timer : MonoBehaviour
         yield return new WaitForSeconds(duration);
         onTimerEnd?.Invoke();
     }
-
-   
 
     public void EndTimerEarly()
     {

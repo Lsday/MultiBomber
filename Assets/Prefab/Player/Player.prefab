@@ -127,9 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  playerIdentity: {fileID: 0}
+  playerEntity: {fileID: 0}
   bombPrefab: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
-  bombCounter: 1
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

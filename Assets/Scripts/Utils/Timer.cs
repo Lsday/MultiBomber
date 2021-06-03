@@ -17,13 +17,19 @@ public class Timer : MonoBehaviour
         onTimerEnd?.Invoke();
     }
 
+    public IEnumerator StartTimerWithGivenTime(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        onTimerEnd?.Invoke();
+    }
+
     public void EndTimerEarly()
     {
         StopAllCoroutines();
         onTimerEnd?.Invoke();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (triggerWhenDestroy)
             onTimerEnd?.Invoke();

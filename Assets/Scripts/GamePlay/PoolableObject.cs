@@ -18,7 +18,7 @@ public class PoolableObject : NetworkBehaviour
     [SyncVar] public bool activeState;
 
     bool componentsScanned;
-    string dbgName = "";
+    public string dbgName = "";
 
     public bool isActive
     {
@@ -107,7 +107,8 @@ public class PoolableObject : NetworkBehaviour
     {
         if (!activeState)
         {
-            name = dbgName+" Enabled";
+            name = dbgName + netId +" Enabled";
+            //dbgName = name;
             if (!componentsScanned) ScanComponents();
 
             for (int i = 0; i < components.Length; i++)

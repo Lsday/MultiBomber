@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BasicBomb
   m_EditorClassIdentifier: 
   description: 
-  bombRadius: 0
+  bombRadius: 1

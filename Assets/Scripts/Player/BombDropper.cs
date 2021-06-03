@@ -41,7 +41,7 @@ public class BombDropper : NetworkBehaviour
         int x, y;
         LevelBuilder.grid.GetXY(transform.position, out x, out y);
         bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(x, y));
-        bomb.Init();
+        //bomb.Init();
     }
 
 

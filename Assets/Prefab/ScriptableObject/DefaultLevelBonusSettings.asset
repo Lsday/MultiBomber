@@ -15,28 +15,28 @@ MonoBehaviour:
   _bonusSettings:
   - name: Bomb
     exactCount: 0
-    proportion: 0.255
-    playersProportion: 2.38
+    proportion: 0.648
+    playersProportion: 0
   - name: Fire
     exactCount: 0
-    proportion: 0.341
-    playersProportion: 5
+    proportion: 0.698
+    playersProportion: 0
   - name: Kick
     exactCount: 0
-    proportion: 0
+    proportion: 0.477
     playersProportion: 0
   - name: Roller
     exactCount: 0
-    proportion: 0
+    proportion: 0.452
     playersProportion: 0
   - name: PowerBomb
     exactCount: 0
-    proportion: 0
+    proportion: 0.468
     playersProportion: 0
   - name: Golden Flame
     exactCount: 0
     proportion: 0
     playersProportion: 0
-  boxesCount: 339
+  boxesCount: 100
   playersCount: 3
   bonusPercentage: 1

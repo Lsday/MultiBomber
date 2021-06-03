@@ -8,7 +8,7 @@ public class ItemBox : ItemBase, IDestroyable
 
     public void Destroy()
     {
-        Debug.Log(gameObject.name + "  Box Destroyed");
+        Debug.Log(gameObject.name + "Box Destroyed");
 
         //DropBehaviour.PerformAction(gameObject);
 

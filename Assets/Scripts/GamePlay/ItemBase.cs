@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class ItemBase : PoolableObject
 {
     public ElementType type;
-    public Tile parentTile { get; private set; }
+    public Tile parentTile { get; protected set; }
 
     #region UnityCallabsk
 

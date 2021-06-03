@@ -188,7 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89104537a8ddb374095192a8af2128ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 3
+  duration: 5
   triggerWhenDestroy: 0
 --- !u!114 &2557602050653326478
 MonoBehaviour:
@@ -205,6 +205,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   activeState: 0
+  dbgName: 
   type: 64
   playerIdentity: {fileID: 0}
   bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}

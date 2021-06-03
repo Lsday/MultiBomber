@@ -9,19 +9,21 @@ public class Timer : MonoBehaviour
     [SerializeField] float duration;
     [SerializeField] bool triggerWhenDestroy;
 
-    public void Init() => StartCoroutine(StartTimer());
+    public void Init() => StartCoroutine(StartTimer(duration));
 
-    private  IEnumerator StartTimer()
+    public void DelayedStart(float duration)
+    {
+        StopAllCoroutines();
+        StartCoroutine(StartTimer(duration));
+    } 
+
+    private  IEnumerator StartTimer(float duration)
     {
         yield return new WaitForSeconds(duration);
         onTimerEnd?.Invoke();
     }
 
-    public IEnumerator StartTimerWithGivenTime(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        onTimerEnd?.Invoke();
-    }
+   
 
     public void EndTimerEarly()
     {

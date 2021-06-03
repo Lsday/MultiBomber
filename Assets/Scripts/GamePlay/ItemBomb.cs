@@ -67,10 +67,8 @@ public class ItemBomb : ItemBase, IDestroyable
 
     private void BombExplosion()
     {
-        //if (alreadySetToExplose) return;
-        //alreadySetToExplose = true;
-
         Debug.Log("Bomb " + netId + " Explode");
+
         bombBehaviour.PerformAction(gameObject);
 
         Disable();
@@ -81,8 +79,9 @@ public class ItemBomb : ItemBase, IDestroyable
         if (alreadyTriggered) return;
         alreadyTriggered = true;
 
-        Triggerbomb();
-        timer.StartTimerWithGivenTime(0.1f);
+        //Triggerbomb();
+       
+        timer.DelayedStart(0.1f);
 
     }
 

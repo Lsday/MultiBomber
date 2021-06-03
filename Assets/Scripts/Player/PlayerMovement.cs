@@ -19,6 +19,7 @@ public class PlayerMovement : NetworkBehaviour
     private int currentTileY;
 
     private Vector3 currentTileCenter;
+    private Vector3 currentOffsetFromCenter;
     private Vector3 movementClampLow;
     private Vector3 movementClampHigh;
     private Vector3 lastPosition;
@@ -28,6 +29,11 @@ public class PlayerMovement : NetworkBehaviour
     #endregion
 
     GenericGrid<Tile> grid;
+
+    bool overlapBomb = false;
+    Vector3 overlapBombPosition = Vector3.zero;
+    Vector2Int overlapBombCoordinates = Vector2Int.zero;
+    float overlapBombDistance;
 
     private void Start()
     {
@@ -93,7 +99,9 @@ public class PlayerMovement : NetworkBehaviour
     private void Move(float h, float v)
     {
         UpdateTileCoordinates();
+        ComputeBombOverlap();
         ComputeMovementLimits();
+        
 
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
@@ -136,8 +144,11 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
         
-        transform.forward = new Vector3(signX,0,signZ).normalized;
-        
+        if(signX !=0 || signZ != 0)
+        {
+            transform.forward = new Vector3(signX, 0, signZ).normalized;
+        }
+
         ////
         ///
 
@@ -179,7 +190,8 @@ public class PlayerMovement : NetworkBehaviour
 
         if(currentTileX != tilex || currentTileY != tiley)
         {
-            if(majorTile != null && majorTile.type == ElementType.Player)
+            // TODO : récupérer le code de l'ancien projet pour définir majorTile
+            if (majorTile != null && majorTile.type == ElementType.Player)
             {
                 majorTile.SetType(ElementType.Empty);
                 majorTile.ClearPlayer();
@@ -188,7 +200,6 @@ public class PlayerMovement : NetworkBehaviour
             Vector3 worldPosition = transform.position;
             majorTile = grid.GetGridObject(worldPosition);
 
-            
             if (majorTile != null)
             {
                 currentTileX = majorTile.x;
@@ -197,8 +208,12 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     majorTile.SetType(ElementType.Player);
                     majorTile.SetPlayer(playerEntity);
+
                 }
+
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
+                currentOffsetFromCenter = worldPosition - currentTileCenter;
+
             }
 
         }
@@ -221,6 +236,59 @@ public class PlayerMovement : NetworkBehaviour
 
         movementClampLow = currentTileCenter + minOffset;
         movementClampHigh = currentTileCenter + maxOffset;
+
+        if (overlapBomb)
+        {
+            Vector3 offset = overlapBombPosition - transform.position;
+
+            // if the distance between the bomb and the player is below 0.5, the player can continue to move over the bomb
+            // else the player is stuck at its current position
+            if (leftWall && overlapBombCoordinates.x == currentTileX - 1)
+            {
+                movementClampLow.x = offset.x > -0.5f ? overlapBombPosition.x : transform.position.x;
+            }
+
+            if (rightWall && overlapBombCoordinates.x == currentTileX + 1)
+            {
+                movementClampHigh.x = offset.x < 0.5f ? overlapBombPosition.x : transform.position.x;
+            }
+
+            if (downWall && overlapBombCoordinates.y == currentTileY - 1)
+            {
+                movementClampLow.z = offset.z > -0.5f ? overlapBombPosition.z : transform.position.z;
+            }
+
+            if (upWall && overlapBombCoordinates.y == currentTileY + 1)
+            {
+                movementClampHigh.z = offset.z < 0.5f ? overlapBombPosition.z : transform.position.z;
+            }
+        }
+
+    }
+
+    private void ComputeBombOverlap()
+    {
+
+
+        if (majorTile.type == ElementType.Bomb)
+        {
+            overlapBombPosition = currentTileCenter;
+            overlapBombCoordinates.x = currentTileX;
+            overlapBombCoordinates.y = currentTileY;
+            overlapBomb = true;
+        }
+
+        if (overlapBomb)
+        {
+            overlapBombDistance = Vector3.Distance(overlapBombPosition, transform.position);
+
+            if(overlapBombDistance >= 1f)
+            {
+                overlapBomb = false;
+            }
+        }
+
+
     }
 
     //TODO : remove debug

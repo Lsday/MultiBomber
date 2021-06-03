@@ -82,8 +82,8 @@ public class ItemBomb : ItemBase, IDestroyable
     private void BombExplosion()
     {
 
-        bombBehaviour.PerformAction(this);
-        dropBehaviour.PerformAction(this);
+        bombBehaviour.PerformAction(this); // Calcul des directions que peuvent emprunter les flammes et stocke l'information dans this
+        dropBehaviour.PerformAction(this); // Spawn les flammes
 
         Disable();
     }

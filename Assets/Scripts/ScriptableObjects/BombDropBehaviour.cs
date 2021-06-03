@@ -9,7 +9,7 @@ public class BombDropBehaviour : DropBehaviour<ItemBase>
     {
         ItemBomb bomb = obj as ItemBomb;
         
-        if (bomb.explosionDirection == Direction.None)
+        if (bomb.explosionDirection == Direction.None) // instancie des flammes sur une seule case
         {
             SpawnFlames(bomb.transform.position - dropPositionOffset, Vector3.up, 1);
             return;
@@ -17,7 +17,7 @@ public class BombDropBehaviour : DropBehaviour<ItemBase>
 
         Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
 
-        for (int i = 0; i < directions.Length; i++)
+        for (int i = 0; i < directions.Length; i++) // instancie des flammes sur les directions données
         {
 
             if ((bomb.explosionDirection & (Direction)Mathf.Pow(2, i)) > 0)
@@ -27,13 +27,13 @@ public class BombDropBehaviour : DropBehaviour<ItemBase>
         }
     }
 
+
+
     void SpawnFlames(Vector3 position , Vector3 direction , float power)
     {
         ItemFlames flames = PoolingSystem.instance.GetPoolObject(ItemsType.FLAMES) as ItemFlames; // TODO : revoir le pooling system pour prendre des prefab en entrée
 
-        flames.SetTransformData(position + dropPositionOffset, direction);
-        flames.SetPower(power);
-        flames.SetSparks(false);
+        flames.InitServer(position + dropPositionOffset, direction,power);
 
         flames.Teleport(position + dropPositionOffset);
     }

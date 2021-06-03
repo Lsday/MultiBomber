@@ -9,10 +9,10 @@ using Mirror;
 public class ItemFlames : ItemBase
 {
 
-    [SyncVar] public Vector3 direction;
+    public Vector3 direction;
 
-    [SyncVar] private float startPower = 1f;
-    [SyncVar] private float endPower = 1f;
+    private float startPower = 1f;
+    private float endPower = 1f;
     private float currentPower = 1f;
 
     // remplissage de la tile en bout d'explosition
@@ -42,16 +42,16 @@ public class ItemFlames : ItemBase
 
 
     private float age = 0f;
-    [SyncVar] private Vector3 sourcePosition;
+     private Vector3 sourcePosition;
 
     // durée supplémentaire de visibilité (golden ou power bomb)
-    [SyncVar] private float extraDuration = 0f;
+    private float extraDuration = 0f;
 
     //dernière valeur utilisée pour remplir la heatmap
     int prevPower = 0;
 
-    [SyncVar] private float lifeTime = 0f;
-    [SyncVar] private float expandTime = 0f;
+     private float lifeTime = 0f;
+     private float expandTime = 0f;
 
     public ParticleSystem _particles;
 
@@ -188,7 +188,7 @@ public class ItemFlames : ItemBase
 
             if (tile.item is IDestroyable)
             {
-                Debug.Log("auto Boom "+ tile.item.name);
+                //Debug.Log("auto Boom "+ tile.item.name);
                 ((IDestroyable)tile.item).Destroy(0.05f);
             }
 
@@ -199,13 +199,7 @@ public class ItemFlames : ItemBase
         prevPower = pow;
     }
 
-    public void SetTransformData(Vector3 position, Vector3 direction)
-    {
-        sourcePosition = position;
-        //transform.localPosition = sourcePosition;
-
-        this.direction = direction;
-    }
+    
 
     void UpdateLength()
     {
@@ -236,12 +230,23 @@ public class ItemFlames : ItemBase
     }
 
     //TODO : il faudrait que ça soit exécuté côté client
-    public void SetPower(float maxPower, float extraTime = 0f)
+    public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
+        Init(position, direction, maxPower, extraTime);
+        RpcInit(position, direction, maxPower, extraTime);
+    }
+
+    private void Init(Vector3 startPosition, Vector3 direction, float maxPower, float extraTime)
+    {
+        
+        sourcePosition = startPosition;
+
+        this.direction = direction;
+
         float globalInstantPowerValue = 1f; // TODO : rendre ce paramètre global dépendant des réglages de la map, ou bien s'en débarrasser
 
         float limitPower = ComputeLimit(maxPower);
-        
+
         startPower = Mathf.Min(Mathf.Max(instantFire, globalInstantPowerValue), limitPower);
         currentPower = 0f;
         age = 0f;
@@ -261,6 +266,14 @@ public class ItemFlames : ItemBase
         main.startSize = 1f + maxPower * 0.05f;
 
         _particles.Play();
+
+       
+    }
+
+    [ClientRpc]
+    private void RpcInit(Vector3 position, Vector3 direction, float maxPower, float extraTime)
+    {
+        Init(position, direction, maxPower, extraTime);
     }
 
     //TODO : voir avec le prefab dans l'autre projet pour chopper le setup correct du callback
@@ -292,7 +305,7 @@ public class ItemFlames : ItemBase
         }
         else
         {
-            Invoke("Disable", removeDelay);
+            Invoke("Disable", removeDelay); 
         }
 
     }

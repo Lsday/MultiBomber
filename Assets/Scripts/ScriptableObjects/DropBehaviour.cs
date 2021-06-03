@@ -1,37 +1,31 @@
 ﻿using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "ScriptableAction/LootAction", fileName = "LootAction")]
-public class DropBehaviour : ScriptableAction
+[CreateAssetMenu(menuName = "ScriptableAction/DropBehaviour", fileName = "DropBehaviour")]
+public class DropBehaviour : ScriptableAction<ItemBase>
 {
     [SerializeField, TextArea(5, 10)]
     protected string description;
 
-    [SerializeField]
-    protected GameObject[] loots;
+    GameObject DropObject;
 
-    public int lootAmount;
-    public bool randomLoot;
-    public float autoDestroyTimer = 20f;
-
-    public override void PerformAction(GameObject obj)
+    public override void PerformAction(ItemBase obj)
     {
-        if (randomLoot)
-        {
-            int randomItemNumber = Random.Range(0, loots.Length);
-            for (int i = 0; i < lootAmount; i++)
-            {
-                GameObject go = Instantiate(loots[randomItemNumber], obj.transform.position, Quaternion.identity);
-                Destroy(go, autoDestroyTimer);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < loots.Length; i++)
-            {
-                Instantiate(loots[i], obj.transform.position, Quaternion.identity);
-            }
-        }
+        ItemBomb bomb = obj as ItemBomb;
 
+        Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
+
+        for (int i = 0; i < directions.Length; i++)
+        {
+
+            if ((bomb.explosionDirection & (Direction)Mathf.Pow(2, i)) > 0)
+            {
+                Flames flames = PoolingSystem.instance.GetPoolObject(ItemsType.FLAMES) as Flames;
+                flames.transform.position = bomb.transform.position;
+                flames.flamesPower = bomb.bombPower;
+                flames.direction = directions[i];
+                flames.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(bomb.parentTile.x, bomb.parentTile.y));
+            }
+        }
     }
 }

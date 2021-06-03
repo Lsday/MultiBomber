@@ -208,8 +208,10 @@ MonoBehaviour:
   dbgName: 
   type: 64
   playerIdentity: {fileID: 0}
-  bombPower: 1
+  bombPower: 2
   bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}
+  dropBehaviour: {fileID: 11400000, guid: 3e9f21ecd0bc24445b563f107a59a882, type: 2}
+  explosionDirection: 0
 --- !u!1 &5312718094065896333
 GameObject:
   m_ObjectHideFlags: 0

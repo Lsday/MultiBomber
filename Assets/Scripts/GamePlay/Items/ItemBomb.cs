@@ -26,6 +26,10 @@ public class ItemBomb : ItemBase, IDestroyable
 
 
     public BombBehaviour bombBehaviour;
+    public DropBehaviour dropBehaviour;
+
+    public Direction explosionDirection;
+
 
     public void Init()
     {
@@ -50,7 +54,7 @@ public class ItemBomb : ItemBase, IDestroyable
 
     protected override void OnEnable()
     {
-        Debug.Log("Bomb " + netId + " Enabled");
+        //Debug.Log("Bomb " + netId + " Enabled");
 
         base.OnEnable();
 
@@ -64,7 +68,7 @@ public class ItemBomb : ItemBase, IDestroyable
 
     private void TriggerBomb()
     {
-        Debug.Log("Bomb " + netId + " Trigger");
+        //Debug.Log("Bomb " + netId + " Trigger");
          alreadyTriggered = true;
 
         if (isServer)
@@ -75,9 +79,10 @@ public class ItemBomb : ItemBase, IDestroyable
 
     private void BombExplosion()
     {
-        Debug.Log("Bomb " + netId + " Explode");
+       // Debug.Log("Bomb " + netId + " Explode");
 
-        bombBehaviour.PerformAction(gameObject);
+        bombBehaviour.PerformAction(this);
+        dropBehaviour.PerformAction(this);
 
         Disable();
     }

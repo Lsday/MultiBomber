@@ -10,7 +10,8 @@ public enum ItemsType
 {
     BOX,
     BOMB,
-    BONUS
+    BONUS,
+    FLAMES
 }
 
 
@@ -28,7 +29,12 @@ public class PoolingSystem : NetworkBehaviour
 
     #region Bomb
     public GameObject bombPrefabToPool;
-    public int bombAmountToPool; 
+    public int bombAmountToPool;
+    #endregion
+
+    #region Flames
+    public GameObject flamesPrefabToPool;
+    public int flamesAmountToPool;
     #endregion
 
     private void Awake()
@@ -47,6 +53,7 @@ public class PoolingSystem : NetworkBehaviour
         pooledObjects.Add(ItemsType.BOX, new List<ItemBase>());
         pooledObjects.Add(ItemsType.BOMB, new List<ItemBase>());
         pooledObjects.Add(ItemsType.BONUS, new List<ItemBase>());
+        pooledObjects.Add(ItemsType.FLAMES, new List<ItemBase>());
 
         if (isServer)
         {
@@ -61,6 +68,12 @@ public class PoolingSystem : NetworkBehaviour
             {
                 obj = Instantiate(bombPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOMB].Add(obj);
+            }
+
+            for (int i = 0; i < flamesAmountToPool; i++)
+            {
+                obj = Instantiate(flamesPrefabToPool).GetComponent<ItemBase>();
+                pooledObjects[ItemsType.FLAMES].Add(obj);
             }
         }
         

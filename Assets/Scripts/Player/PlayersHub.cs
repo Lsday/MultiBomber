@@ -74,9 +74,6 @@ public class PlayersHub : NetworkBehaviour
         // Get the Player Entity of this instance
         PlayerEntity playerEntity = playerGameObject.GetComponent<PlayerEntity>();
         
-        // parent it to the hub for a better clarity in the hierarchy
-        playerEntity.transform.parent = transform;
-
         // 
         playerEntity.SetHubIdentity(identity);
         playerEntity.SetLocalPlayerIndex(localPlayerIndex);

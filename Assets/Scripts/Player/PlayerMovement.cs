@@ -29,12 +29,12 @@ public class PlayerMovement : NetworkBehaviour
     #endregion
 
     GenericGrid<Tile> grid;
-
+    /*
     bool overlapBomb = false;
     Vector3 overlapBombPosition = Vector3.zero;
     Vector2Int overlapBombCoordinates = Vector2Int.zero;
     float overlapBombDistance;
-
+    */
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -99,7 +99,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Move(float h, float v)
     {
         UpdateTileCoordinates();
-        ComputeBombOverlap();
+        //ComputeBombOverlap();
         ComputeMovementLimits();
         
 
@@ -210,12 +210,9 @@ public class PlayerMovement : NetworkBehaviour
                     majorTile.SetPlayer(playerEntity);
 
                 }
-
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
                 currentOffsetFromCenter = worldPosition - currentTileCenter;
-
             }
-
         }
     }
 
@@ -237,6 +234,12 @@ public class PlayerMovement : NetworkBehaviour
         movementClampLow = currentTileCenter + minOffset;
         movementClampHigh = currentTileCenter + maxOffset;
 
+        movementClampLow.x = Mathf.Min(movementClampLow.x, transform.position.x);
+        movementClampLow.z = Mathf.Min(movementClampLow.z, transform.position.z);
+
+        movementClampHigh.x = Mathf.Max(movementClampHigh.x, transform.position.x);
+        movementClampHigh.z = Mathf.Max(movementClampHigh.z, transform.position.z);
+        /*
         if (overlapBomb)
         {
             Vector3 offset = overlapBombPosition - transform.position;
@@ -263,12 +266,12 @@ public class PlayerMovement : NetworkBehaviour
                 movementClampHigh.z = offset.z < 0.5f ? overlapBombPosition.z : transform.position.z;
             }
         }
-
+        */
     }
-
+    /*
     private void ComputeBombOverlap()
     {
-
+        return;
 
         if (majorTile.type == ElementType.Bomb)
         {
@@ -290,7 +293,7 @@ public class PlayerMovement : NetworkBehaviour
 
 
     }
-
+    */
     //TODO : remove debug
     Vector3 debugPivot;
     Vector3 debugDir;

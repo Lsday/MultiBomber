@@ -44,7 +44,7 @@ public class ItemBomb : ItemBase, IDestroyable
 
     protected override void OnDisable()
     {
-        Debug.Log( "Bomb " + netId + " Disabled");
+        //Debug.Log( "Bomb " + netId + " Disabled");
 
         if (timer != null)
             timer.onTimerEnd -= TriggerBomb;

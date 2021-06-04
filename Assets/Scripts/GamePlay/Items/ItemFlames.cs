@@ -8,7 +8,6 @@ using Mirror;
 
 public class ItemFlames : ItemBase
 {
-
     public Vector3 direction;
 
     private float startPower = 1f;
@@ -59,6 +58,8 @@ public class ItemFlames : ItemBase
 
     private float removeDelay = 0f;
 
+    bool initialized = false;
+
     public override void Awake()
     {
         base.Awake();
@@ -80,6 +81,7 @@ public class ItemFlames : ItemBase
         extraDuration = 0;
         removeDelay = 0;
         heatRemoved = false;
+        initialized = false;
 
         if (_particles != null)
         {
@@ -92,8 +94,8 @@ public class ItemFlames : ItemBase
 
     private void Update()
     {
+        if (!initialized) return;
 
-        age += Time.deltaTime;
 
         // suppression de la chaleur un peu avant la fin de a visibilité de l'explosion
         if (age >= lifeTime - fadeoutDuration)
@@ -104,12 +106,12 @@ public class ItemFlames : ItemBase
 
         if (age >= lifeTime)
         {
-            //Remove();
             Disable();
         }
-        else
+        else if(age > 0)
         {
-
+            // only if age > 0 : to get the right particles trail, the first update must be skipped to give time to the transform to be registered at the right start position.
+            
             if (age <= expandTime)
             {
                 ParticleSystem.MainModule main = _particles.main;
@@ -120,7 +122,9 @@ public class ItemFlames : ItemBase
                 if (currentPower < endPower)
                 {
                     currentPower = Mathf.Lerp(startPower, endPower, age / expandTime);
-                    UpdateLength();
+
+                    transform.position = sourcePosition + direction * currentPower;
+
                     if (!heatRemoved)
                     {
                         UpdateHeat();
@@ -133,6 +137,7 @@ public class ItemFlames : ItemBase
             }
         }
 
+        age += Time.deltaTime;
     }
 
     private void OnDrawGizmos()
@@ -201,10 +206,6 @@ public class ItemFlames : ItemBase
 
     
 
-    void UpdateLength()
-    {
-        transform.localPosition = sourcePosition + direction * currentPower;
-    }
 
     private float ComputeLimit(float maxPower)
     {
@@ -232,13 +233,23 @@ public class ItemFlames : ItemBase
     //TODO : il faudrait que ça soit exécuté côté client
     public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
-        Init(position, direction, maxPower, extraTime);
-        RpcInit(position, direction, maxPower, extraTime);
+        Teleport(position);
+
+        if (isServer)
+        {
+            RpcInit(position, direction, maxPower, extraTime);
+        }
+        else
+        {
+            Init(position, direction, maxPower, extraTime);
+        }
     }
 
     private void Init(Vector3 startPosition, Vector3 direction, float maxPower, float extraTime)
     {
-        
+
+        transform.position = startPosition;
+
         sourcePosition = startPosition;
 
         this.direction = direction;
@@ -267,7 +278,7 @@ public class ItemFlames : ItemBase
 
         _particles.Play();
 
-       
+        initialized = true;
     }
 
     [ClientRpc]

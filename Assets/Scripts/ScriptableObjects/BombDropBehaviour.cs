@@ -33,8 +33,7 @@ public class BombDropBehaviour : DropBehaviour<ItemBase>
     {
         ItemFlames flames = PoolingSystem.instance.GetPoolObject(ItemsType.FLAMES) as ItemFlames; // TODO : revoir le pooling system pour prendre des prefab en entrée
 
-        flames.InitServer(position + dropPositionOffset, direction,power);
+        flames.InitServer(position, direction,power);
 
-        flames.Teleport(position + dropPositionOffset);
     }
 }

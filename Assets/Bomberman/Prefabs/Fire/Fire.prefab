@@ -92,7 +92,6 @@ MonoBehaviour:
   dbgName: 
   type: 0
   direction: {x: 0, y: 0, z: 0}
-  flamesPower: 0
   cellFilling: 0.4
   instantFire: 4
   duration: 1
@@ -4959,7 +4958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4993620906090934
 Transform:
   m_ObjectHideFlags: 0

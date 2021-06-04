@@ -37,8 +37,6 @@ public class PhysicalDevice : MonoBehaviour
 
     public virtual void OnDropBomb(InputValue value)
     {
-        Debug.Log("Space BAr Pressed");
         onDropBombAction?.Invoke();
-
     }
 }

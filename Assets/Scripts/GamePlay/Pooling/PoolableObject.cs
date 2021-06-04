@@ -45,7 +45,7 @@ public class PoolableObject : NetworkBehaviour
         networkTransform = GetComponent<NetworkTransform>();
         activeState = true;
         ScanComponents();
-        Disable();
+        
 
         // Spawn only from server :
         // if this is the server/host
@@ -59,6 +59,9 @@ public class PoolableObject : NetworkBehaviour
         {
             NetworkServer.Spawn(gameObject);
         }
+
+        // Disable AFTER NetworkServer.Spawn, to be sure ot disable the NetworkTransform component
+        Disable();
     }
 
     private void ScanComponents()
@@ -84,6 +87,10 @@ public class PoolableObject : NetworkBehaviour
         if (isActive)
         {
             Enable();
+        }
+        else
+        {
+            Disable();
         }
 
     }

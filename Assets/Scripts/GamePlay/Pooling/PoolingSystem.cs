@@ -62,18 +62,21 @@ public class PoolingSystem : NetworkBehaviour
             {
                 obj = Instantiate(boxPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOX].Add(obj);
+
             }
 
             for (int i = 0; i < bombAmountToPool; i++)
             {
                 obj = Instantiate(bombPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOMB].Add(obj);
+
             }
 
             for (int i = 0; i < flamesAmountToPool; i++)
             {
                 obj = Instantiate(flamesPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.FLAMES].Add(obj);
+
             }
         }
         

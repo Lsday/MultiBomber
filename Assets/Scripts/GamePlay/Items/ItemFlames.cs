@@ -139,7 +139,8 @@ public class ItemFlames : ItemBase
 
         age += Time.deltaTime;
     }
-
+    /*
+     * 
     private void OnDrawGizmos()
     {
         if(currentPower > 0)
@@ -153,7 +154,7 @@ public class ItemFlames : ItemBase
         }
         
     }
-
+    */
     private void RemoveHeat()
     {
         if (heatRemoved) return;
@@ -214,7 +215,7 @@ public class ItemFlames : ItemBase
         for (int i = 1; i <= maxPower; i++)
         {
             Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction*i);
-
+            
             if (tile.type >= ElementType.Block)
             {
                 // Allow destruction of nearby objects
@@ -230,7 +231,7 @@ public class ItemFlames : ItemBase
         return limitPower;
     }
 
-    //TODO : il faudrait que ça soit exécuté côté client
+    //TODO : voir s'il y a moyen de ne plus utiliser d'objets synchronisés sur le réseau pour les flammes
     public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
         Teleport(position);

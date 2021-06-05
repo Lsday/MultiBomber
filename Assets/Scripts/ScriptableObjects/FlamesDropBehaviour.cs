@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "ScriptableAction/Bomb DropBehaviour", fileName = "BombDropBehaviour")]
-public class BombDropBehaviour : DropBehaviour<ItemBase>
+[CreateAssetMenu(menuName = "ScriptableAction/Fire DropBehaviour", fileName = "FlamesDropBehaviour")]
+public class FlamesDropBehaviour : DropBehaviour<ItemBase>
 {
 
     public override void PerformAction(ItemBase obj)

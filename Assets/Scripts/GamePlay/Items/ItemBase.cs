@@ -75,16 +75,20 @@ public abstract class ItemBase : PoolableObject
         parentTile?.SetTile(this);
     }
 
+    // remove the item from its tile only if it is still registered in it
     public void RemoveFromTile()
     {
-        parentTile?.SetTile(null);
+        if(parentTile != null && parentTile.item == this)
+        {
+            parentTile.SetTile(null);
+        }
         parentTile = null;
     }
+
     public override void Disable()
     {
-        parentTile?.ClearTile();
+        RemoveFromTile();
         base.Disable();
-
     }
 
     [Server]

@@ -26,7 +26,7 @@ public class ItemBomb : ItemBase, IDestroyable
 
 
     public BombBehaviour bombBehaviour;
-    public BombDropBehaviour dropBehaviour;
+    public FlamesDropBehaviour dropBehaviour;
 
     public Direction explosionDirection;
 
@@ -88,15 +88,21 @@ public class ItemBomb : ItemBase, IDestroyable
         Disable();
     }
 
-    public void Destroy(float delay = 0f)
+    public void Destroy()
+    {
+        if (alreadyTriggered) return;
+        alreadyTriggered = true;
+
+        timer.EndTimerEarly();
+    }
+
+    public void InitDestroy(float delay = 0f, float fireEndDelay = 0f)
     {
         if (alreadyTriggered) return;
         alreadyTriggered = true;
 
         timer.DelayedStart(delay);
     }
-
-   
 }
    
 

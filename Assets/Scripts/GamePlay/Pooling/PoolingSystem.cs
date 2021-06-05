@@ -20,7 +20,8 @@ public class PoolingSystem : NetworkBehaviour
 {
     public static PoolingSystem instance;
     public Dictionary<ItemsType, List<ItemBase>> pooledObjects = new Dictionary<ItemsType, List<ItemBase>>();
-    //public List<ItemBase> pooledObjects  = new List<ItemBase>();
+ 
+    // TODO : faire un système qui identifie les objets par leur ID interne
 
     #region Box
     public GameObject boxPrefabToPool;
@@ -92,7 +93,9 @@ public class PoolingSystem : NetworkBehaviour
 
     public ItemBase GetPoolObject(ItemsType type)
     {
-        for (int i = 0; i < boxAmountToPool; i++) // TODO boxAmountToPool à modifier
+        if (!pooledObjects.ContainsKey(type)) return null;
+
+        for (int i = 0; i < pooledObjects[type].Count; i++)
         {
             if (!pooledObjects[type][i].isActive)
             {
@@ -100,8 +103,8 @@ public class PoolingSystem : NetworkBehaviour
                 return pooledObjects[type][i];
             }
         }
+
         return null;
     }
-
 
 }

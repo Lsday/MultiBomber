@@ -1,5 +1,5 @@
 using System;
-using Mirror;
+using UnityEngine;
 
 [Serializable]
 public class Tile 
@@ -52,10 +52,23 @@ public bool IsDirty => throw new NotImplementedException();
     }
     public void SetTile(ItemBase item)
     {
-        this.item = item;
-        if (item != null)
+
+        bool changed = false;
+
+        if(this.item != item)
+        {
+            this.item = item;
+            changed = true;
+        }
+        
+        if (item != null && type != item.type)
         {
             type = item.type;
+            changed = true;
+        }
+
+        if (changed)
+        {
             grid.OnGridObjectModified(this);
         }
        

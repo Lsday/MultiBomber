@@ -9,6 +9,9 @@ public class PoolableObject : NetworkBehaviour
 
     NetworkTransform networkTransform;
 
+    Animation animComponent;
+    bool animState;
+
     MonoBehaviour[] components;
     bool[] states;
 
@@ -43,6 +46,7 @@ public class PoolableObject : NetworkBehaviour
     {
         dbgName = name;
         networkTransform = GetComponent<NetworkTransform>();
+        animComponent = GetComponent<Animation>();
         activeState = true;
         ScanComponents();
         
@@ -66,6 +70,7 @@ public class PoolableObject : NetworkBehaviour
 
     private void ScanComponents()
     {
+
         components = this.gameObject.GetComponents<MonoBehaviour>();
         states = new bool[components.Length];
 
@@ -108,6 +113,11 @@ public class PoolableObject : NetworkBehaviour
         {
             childrenStates[i] = children[i].activeInHierarchy;
         }
+
+        if (animComponent != null)
+        {
+            animState = animComponent.enabled;
+        }
     }
 
     public virtual void Enable()
@@ -125,6 +135,11 @@ public class PoolableObject : NetworkBehaviour
             for (int i = 0; i < children.Length; i++)
             {
                 children[i].SetActive(childrenStates[i]);
+            }
+
+            if (animComponent != null)
+            {
+                animComponent.enabled = animState;
             }
 
             activeState = true;
@@ -148,8 +163,18 @@ public class PoolableObject : NetworkBehaviour
                 children[i].SetActive(false);
             }
 
+            if (animComponent != null)
+            {
+                animComponent.enabled = false;
+            }
+
             activeState = false;
-            Teleport(hiddenPosition);
+
+            if (isServer)
+            {
+                Teleport(hiddenPosition);
+            }
+            
         }
     }
 
@@ -161,13 +186,10 @@ public class PoolableObject : NetworkBehaviour
         }
         else
         {
-            bool isEnabled = networkTransform.enabled;
-
-            networkTransform.enabled = false;
+            //bool isEnabled = networkTransform.enabled;
+            //networkTransform.enabled = false;
             transform.position = position;
-            networkTransform.enabled = isEnabled;
-
-
+            //networkTransform.enabled = isEnabled;
         }
     }
 

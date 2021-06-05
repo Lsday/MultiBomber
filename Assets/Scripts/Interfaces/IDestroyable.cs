@@ -1,4 +1,6 @@
 ﻿public interface IDestroyable
 {
-    public void Destroy(float delay = 0f);
+    public void Destroy();
+
+    public void InitDestroy(float delay = 0f, float extraDelay = 0f);
 }

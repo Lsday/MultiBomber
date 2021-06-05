@@ -165,7 +165,7 @@ public class ItemFlames : ItemBase
         prevPower = 0;
 
         // suppression de la chaleur sur toute la longueur de l'explosion
-        UpdateHeat(-1);
+        //UpdateHeat(-1);
 
         /*
         // suppression de la chaleur au centre de l'explosion
@@ -196,16 +196,12 @@ public class ItemFlames : ItemBase
             {
                 if (isServer)
                 {
-                    ((IDestroyable)tile.item).Destroy(0.05f);
+                    ((IDestroyable)tile.item).InitDestroy(0.05f , lifeTime - age);
                 }
                
             }
-
-
             //gameSettings.level.AddHeat((int)(CellX + i * direction.x), CellZ, heatValue);
         }
-
-
         prevPower = pow;
     }
 
@@ -331,6 +327,9 @@ public class ItemFlames : ItemBase
 
         ResetData();
 
+        // multiple flames can be spwaned on the same tile
+        // force a clear tile here to leave the Tile clean when all the flames are removed
+        parentTile?.ClearTile();
 
         base.Disable();
     }

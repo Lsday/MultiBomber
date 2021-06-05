@@ -269,6 +269,8 @@ MonoBehaviour:
   boxAmountToPool: 100
   bombPrefabToPool: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
   bombAmountToPool: 100
+  bonusPrefabToPool: {fileID: 5312718094065896331, guid: b6a67a708afdff74784655addb5c0317, type: 3}
+  bonusAmountToPool: 100
   flamesPrefabToPool: {fileID: 1708823365755688, guid: 521afbc6d6fca8748abadfd8e72a2b95, type: 3}
   flamesAmountToPool: 100
 --- !u!114 &618848645
@@ -707,6 +709,7 @@ MonoBehaviour:
   - {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
   - {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
   - {fileID: 1708823365755688, guid: 521afbc6d6fca8748abadfd8e72a2b95, type: 3}
+  - {fileID: 5312718094065896331, guid: b6a67a708afdff74784655addb5c0317, type: 3}
 --- !u!4 &1486902722
 Transform:
   m_ObjectHideFlags: 0

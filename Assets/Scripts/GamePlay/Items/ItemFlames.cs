@@ -41,7 +41,7 @@ public class ItemFlames : ItemBase
 
 
     private float age = 0f;
-     private Vector3 sourcePosition;
+    private Vector3 sourcePosition;
 
     // durée supplémentaire de visibilité (golden ou power bomb)
     private float extraDuration = 0f;
@@ -49,8 +49,8 @@ public class ItemFlames : ItemBase
     //dernière valeur utilisée pour remplir la heatmap
     int prevPower = 0;
 
-     private float lifeTime = 0f;
-     private float expandTime = 0f;
+    private float lifeTime = 0f;
+    private float expandTime = 0f;
 
     public ParticleSystem _particles;
 
@@ -108,10 +108,10 @@ public class ItemFlames : ItemBase
         {
             Disable();
         }
-        else if(age > 0)
+        else if (age > 0)
         {
             // only if age > 0 : to get the right particles trail, the first update must be skipped to give time to the transform to be registered at the right start position.
-            
+
             if (age <= expandTime)
             {
                 ParticleSystem.MainModule main = _particles.main;
@@ -194,9 +194,13 @@ public class ItemFlames : ItemBase
 
             if (tile.item is IDestroyable)
             {
-                //Debug.Log("auto Boom "+ tile.item.name);
-                ((IDestroyable)tile.item).Destroy(0.05f);
+                if (isServer)
+                {
+                    ((IDestroyable)tile.item).Destroy(0.05f);
+                }
+               
             }
+
 
             //gameSettings.level.AddHeat((int)(CellX + i * direction.x), CellZ, heatValue);
         }
@@ -205,17 +209,14 @@ public class ItemFlames : ItemBase
         prevPower = pow;
     }
 
-    
-
-
     private float ComputeLimit(float maxPower)
     {
         float limitPower = 0;
 
         for (int i = 1; i <= maxPower; i++)
         {
-            Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction*i);
-            
+            Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction * i);
+
             if (tile.type >= ElementType.Block)
             {
                 // Allow destruction of nearby objects
@@ -232,6 +233,7 @@ public class ItemFlames : ItemBase
     }
 
     //TODO : voir s'il y a moyen de ne plus utiliser d'objets synchronisés sur le réseau pour les flammes
+    [Server]
     public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
         Teleport(position);
@@ -240,10 +242,10 @@ public class ItemFlames : ItemBase
         {
             RpcInit(position, direction, maxPower, extraTime);
         }
-        else
-        {
-            Init(position, direction, maxPower, extraTime);
-        }
+        //else
+        //{
+        //    Init(position, direction, maxPower, extraTime);
+        //}
     }
 
     private void Init(Vector3 startPosition, Vector3 direction, float maxPower, float extraTime)
@@ -317,7 +319,7 @@ public class ItemFlames : ItemBase
         }
         else
         {
-            Invoke("Disable", removeDelay); 
+            Invoke("Disable", removeDelay);
         }
 
     }

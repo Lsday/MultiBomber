@@ -161,9 +161,13 @@ public class PoolableObject : NetworkBehaviour
         }
         else
         {
+            bool isEnabled = networkTransform.enabled;
+
             networkTransform.enabled = false;
             transform.position = position;
-            networkTransform.enabled = true;
+            networkTransform.enabled = isEnabled;
+
+
         }
     }
 

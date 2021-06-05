@@ -7,7 +7,7 @@ public class DropBehaviour<T> : ScriptableAction<T>
     [SerializeField, TextArea(5, 10)]
     protected string description;
 
-    public GameObject DropObject;
+    public GameObject dropObject;
     public Vector3 dropPositionOffset;
 
     public override void PerformAction(T obj)

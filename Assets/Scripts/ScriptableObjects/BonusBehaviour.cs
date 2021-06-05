@@ -11,7 +11,5 @@ public class BonusBehaviour : ScriptableAction<ItemBase>
     public override void PerformAction(ItemBase obj)
     {
 
-        
-        
     }
 }

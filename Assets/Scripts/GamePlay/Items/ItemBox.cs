@@ -4,14 +4,14 @@ using Mirror;
 
 public class ItemBox : ItemBase, IDestroyable
 {
-    public ScriptableAction<ItemBox> DropBehaviour;
+    public BonusDropBehaviour bonusDropBehaviour;
 
   
     public void Destroy(float delay = 0f)
     {
-       // Debug.Log(gameObject.name + "Box Destroyed");
+        Debug.Log(gameObject.name + "Box Destroyed");
 
-       // DropBehaviour.PerformAction(gameObject);
+        bonusDropBehaviour.PerformAction(this);
 
         Disable();
     }

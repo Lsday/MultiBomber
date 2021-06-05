@@ -49,9 +49,12 @@ public abstract class ItemBase : PoolableObject
     [ClientRpc]
     public void RpcPlaceOnTile(Vector3 position)
     {
-        parentTile = LevelBuilder.grid?.GetGridObject(position);
-        parentTile?.SetTile(this);
+        Debug.Log("RpcPlaceOnTile execute");
+        //parenttile = levelbuilder.grid?.getgridobject(position);
+        //parenttile?.settile(this);
+        PlaceOnTile(position);
     }
+
     #endregion
 
     public void PlaceOnTile()
@@ -84,7 +87,8 @@ public abstract class ItemBase : PoolableObject
 
     }
 
-    public override void Teleport(Vector3 position)
+    [Server]
+    public override void Teleport(Vector3 position) // TODO : NE DEVRAIT SE FAIRE QUE COTE SERVEUR
     {
         base.Teleport(position);
 
@@ -94,10 +98,10 @@ public abstract class ItemBase : PoolableObject
         {
             RpcPlaceOnTile(position);
         }
-        else
-        {
-            PlaceOnTile(position);
-        }
+        //else
+        //{
+        //    PlaceOnTile(position);
+        //}
     }
 
 

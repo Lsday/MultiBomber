@@ -32,6 +32,11 @@ public class PoolingSystem : NetworkBehaviour
     public int bombAmountToPool;
     #endregion
 
+    #region Bonus
+    public GameObject bonusPrefabToPool;
+    public int bonusAmountToPool;
+    #endregion
+
     #region Flames
     public GameObject flamesPrefabToPool;
     public int flamesAmountToPool;
@@ -62,21 +67,24 @@ public class PoolingSystem : NetworkBehaviour
             {
                 obj = Instantiate(boxPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOX].Add(obj);
-
             }
 
             for (int i = 0; i < bombAmountToPool; i++)
             {
                 obj = Instantiate(bombPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.BOMB].Add(obj);
+            }
 
+            for (int i = 0; i < bonusAmountToPool; i++)
+            {
+                obj = Instantiate(bonusPrefabToPool).GetComponent<ItemBase>();
+                pooledObjects[ItemsType.BONUS].Add(obj);
             }
 
             for (int i = 0; i < flamesAmountToPool; i++)
             {
                 obj = Instantiate(flamesPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.FLAMES].Add(obj);
-
             }
         }
         
@@ -84,7 +92,7 @@ public class PoolingSystem : NetworkBehaviour
 
     public ItemBase GetPoolObject(ItemsType type)
     {
-        for (int i = 0; i < boxAmountToPool; i++)
+        for (int i = 0; i < boxAmountToPool; i++) // TODO boxAmountToPool à modifier
         {
             if (!pooledObjects[type][i].isActive)
             {

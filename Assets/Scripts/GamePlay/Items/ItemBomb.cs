@@ -18,7 +18,11 @@ using System;
 
 public class ItemBomb : ItemBase, IDestroyable
 {
+
+    public Action OnBombExploded;
+
     public NetworkIdentity playerIdentity;
+    public PlayerBombDropper bombDropper;
     Timer timer;
     bool alreadyTriggered;
 
@@ -84,6 +88,8 @@ public class ItemBomb : ItemBase, IDestroyable
 
         bombBehaviour.PerformAction(this); // Calcul des directions que peuvent emprunter les flammes et stocke l'information dans this
         dropBehaviour.PerformAction(this); // Spawn les flammes
+
+        bombDropper.RpcDecrementBombCounter();
 
         Disable();
     }

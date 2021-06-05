@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombDropper : NetworkBehaviour
+public class PlayerBombDropper : NetworkBehaviour
 {
     public PlayerEntity playerEntity;
-    public GameObject bombPrefab;
+
+    public int bombMax = 1;
+    public int bombCounter;
    
     private void Start()
     {
@@ -39,7 +41,7 @@ public class BombDropper : NetworkBehaviour
 
     public void PlaceBomb()
     {
-        if (playerEntity.hubIdentity.isLocalPlayer)
+        if (playerEntity.hubIdentity.isLocalPlayer && bombCounter < bombMax)
         {
             if (isServer)
             {
@@ -47,6 +49,8 @@ public class BombDropper : NetworkBehaviour
             }
             else
                 CmdDropBomb();
+
+            
         }
     }
 
@@ -56,6 +60,41 @@ public class BombDropper : NetworkBehaviour
         DropBomb();
     }
 
+    [ClientRpc]
+    public void RpcDecrementBombCounter()
+    {
+        if (bombCounter > 0)
+        {
+            bombCounter--;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcIncrementBombCounter()
+    {
+       
+            bombCounter++;
+        
+    }
+
+    [ClientRpc]
+    public void RpcDecrementBombMax()
+    {
+        if (bombMax > 1)
+        {
+            bombMax--;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcIncrementBombMax()
+    {
+        if (bombMax < 10)
+        {
+            bombMax++;
+        }
+       
+    }
 
     private void DropBomb()
     {
@@ -66,21 +105,26 @@ public class BombDropper : NetworkBehaviour
             ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
 
             bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
+            bomb.bombDropper = this;
+
+            RpcIncrementBombCounter();
         }
-        
-        //bomb.Init();
     }
 
 
-    //void AddBomb(byte count)
-    //{
-    //    bombCounter += count;
-    //}
 
 
-    //void RemoveBomb(byte count)
-    //{
-    //    bombCounter -= count;
-    //}
+
+
+    void AddBomb(byte count)
+    {
+        bombCounter += count;
+    }
+
+
+    void RemoveBomb(byte count)
+    {
+        bombCounter -= count;
+    }
 
 }

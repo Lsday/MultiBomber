@@ -2,6 +2,6 @@
 
 public interface ILootable
 {
-    public void Loot();
+    public void Loot(PlayerEntity player);
 }
 

@@ -501,24 +501,24 @@ public class LevelBuilder : NetworkBehaviour
 
     private void OnGUI()
     {
-        //if (isServer)
-        //{
-        //    if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
-        //    {
+        if (isServer)
+        {
+            if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+            {
 
-        //        //NetworkServer.SendToAll(new ClearMapMessage { });
+                //NetworkServer.SendToAll(new ClearMapMessage { });
 
-        //        //Debug.Log("Send CreateMap Message");
+                //Debug.Log("Send CreateMap Message");
 
 
-        //        CreateMap();
-        //    }
+                CreateMap();
+            }
 
-        //    if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
-        //    {
-        //        NetworkServer.SendToAll(new ClearMapMessage { });
-        //    }
-        //}
+            if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
+            {
+                NetworkServer.SendToAll(new ClearMapMessage { });
+            }
+        }
     }
 
     public void CreateMap()

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 471709280951393523}
   - component: {fileID: 7299415106740637389}
   - component: {fileID: 161878465008676798}
+  - component: {fileID: 2718188998225735062}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -128,7 +129,20 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerEntity: {fileID: 0}
-  bombPrefab: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
+  bombMax: 1
+  bombCounter: 0
+--- !u!114 &2718188998225735062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340615587193445658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4cb7572b3ff9ad49bbe12e387df4e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

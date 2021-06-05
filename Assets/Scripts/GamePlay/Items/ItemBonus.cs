@@ -2,11 +2,16 @@
 using UnityEngine;
 using Mirror;
 
+
+
 public class ItemBonus : ItemBase, ILootable, IDestroyable
 {
 
-    BonusBehaviour bonusBehaviour;
+    BonusBehaviour<ItemBonus,PlayerEntity> bonusBehaviour;
     bool destroyedTriggered = false;
+
+    PlayerEntity targetPlayer = null;
+
 
     public void Destroy()
     {
@@ -29,10 +34,12 @@ public class ItemBonus : ItemBase, ILootable, IDestroyable
         Destroy();
     }
 
-    public void Loot()
+    public void Loot(PlayerEntity playerEntity)
     {
         Debug.Log("Bonus " + netId + " Looted");
-        bonusBehaviour.PerformAction(this);
+        bonusBehaviour.PerformAction(this,playerEntity);
+        //playerEntity.GetComponent<PlayerBonusPickUp>().
+
     }
 }
 

@@ -19,15 +19,20 @@ public class MainMenuUI : MonoBehaviour
     public GameObject mutliplayerButtonsPanel;
     public Button hostButton, joinButton, multiBackButton;
 
+    public GameObject  mapOptionsPanel;
+
+    MapOptionsUI mapOptionsUI;
 
     private void Start()
     {
+        NetworkClient.RegisterHandler<GameStartedMessage>(GameStart);
+
         // GAME MODE SELECTION
         localButton.onClick.AddListener(OnLocalButtonPressed);
         multiPlayerButton.onClick.AddListener(OnMultiButtonPressed);
 
         //LOCAL MODE
-        //TODO : startbutton
+        startButton.onClick.AddListener(EnableMapOptionsPanel);
         localBackButton.onClick.AddListener(OnlocalBackButtonPressed);
 
         //MULTIPLAYER MODE
@@ -38,9 +43,23 @@ public class MainMenuUI : MonoBehaviour
 
     }
 
+    private void GameStart(GameStartedMessage arg2)
+    {
+         mainPanel.SetActive(false);
+    }
+
+    private void EnableMapOptionsPanel()
+    {
+        mapOptionsPanel.SetActive(true);
+        mapOptionsUI = mapOptionsPanel.GetComponent<MapOptionsUI>();
+        mapOptionsUI.Init();
+
+
+
+    }
+
     #region Navigation
 
-    public void DisableMainPanel() => mainPanel.SetActive(false);
     public void DisableGameModeButtonsPanel() => gameModeButtonsPanel.SetActive(false);
     public void DisableLocalButtonsPanel() => localButtonsPanel.SetActive(false);
     public void DisableMutliplayerButtonsPanel() => mutliplayerButtonsPanel.SetActive(false);
@@ -75,11 +94,13 @@ public class MainMenuUI : MonoBehaviour
     private void OnHostButtonPressed()
     {
         NetworkManager.singleton.StartHost();
-        DisableMainPanel();
+        DisableMutliplayerButtonsPanel();
+        EnableMapOptionsPanel();
     }
     private void OnJoinButtonPressed()
     {
         NetworkManager.singleton.StartClient();
-        DisableMainPanel();
+        DisableMutliplayerButtonsPanel();
+       
     }
 }

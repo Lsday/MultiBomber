@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
+        //NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
 
         levelBuilder = GetComponent<LevelBuilder>();
        
@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
 
 
 
-    private void GameStartedCallBack( GameStartedMessage arg2)
-    {
-        onGameStarted?.Invoke();
-    }
+    //private void GameStartedCallBack( GameStartedMessage arg2)
+    //{
+    //    onGameStarted?.Invoke();
+    //}
 }

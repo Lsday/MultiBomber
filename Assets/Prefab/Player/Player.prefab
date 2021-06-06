@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0
+  syncInterval: 0.025
   clientAuthority: 1
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.025
   debugName: 
   hubIdentity: {fileID: 0}
   localPlayerIndex: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4cb7572b3ff9ad49bbe12e387df4e08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemBonusList: []
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

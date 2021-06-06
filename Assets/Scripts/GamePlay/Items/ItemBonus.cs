@@ -7,10 +7,8 @@ using Mirror;
 public class ItemBonus : ItemBase, ILootable, IDestroyable
 {
 
-    BonusBehaviour<ItemBonus,PlayerEntity> bonusBehaviour;
+    public BonusBehaviour<PlayerEntity> bonusBehaviour;
     bool destroyedTriggered = false;
-
-    PlayerEntity targetPlayer = null;
 
 
     public void Destroy()
@@ -37,8 +35,10 @@ public class ItemBonus : ItemBase, ILootable, IDestroyable
     public void Loot(PlayerEntity playerEntity)
     {
         Debug.Log("Bonus " + netId + " Looted");
-        bonusBehaviour.PerformAction(this,playerEntity);
-        //playerEntity.GetComponent<PlayerBonusPickUp>().
+        bonusBehaviour.PerformAction(playerEntity);
+        playerEntity.GetComponent<PlayerBonusPickUp>().AddItem(bonusBehaviour);
+
+        Disable();
 
     }
 }

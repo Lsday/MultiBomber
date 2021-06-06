@@ -106,6 +106,7 @@ MonoBehaviour:
   activeState: 0
   dbgName: 
   type: 8
+  bonusBehaviour: {fileID: 11400000, guid: f0019a68c8f4c10428ecaee840db7f66, type: 2}
 --- !u!1 &9054297990067371756
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+
 public class GenericGrid<TGridObject>
 {
     public event EventHandler<OnGridObjectChangedEventHandlerArgs> OnGridObjectChanged;

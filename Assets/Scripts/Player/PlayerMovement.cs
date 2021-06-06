@@ -5,12 +5,12 @@ public class PlayerMovement : NetworkBehaviour
 {
 
     #region Properties
-    [SyncVar]bool isRunning;
+    [SyncVar] bool isRunning;
     PlayerEntity playerEntity;
 
     public float speed = 5;
 
-    [Range(0f,0.5f)]
+    [Range(0f, 0.5f)]
     public float cornerSliding = 0f;
 
     public SO_Bool gameStarted;
@@ -49,7 +49,7 @@ public class PlayerMovement : NetworkBehaviour
 
         grid = LevelBuilder.grid;
     }
-    
+
 
     void Update()
     {
@@ -101,7 +101,7 @@ public class PlayerMovement : NetworkBehaviour
         UpdateTileCoordinates();
         //ComputeBombOverlap();
         ComputeMovementLimits();
-        
+
 
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
@@ -114,11 +114,11 @@ public class PlayerMovement : NetworkBehaviour
 
         newPosition += dir.normalized * travelDistance;
 
-        newPosition = ComputeCorners(lastPosition,newPosition, dir, travelDistance);
+        newPosition = ComputeCorners(lastPosition, newPosition, dir, travelDistance);
 
         newPosition.x = Mathf.Clamp(newPosition.x, movementClampLow.x, movementClampHigh.x);
         newPosition.z = Mathf.Clamp(newPosition.z, movementClampLow.z, movementClampHigh.z);
-        
+
         transform.position = newPosition;
 
         // orientation
@@ -143,14 +143,30 @@ public class PlayerMovement : NetworkBehaviour
                 signZ = 0;
             }
         }
-        
-        if(signX !=0 || signZ != 0)
+
+        if (signX != 0 || signZ != 0)
         {
             transform.forward = new Vector3(signX, 0, signZ).normalized;
         }
 
         ////
         ///
+
+    }
+
+    [ClientRpc]
+    public void RpcIncreaseSpeed()
+    {
+        speed += 1;
+    }
+
+    [ClientRpc]
+    public void RpcDecreaseSpeed()
+    {
+        if (speed > 1)
+        {
+            speed -= 1;
+        }
 
     }
 
@@ -161,15 +177,15 @@ public class PlayerMovement : NetworkBehaviour
         //Gizmos.color = Color.red;
         if (LevelBuilder.grid != null)
         {
-            
-            Gizmos.DrawWireCube(currentTileCenter, Vector3.one*0.95f);
+
+            Gizmos.DrawWireCube(currentTileCenter, Vector3.one * 0.95f);
         }
 
         //Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(debugPivot, 0.5f);
         Gizmos.DrawLine(transform.position, transform.position + debugDir);
 
-       
+
         //Gizmos.color = pivotWall ? Color.red : Color.green;
         Gizmos.DrawWireSphere(testWallPivot, 0.49f);
 
@@ -188,13 +204,13 @@ public class PlayerMovement : NetworkBehaviour
 
         grid.GetXY(transform.position, out tilex, out tiley);
 
-        if(currentTileX != tilex || currentTileY != tiley)
+        if (currentTileX != tilex || currentTileY != tiley)
         {
             // TODO : récupérer le code de l'ancien projet pour définir majorTile
             if (majorTile != null && majorTile.type == ElementType.Player)
             {
                 majorTile.SetType(ElementType.Empty);
-                //majorTile.ClearPlayer();
+
             }
 
             Vector3 worldPosition = transform.position;
@@ -204,10 +220,29 @@ public class PlayerMovement : NetworkBehaviour
             {
                 currentTileX = majorTile.x;
                 currentTileY = majorTile.y;
-                if(majorTile.type == ElementType.Empty)
+                if (majorTile.type == ElementType.Empty)
                 {
                     majorTile.SetType(ElementType.Player);
-                    //majorTile.SetPlayer(playerEntity);
+
+
+                }
+
+                if (majorTile.type == ElementType.Item)
+                {
+
+                    if (majorTile.item != null)
+                    {
+                        if (isServer)
+                        {
+                            ((ILootable)majorTile.item).Loot(playerEntity);
+                        }
+
+                        majorTile.SetType(ElementType.Player);
+                    }
+                    else
+                        majorTile.SetType(ElementType.Player);
+
+
 
                 }
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
@@ -228,7 +263,7 @@ public class PlayerMovement : NetworkBehaviour
 
         float cellSize = grid.GetCellsize();
 
-        Vector3 minOffset = new Vector3(leftWall ? 0 : -cellSize, 0 , downWall ? 0 : -cellSize);
+        Vector3 minOffset = new Vector3(leftWall ? 0 : -cellSize, 0, downWall ? 0 : -cellSize);
         Vector3 maxOffset = new Vector3(rightWall ? 0 : cellSize, 0, upWall ? 0 : cellSize);
 
         movementClampLow = currentTileCenter + minOffset;
@@ -302,7 +337,7 @@ public class PlayerMovement : NetworkBehaviour
     Vector3 intersect;
     Color dbgCol;
 
-    private Vector3 ComputeCorners(Vector3 startPosition, Vector3 position , Vector3 travelDirection , float travelDistance)
+    private Vector3 ComputeCorners(Vector3 startPosition, Vector3 position, Vector3 travelDirection, float travelDistance)
     {
         dbgCol = Color.black;//TODO : remove debug
 
@@ -378,7 +413,7 @@ public class PlayerMovement : NetworkBehaviour
 
         // calculate the corner position around which the player will turn
         Vector3 pivot = currentTileCenter + new Vector3(radius * posSignX, 0, radius * posSignZ);
-        
+
         if (!blockingPivotTile && blockingDestTile)
         {
             dbgCol = Color.red; //TODO : remove debug
@@ -403,7 +438,7 @@ public class PlayerMovement : NetworkBehaviour
                 moveDirection.z = signZ * (absX < absZ ? 1 : 0);
             }
         }
-        else if(blockingPivotTile && !blockingDestTile)
+        else if (blockingPivotTile && !blockingDestTile)
         {
             dbgCol = Color.green; //TODO : remove debug
 
@@ -419,7 +454,7 @@ public class PlayerMovement : NetworkBehaviour
             moveDirection.z = blockingZ ? (posSignZ == dirSignZ) ? 0 : moveDirection.z : moveDirection.z;
         }
         //else if(blockingPivotTile && blockingDestTile && Mathf.Abs(dirSignX - posSignX) < 2 && Mathf.Abs(dirSignZ - posSignZ) < 2)
-        else if (blockingPivotTile && blockingDestTile )
+        else if (blockingPivotTile && blockingDestTile)
         {
             dbgCol = Color.blue; //TODO : remove debug
             // if both pivot and destination tiles are blocking
@@ -462,7 +497,7 @@ public class PlayerMovement : NetworkBehaviour
         debugDir = moveDirection;
         debugPivot = pivot;
         //**********************************
-        
+
         return newPosition;
     }
 }

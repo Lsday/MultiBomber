@@ -2,10 +2,9 @@
 
 
 [CreateAssetMenu(menuName = "ScriptableAction/BonusBehaviour/BonusBombUp", fileName = "BonusBombUp")]
-public class BonusBombUp : BonusBehaviour<ItemBonus, PlayerBombDropper>
+public class BonusBombUp : BonusBehaviour<PlayerEntity>
 {
-
-    public override void PerformAction(ItemBonus obj, PlayerBombDropper player)
+    public override void PerformAction(PlayerEntity player)
     {
         PlayerBombDropper dropper = player.GetComponent<PlayerBombDropper>();
         dropper.RpcIncrementBombMax();

@@ -80,9 +80,10 @@ public abstract class ItemBase : PoolableObject
     {
         if(parentTile != null && parentTile.item == this)
         {
-            parentTile.SetTile(null);
+            parentTile.ClearTile();
         }
         parentTile = null;
+        //type = ElementType.Empty;
     }
 
     public override void Disable()

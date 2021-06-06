@@ -53,6 +53,16 @@ public class LevelBuilder : NetworkBehaviour
     List<Tile> wallTiles = new List<Tile>();
 
     /// <summary>
+    /// List containing the Boxes of the map , use to put bonus on it
+    /// </summary>
+    List<ItemBox> actualBoxes = new List<ItemBox>();
+
+    /// <summary>
+    /// Responsible of assigning bonus on boxes
+    /// </summary>
+    BonusDispenser bonusDispenser;
+
+    /// <summary>
     /// Dictionary containing the Meshes Shapes with their correponding rotations
     /// </summary>
     Dictionary<byte, MeshShape> wallShapes = new Dictionary<byte, MeshShape>();
@@ -98,6 +108,8 @@ public class LevelBuilder : NetworkBehaviour
     {
         NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
         NetworkClient.RegisterHandler<ClearMapMessage>(ClearMapCallBack);
+
+        bonusDispenser = new BonusDispenser();
 
         CreateMeshDictionary();
     }
@@ -162,15 +174,17 @@ public class LevelBuilder : NetworkBehaviour
             //Calculate Box Position
             Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
 
-            ItemBase item = PoolingSystem.instance.GetPoolObject(ItemsType.BOX);
-            //item.GetComponent<NetworkTransform>().ServerTeleport(boxTilePosition + offset);
-            item.Teleport(boxTilePosition);
+            ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX) as ItemBox;
 
-            //item.GetComponent<ItemBox>().PlaceOnTile(potentialBoxTile[i]);
+            actualBoxes.Add(box);
+
+            box.Teleport(boxTilePosition);
+
 
         }
 
-       //NetworkServer.SendToAll(new RegisterBoxsMessage { });
+       // bonusDispenser.AssignBonus(actualBoxes, totalPlayersCount.value, boxPrcent);
+
     }
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {

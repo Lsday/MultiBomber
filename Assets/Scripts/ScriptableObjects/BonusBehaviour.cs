@@ -2,12 +2,24 @@
 
 
 [CreateAssetMenu(menuName = "ScriptableAction/BonusBehaviour", fileName = "BonusBehaviour")]
-public class BonusBehaviour<T> : ScriptableAction<T>
+public class BonusBehaviour : ScriptableAction
 {
     [SerializeField, TextArea(5, 10)]
     protected string description;
 
     
+    public override void PerformAction(GameObject obj)
+    {
+
+    }
+}
+
+public class BonusBehaviour<T> : ScriptableAction<T>
+{
+    [SerializeField, TextArea(5, 10)]
+    protected string description;
+
+
     public override void PerformAction(T obj)
     {
 

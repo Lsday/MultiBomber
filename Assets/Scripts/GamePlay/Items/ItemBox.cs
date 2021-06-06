@@ -5,6 +5,7 @@ using Mirror;
 public class ItemBox : ItemBase, IDestroyable
 {
     public BonusDropBehaviour bonusDropBehaviour;
+    public ItemBonus bonusToDrop;
 
     bool destroyedTriggered = false;
 
@@ -14,7 +15,9 @@ public class ItemBox : ItemBase, IDestroyable
 
         Debug.Log(gameObject.name + "Box Destroyed");
 
-        bonusDropBehaviour.PerformAction(this);
+        ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
+        itemBonus.Teleport(transform.position);
+        //bonusDropBehaviour.PerformAction(this);
 
         Disable();
     }

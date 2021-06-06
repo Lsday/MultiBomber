@@ -9,7 +9,8 @@ public class SO_LevelBonusSettings : ScriptableObject
     public struct BonusStock
     {
         public int count;
-        public string name; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
+        public string name;
+        //public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
     }
 
 

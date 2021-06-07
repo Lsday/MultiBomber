@@ -79,6 +79,8 @@ public class LevelBuilder : NetworkBehaviour
     [Header("Map Size")]
     [Range(3, 10)] public byte mapSize;
 
+    public SO_LevelBonusSettings bonusSettings;
+
     #region Meshs
     [Header("Wall Meshes")]
     public Mesh block_I;
@@ -126,6 +128,7 @@ public class LevelBuilder : NetworkBehaviour
         CalculateWallsAndBoxsPositions();
         CreateWalls();
         CreateBoxs();
+        AssignBonuses();
         AssignPlayersPositions();
     }
 
@@ -150,7 +153,7 @@ public class LevelBuilder : NetworkBehaviour
         for (int i = 0; i < count; i++)
         {
             // send the position to the PlayerMovement script assigned to this player entity
-            PlayerEntity.instancesList[i].SendMessage("SetWorldPosition", playerStartPositions[i] * size + offset );
+            PlayerEntity.instancesList[i].SendMessage("SetWorldPosition", playerStartPositions[i] * size + offset);
         }
     }
     private void CreateBoxs()
@@ -183,9 +186,20 @@ public class LevelBuilder : NetworkBehaviour
 
         }
 
-       // bonusDispenser.AssignBonus(actualBoxes, totalPlayersCount.value, boxPrcent);
+
 
     }
+
+    void AssignBonuses() { 
+    
+        if(bonusDispenser != null && bonusSettings != null){
+
+            bonusDispenser.bonusSettings = bonusSettings;
+            bonusDispenser.AssignBonus(ref actualBoxes, totalPlayersCount.value);
+        }
+
+    }
+
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
         return new Tile(grid, x, y);

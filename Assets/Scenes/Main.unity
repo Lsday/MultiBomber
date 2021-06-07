@@ -1407,6 +1407,7 @@ MonoBehaviour:
   syncInterval: 0.1
   totalPlayersCount: {fileID: 11400000, guid: 5a3f6384940da834db1a09c00d9edd70, type: 2}
   mapSize: 7
+  bonusSettings: {fileID: 11400000, guid: 4da12222d3ba730409b5a00011c8637c, type: 2}
   block_I: {fileID: 4300008, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   block_T: {fileID: 0}
   block_X: {fileID: 0}

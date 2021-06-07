@@ -42,6 +42,10 @@ public bool IsDirty => throw new NotImplementedException();
 
     public override string ToString()
     {
+        if(item != null)
+        {
+            return item.ToString();
+        }
         return type.ToString();
     }
     public void ClearTile()
@@ -93,7 +97,6 @@ public bool IsDirty => throw new NotImplementedException();
         type = ElementType.Empty;
         grid.OnGridObjectModified(this);
     }
-
 }
 
 

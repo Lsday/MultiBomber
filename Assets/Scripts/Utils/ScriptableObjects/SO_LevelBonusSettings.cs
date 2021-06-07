@@ -10,7 +10,8 @@ public class SO_LevelBonusSettings : ScriptableObject
     {
         public int count;
         public string name;
-        //public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
+        [SerializeField]
+        public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
     }
 
 
@@ -18,6 +19,9 @@ public class SO_LevelBonusSettings : ScriptableObject
     public struct BonusDropSettings
     {
         public string name;
+
+        [SerializeField]
+        public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
 
         [Range(0,10)]
         public int exactCount;
@@ -34,6 +38,7 @@ public class SO_LevelBonusSettings : ScriptableObject
             this.exactCount = exactCount;
             this.proportion = proportion;
             this.playersProportion = playersProportion;
+            this.bonus = null;
         }
     }
 
@@ -62,9 +67,9 @@ public class SO_LevelBonusSettings : ScriptableObject
         // Awake
     }
 
-    public BonusStock[] ComputeBonusList()
+    public BonusStock[] ComputeBonusList(int bonusCount , int playersCount)
     {
-        int total = Mathf.CeilToInt(boxesCount * bonusPercentage);
+        //int total = Mathf.CeilToInt(boxesCount * bonusPercentage);
 
         BonusStock[] result = new BonusStock[_bonusSettings.Count];
 
@@ -74,6 +79,7 @@ public class SO_LevelBonusSettings : ScriptableObject
         {
             BonusDropSettings settings = _bonusSettings[i];
             result[i].name = settings.name;
+            result[i].bonus = settings.bonus; // assign the bonus scriptable object to the result
 
             if (settings.exactCount > 0)
             {
@@ -82,21 +88,21 @@ public class SO_LevelBonusSettings : ScriptableObject
             }
         }
 
-        if(totalExact > total)
+        if(totalExact > bonusCount)
         {
             int newtotal = 0;
             for (int i = 0; i < _bonusSettings.Count; i++)
             {
                 if (result[i].count > 0)
                 {
-                    result[i].count = Mathf.CeilToInt(((float)result[i].count/totalExact) * total);
+                    result[i].count = Mathf.CeilToInt(((float)result[i].count/totalExact) * bonusCount);
                     newtotal += result[i].count;
                 }
             }
             totalExact = newtotal;
         }
 
-        int totalProportionnal = total - totalExact;
+        int totalProportionnal = bonusCount - totalExact;
         if(totalProportionnal > 0)
         {
             float floatTotal = 0;

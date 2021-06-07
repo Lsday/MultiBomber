@@ -4,8 +4,9 @@ using Mirror;
 
 public class ItemBox : ItemBase, IDestroyable
 {
-    public BonusDropBehaviour bonusDropBehaviour;
-    public ItemBonus bonusToDrop;
+    //public BonusDropBehaviour bonusDropBehaviour;
+    //public ItemBonus bonusToDrop;
+    public BonusBehaviour<PlayerEntity> bonus;
 
     bool destroyedTriggered = false;
 
@@ -15,9 +16,17 @@ public class ItemBox : ItemBase, IDestroyable
 
         Debug.Log(gameObject.name + "Box Destroyed");
 
-        ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
-        itemBonus.Teleport(transform.position);
+        if(bonus != null)
+        {
+            ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
+            itemBonus.bonusBehaviour = bonus;
+            itemBonus.Teleport(transform.position);
+        }
+        
         //bonusDropBehaviour.PerformAction(this);
+
+        // reset bonus
+        bonus = null;
 
         Disable();
     }
@@ -38,4 +47,8 @@ public class ItemBox : ItemBase, IDestroyable
         Destroy();
     }
 
+    public override string ToString()
+    {
+        return bonus==null ? type.ToString():"Box:"+bonus.name;
+    }
 }

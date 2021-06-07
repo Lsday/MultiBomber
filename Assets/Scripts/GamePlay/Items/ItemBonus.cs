@@ -41,5 +41,11 @@ public class ItemBonus : ItemBase, ILootable, IDestroyable
         Disable();
 
     }
+
+    public override string ToString()
+    {
+        return bonusBehaviour.name;
+    }
+
 }
 

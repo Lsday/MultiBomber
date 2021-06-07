@@ -14,26 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bonusSettings:
   - name: Bomb
+    bonus: {fileID: 11400000, guid: f0019a68c8f4c10428ecaee840db7f66, type: 2}
     exactCount: 0
     proportion: 0.648
     playersProportion: 0
-  - name: Fire
-    exactCount: 0
-    proportion: 0.698
-    playersProportion: 0
-  - name: Kick
-    exactCount: 0
-    proportion: 0.477
-    playersProportion: 0
   - name: Roller
+    bonus: {fileID: 11400000, guid: 56126229172752c48910021deeb99c85, type: 2}
     exactCount: 0
     proportion: 0.452
     playersProportion: 0
-  - name: PowerBomb
+  - name: Fire
+    bonus: {fileID: 0}
     exactCount: 0
-    proportion: 0.468
+    proportion: 0
+    playersProportion: 0
+  - name: Kick
+    bonus: {fileID: 0}
+    exactCount: 0
+    proportion: 0
+    playersProportion: 0
+  - name: PowerBomb
+    bonus: {fileID: 0}
+    exactCount: 0
+    proportion: 0
     playersProportion: 0
   - name: Golden Flame
+    bonus: {fileID: 0}
     exactCount: 0
     proportion: 0
     playersProportion: 0

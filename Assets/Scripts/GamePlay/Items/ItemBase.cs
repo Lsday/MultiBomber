@@ -99,7 +99,7 @@ public abstract class ItemBase : PoolableObject
 
         if (LevelBuilder.grid == null) return;
 
-        if (isServer)
+        if (isServer && isActive)
         {
             RpcPlaceOnTile(position);
         }
@@ -109,5 +109,5 @@ public abstract class ItemBase : PoolableObject
         //}
     }
 
-
+    
 }

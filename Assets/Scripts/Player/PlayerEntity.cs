@@ -100,7 +100,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
         if (isServer)
         {
-            defaultColor = Random.ColorHSV();
+            defaultColor = Random.ColorHSV(0,1,0,1,0.7f,1f);
             RpcSetColor(defaultColor);
         }
 

@@ -27,11 +27,12 @@ public class SO_LevelBonusSettings_Inspector : Editor
         // https://forum.unity.com/threads/display-a-list-class-with-a-custom-editor-script.227847/
         //EditorGUILayout.PropertyField(bonusList, true,null);
 
-        SO_LevelBonusSettings.BonusStock[] results =  myTarget.ComputeBonusList();
+        int bonusCount = Mathf.CeilToInt(myTarget.boxesCount * myTarget.bonusPercentage);
 
-        int total = Mathf.CeilToInt(myTarget.boxesCount * myTarget.bonusPercentage);
+        SO_LevelBonusSettings.BonusStock[] results =  myTarget.ComputeBonusList(bonusCount, myTarget.playersCount);
+        
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Total: "+total.ToString(), GUILayout.Width(100));
+        EditorGUILayout.LabelField("Total: "+ bonusCount.ToString(), GUILayout.Width(100));
         EditorGUILayout.Space();
         int sum = 0;
 

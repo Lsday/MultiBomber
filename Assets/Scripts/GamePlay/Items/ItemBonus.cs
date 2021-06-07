@@ -30,7 +30,7 @@ public class ItemBonus : ItemBase, ILootable, IDestroyable
 
     public void Loot(PlayerEntity playerEntity)
     {
-        Debug.Log(playerEntity + " Looted : " + bonusBehaviour.name);
+        Debug.Log("Player :"+playerEntity.netId + " Looted : " + bonusBehaviour.name);
         bonusBehaviour.PerformAction(playerEntity);
         playerEntity.playerBonusPickUp.AddItem(bonusBehaviour);
 

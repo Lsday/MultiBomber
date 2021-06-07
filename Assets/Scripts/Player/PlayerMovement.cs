@@ -274,61 +274,9 @@ public class PlayerMovement : NetworkBehaviour
 
         movementClampHigh.x = Mathf.Max(movementClampHigh.x, transform.position.x);
         movementClampHigh.z = Mathf.Max(movementClampHigh.z, transform.position.z);
-        /*
-        if (overlapBomb)
-        {
-            Vector3 offset = overlapBombPosition - transform.position;
-
-            // if the distance between the bomb and the player is below 0.5, the player can continue to move over the bomb
-            // else the player is stuck at its current position
-            if (leftWall && overlapBombCoordinates.x == currentTileX - 1)
-            {
-                movementClampLow.x = offset.x > -0.5f ? overlapBombPosition.x : transform.position.x;
-            }
-
-            if (rightWall && overlapBombCoordinates.x == currentTileX + 1)
-            {
-                movementClampHigh.x = offset.x < 0.5f ? overlapBombPosition.x : transform.position.x;
-            }
-
-            if (downWall && overlapBombCoordinates.y == currentTileY - 1)
-            {
-                movementClampLow.z = offset.z > -0.5f ? overlapBombPosition.z : transform.position.z;
-            }
-
-            if (upWall && overlapBombCoordinates.y == currentTileY + 1)
-            {
-                movementClampHigh.z = offset.z < 0.5f ? overlapBombPosition.z : transform.position.z;
-            }
-        }
-        */
+       
     }
-    /*
-    private void ComputeBombOverlap()
-    {
-        return;
-
-        if (majorTile.type == ElementType.Bomb)
-        {
-            overlapBombPosition = currentTileCenter;
-            overlapBombCoordinates.x = currentTileX;
-            overlapBombCoordinates.y = currentTileY;
-            overlapBomb = true;
-        }
-
-        if (overlapBomb)
-        {
-            overlapBombDistance = Vector3.Distance(overlapBombPosition, transform.position);
-
-            if(overlapBombDistance >= 1f)
-            {
-                overlapBomb = false;
-            }
-        }
-
-
-    }
-    */
+    
     //TODO : remove debug
     Vector3 debugPivot;
     Vector3 debugDir;
@@ -351,8 +299,8 @@ public class PlayerMovement : NetworkBehaviour
         // get position sign within the Tile
         // posSignX positive = the player is on the right side of the Tile
         // posSignZ positive = the player is on the upper side of the tile
-        int posSignX = Utils.RoundedSign(offset.x);
-        int posSignZ = Utils.RoundedSign(offset.z);
+        int posSignX = Utils.RoundedSign(offset.x,0.01f);
+        int posSignZ = Utils.RoundedSign(offset.z,0.01f);
 
         // the player is perfectly aligned on an axis, no turn is possible in this case
         if (posSignX == 0 || posSignZ == 0)
@@ -384,6 +332,24 @@ public class PlayerMovement : NetworkBehaviour
         // detect blocking wall in each axis
         bool blockingX = grid.GetGridObject(currentTileX + dirSignX, currentTileY).type >= ElementType.Block;
         bool blockingZ = grid.GetGridObject(currentTileX, currentTileY + dirSignZ).type >= ElementType.Block;
+
+        if(blockingDestTile)
+        {
+            int dx = dirSignX;
+            int dz = dirSignZ;
+            if(blockingX && dirSignX!=0 && dirSignZ!=0)
+            {
+                dx = 0;
+            }
+
+            if (blockingZ && dirSignX != 0 && dirSignZ != 0)
+            {
+                dz = 0;
+            }
+            
+            blockingDestTile = grid.GetGridObject(currentTileX + dx, currentTileY + dz).type >= ElementType.Block;
+        }
+
 
         //**********************************
         //TODO : remove debug

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Mirror;
 
 public class ItemFlames : ItemBase
@@ -25,7 +20,6 @@ public class ItemFlames : ItemBase
     // durée minimale de visibilité de la flamme
     [Range(0.5f, 2f)]
     public float duration = 1f;
-
 
     // durée de visibilité supplémentaire pour chaque niveau de flamme 
     [Range(0f, 0.3f)]
@@ -238,10 +232,6 @@ public class ItemFlames : ItemBase
         {
             RpcInit(position, direction, maxPower, extraTime);
         }
-        //else
-        //{
-        //    Init(position, direction, maxPower, extraTime);
-        //}
     }
 
     private void Init(Vector3 startPosition, Vector3 direction, float maxPower, float extraTime)

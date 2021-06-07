@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using Mirror;
-
-
+﻿using UnityEngine;
 
 public class ItemBonus : ItemBase, ILootable, IDestroyable
 {
@@ -34,9 +30,9 @@ public class ItemBonus : ItemBase, ILootable, IDestroyable
 
     public void Loot(PlayerEntity playerEntity)
     {
-        Debug.Log("Bonus " + netId + " Looted");
+        Debug.Log(playerEntity + " Looted : " + bonusBehaviour.name);
         bonusBehaviour.PerformAction(playerEntity);
-        playerEntity.GetComponent<PlayerBonusPickUp>().AddItem(bonusBehaviour);
+        playerEntity.playerBonusPickUp.AddItem(bonusBehaviour);
 
         Disable();
 

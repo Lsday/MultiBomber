@@ -13,20 +13,35 @@ MonoBehaviour:
   m_Name: DefaultLevelBonusSettings
   m_EditorClassIdentifier: 
   _bonusSettings:
-  - name: Bomb
+  - name: Bomb +
+    bonus: {fileID: 11400000, guid: 90a375be85bb27c418c82356d3e60fa2, type: 2}
+    exactCount: 0
+    proportion: 0.5
+    playersProportion: 0
+  - name: Bomb -
     bonus: {fileID: 11400000, guid: f0019a68c8f4c10428ecaee840db7f66, type: 2}
     exactCount: 0
-    proportion: 0.648
+    proportion: 0.5
     playersProportion: 0
-  - name: Roller
+  - name: Fire +
+    bonus: {fileID: 11400000, guid: b1953d41da9f1f6439308d64a494b4a3, type: 2}
+    exactCount: 0
+    proportion: 0.5
+    playersProportion: 0
+  - name: Fire -
+    bonus: {fileID: 11400000, guid: 7a78a0e4a23cb4a429f93fb22740d2ef, type: 2}
+    exactCount: 0
+    proportion: 0.5
+    playersProportion: 0
+  - name: Roller +
     bonus: {fileID: 11400000, guid: 56126229172752c48910021deeb99c85, type: 2}
     exactCount: 0
-    proportion: 0.452
+    proportion: 0.5
     playersProportion: 0
-  - name: Fire
-    bonus: {fileID: 0}
+  - name: Roller -
+    bonus: {fileID: 11400000, guid: 6f18f96667ab6434d891f64fdfa18eae, type: 2}
     exactCount: 0
-    proportion: 0
+    proportion: 0.5
     playersProportion: 0
   - name: Kick
     bonus: {fileID: 0}
@@ -39,10 +54,10 @@ MonoBehaviour:
     proportion: 0
     playersProportion: 0
   - name: Golden Flame
-    bonus: {fileID: 0}
+    bonus: {fileID: 11400000, guid: f0204addfe9bf164083e75d7ebcf1a05, type: 2}
     exactCount: 0
-    proportion: 0
+    proportion: 0.288
     playersProportion: 0
-  boxesCount: 25
-  playersCount: 2
+  boxesCount: 24
+  playersCount: 1
   bonusPercentage: 1

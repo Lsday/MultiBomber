@@ -4,14 +4,13 @@
 [CreateAssetMenu(menuName = "ScriptableAction/Fire DropBehaviour", fileName = "FlamesDropBehaviour")]
 public class FlamesDropBehaviour : DropBehaviour<ItemBase>
 {
-
     public override void PerformAction(ItemBase obj)
     {
         ItemBomb bomb = obj as ItemBomb;
         
         if (bomb.explosionDirection == Direction.None) // instancie des flammes sur une seule case
         {
-            SpawnFlames(bomb.transform.position - dropPositionOffset, Vector3.up, 1);
+            SpawnFlames(bomb.transform.position - dropPositionOffset, Vector3.up, bomb.flamesPower);
             return;
         }
 
@@ -22,12 +21,10 @@ public class FlamesDropBehaviour : DropBehaviour<ItemBase>
 
             if ((bomb.explosionDirection & (Direction)Mathf.Pow(2, i)) > 0)
             {
-                SpawnFlames(bomb.transform.position + dropPositionOffset, directions[i], bomb.bombPower);
+                SpawnFlames(bomb.transform.position + dropPositionOffset, directions[i], bomb.flamesPower);
             }
         }
     }
-
-
 
     void SpawnFlames(Vector3 position , Vector3 direction , float power)
     {

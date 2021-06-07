@@ -8,9 +8,13 @@ public class PlayerBombDropper : NetworkBehaviour
 {
     public PlayerEntity playerEntity;
 
-    public int bombMax = 1;
-    public int bombCounter;
-   
+    public int bombCount = 1;
+    public int bombOnMap;
+    public int bombMaxOnMap = 10;
+
+    public int flamesPower = 1;
+    public int flamePowerMax = 15;
+
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -41,7 +45,7 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public void PlaceBomb()
     {
-        if (playerEntity.hubIdentity.isLocalPlayer && bombCounter < bombMax)
+        if (playerEntity.hubIdentity.isLocalPlayer && bombOnMap < bombCount)
         {
             if (isServer)
             {
@@ -49,8 +53,6 @@ public class PlayerBombDropper : NetworkBehaviour
             }
             else
                 CmdDropBomb();
-
-            
         }
     }
 
@@ -61,70 +63,58 @@ public class PlayerBombDropper : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcDecrementBombCounter()
+    public void RpcDecrementBombOnMap()
     {
-        if (bombCounter > 0)
+        if (bombOnMap > 0)
         {
-            bombCounter--;
+            bombOnMap--;
         }
     }
 
     [ClientRpc]
-    public void RpcIncrementBombCounter()
+    public void AddBombOnMap()
     {
-       
-            bombCounter++;
-        
+        bombOnMap++;
     }
 
     [ClientRpc]
-    public void RpcDecrementBombMax()
+    public void RpcModifyBombCount(int amount)
     {
-        if (bombMax > 1)
-        {
-            bombMax--;
-        }
+        bombCount += amount;
+
+        if (bombCount <= 0)
+            bombCount = 1;
+
+        if (bombCount >= bombMaxOnMap)
+            bombCount = bombMaxOnMap;
     }
 
     [ClientRpc]
-    public void RpcIncrementBombMax()
+    public void RpcModifyFlamesPower(int amount)
     {
-        if (bombMax < 10)
-        {
-            bombMax++;
-        }
-       
+
+        flamesPower += amount;
+
+        if (flamesPower <= 0)
+            flamesPower = 1;
+
+        if (flamesPower >= flamePowerMax)
+            flamesPower = flamePowerMax;
+
     }
 
     private void DropBomb()
     {
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
 
-        if(tile.type < ElementType.Block)
+        if (tile.type < ElementType.Block)
         {
             ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
-
             bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
             bomb.bombDropper = this;
+            bomb.flamesPower = flamesPower;
 
-            RpcIncrementBombCounter();
+            AddBombOnMap();
         }
     }
-
-
-
-
-
-
-    void AddBomb(byte count)
-    {
-        bombCounter += count;
-    }
-
-
-    void RemoveBomb(byte count)
-    {
-        bombCounter -= count;
-    }
-
 }

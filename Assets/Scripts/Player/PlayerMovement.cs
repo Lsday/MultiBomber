@@ -8,7 +8,9 @@ public class PlayerMovement : NetworkBehaviour
     [SyncVar] bool isRunning;
     PlayerEntity playerEntity;
 
-    public float speed = 5;
+    public float startSpeed = 3;
+    public float speed = 3;
+    public float speedMax = 10;
 
     [Range(0f, 0.5f)]
     public float cornerSliding = 0f;
@@ -155,9 +157,10 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcIncreaseSpeed()
+    public void RpcModifySpeed(int amount)
     {
-        speed += 1;
+        if (speed < speedMax && speed > startSpeed)
+            speed += amount;
     }
 
     [ClientRpc]

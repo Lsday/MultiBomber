@@ -1,36 +1,15 @@
-﻿using System.Collections;
-using UnityEngine;
-using Mirror;
-using System;
-
-
-//spawn par le serveur 
-// set la tile où la bombe est posée
-// activer Timer
-// peut se désactiver et ne pas péter automatiquement, mais peut péter si est touché par une autre explosion
-//faire péter la bombe , la bombe a une puissance ( en cases )
-//Calculer les 4 directions de la bombes, et regarder si l'explo est bloqué
-// Si une bombe est touché , elle doit péter après
-// si touche un joueur , il meurt
-// les cases qui ont pété deviennent "chaudes" et restent mortelles pendant un laps de temps
-// Animation de flammes
-// 
-
-public class ItemBomb : ItemBase, IDestroyable
+﻿public class ItemBomb : ItemBase, IDestroyable
 {
-
-    public Action OnBombExploded;
-
-    public NetworkIdentity playerIdentity;
     public PlayerBombDropper bombDropper;
     Timer timer;
     bool alreadyTriggered;
 
-    public int bombPower = 1;
+    public int flamesPower = 1;
+   
 
 
     public BombBehaviour bombBehaviour;
-    public FlamesDropBehaviour dropBehaviour;
+    public FlamesDropBehaviour flamesBehaviour;
 
     public Direction explosionDirection;
 
@@ -85,11 +64,10 @@ public class ItemBomb : ItemBase, IDestroyable
 
     private void BombExplosion()
     {
+        bombBehaviour.PerformAction(this); // Calcul des directions que peuvent emprunter les flammes et stocke l'information dans "this"
+        flamesBehaviour.PerformAction(this); // Spawn les flammes
 
-        bombBehaviour.PerformAction(this); // Calcul des directions que peuvent emprunter les flammes et stocke l'information dans this
-        dropBehaviour.PerformAction(this); // Spawn les flammes
-
-        bombDropper.RpcDecrementBombCounter();
+        bombDropper.RpcDecrementBombOnMap();
 
         Disable();
     }

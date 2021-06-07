@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f89c9e2acd9b528448e7dde15e26f849, type: 3}
-  m_Name: BonusBombUp+1
+  m_Script: {fileID: 11500000, guid: 6d90dbd0128a568468824870b64d5839, type: 3}
+  m_Name: BonusSpeed +1
   m_EditorClassIdentifier: 
-  description: "Incr\xE9mentre le nombre de bombes max"
+  description: Augmente la vitesse de deplacement
+  speedModifier: 1

@@ -37,6 +37,10 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     /// </summary>
     public DeviceEntity controllerDevice;
 
+    public PlayerMovement playerMovement {get; private set;}
+    public PlayerBombDropper playerBombDropper{get; private set;}
+    public PlayerBonusPickUp playerBonusPickUp{get; private set;}
+
     // TODO : private variables
     public Animator animator;
     public Renderer avatarRenderer;
@@ -49,6 +53,11 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         animator = GetComponentInChildren<Animator>();
         avatarRenderer = GetComponentInChildren<Renderer>();
         avatarMaterial = avatarRenderer.material;
+
+        playerMovement = GetComponent<PlayerMovement>();
+        playerBombDropper = GetComponent<PlayerBombDropper>();
+        playerBonusPickUp = GetComponent<PlayerBonusPickUp>();
+       
     }
 
     /// <summary>

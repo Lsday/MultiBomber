@@ -14,7 +14,7 @@ public class ItemBox : ItemBase, IDestroyable
     {
         destroyedTriggered = false;
 
-        Debug.Log(gameObject.name + "Box Destroyed");
+        //Debug.Log(gameObject.name + "Box Destroyed");
 
         if(bonus != null)
         {

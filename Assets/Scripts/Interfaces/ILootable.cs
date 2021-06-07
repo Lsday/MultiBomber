@@ -1,6 +1,4 @@
-﻿
-
-public interface ILootable
+﻿public interface ILootable
 {
     public void Loot(PlayerEntity player);
 }

@@ -49,7 +49,7 @@ public abstract class ItemBase : PoolableObject
     [ClientRpc]
     public void RpcPlaceOnTile(Vector3 position)
     {
-        Debug.Log("RpcPlaceOnTile execute");
+       // Debug.Log("RpcPlaceOnTile execute");
         //parenttile = levelbuilder.grid?.getgridobject(position);
         //parenttile?.settile(this);
         PlaceOnTile(position);

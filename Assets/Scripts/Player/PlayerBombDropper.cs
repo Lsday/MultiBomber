@@ -15,6 +15,8 @@ public class PlayerBombDropper : NetworkBehaviour
     public int flamesPower = 1;
     public int flamePowerMax = 15;
 
+    bool canDropbomb = true;
+
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -38,59 +40,42 @@ public class PlayerBombDropper : NetworkBehaviour
     private void OnDisable()
     {
         if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
-        {
             playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
-        }
+        
     }
 
     public void PlaceBomb()
     {
+        if (!canDropbomb) return;
+        
         if (playerEntity.hubIdentity.isLocalPlayer && bombOnMap < bombCount)
         {
             if (isServer)
-            {
                 DropBomb();
-            }
+            
             else
                 CmdDropBomb();
         }
     }
 
     [Command]
-    private void CmdDropBomb()
-    {
-        DropBomb();
-    }
-
+    private void CmdDropBomb() => DropBomb();
+    
     [ClientRpc]
     public void RpcDecrementBombOnMap()
     {
         if (bombOnMap > 0)
-        {
             bombOnMap--;
-        }
     }
 
     [ClientRpc]
-    public void AddBombOnMap()
-    {
-        bombOnMap++;
-    }
+    public void AddBombOnMap() => bombOnMap++;
+    
+    [ClientRpc]
+    public void RpcModifyBombCount(int amount) => bombCount = Mathf.Clamp(bombCount + amount, 1, bombMaxOnMap);
 
     [ClientRpc]
-    public void RpcModifyBombCount(int amount)
-    {
-        bombCount = Mathf.Clamp(bombCount+amount, 1, bombMaxOnMap);
-    }
-
-    [ClientRpc]
-    public void RpcModifyFlamesPower(int amount)
-    {
-
-        flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
-
-    }
-
+    public void RpcModifyFlamesPower(int amount) => flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
     private void DropBomb()
     {
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
@@ -105,4 +90,10 @@ public class PlayerBombDropper : NetworkBehaviour
             AddBombOnMap();
         }
     }
+
+    public void ToggleCanDropBomb() => canDropbomb = !canDropbomb;
+    
+    
+
+
 }

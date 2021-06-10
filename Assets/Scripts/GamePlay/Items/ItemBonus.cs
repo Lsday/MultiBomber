@@ -1,46 +1,20 @@
-﻿using UnityEngine;
-
-public class ItemBonus : ItemBase, ILootable, IDestroyable
-{
-
-    public BonusBehaviour<PlayerEntity> bonusBehaviour;
-    bool destroyedTriggered = false;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 
-    public void Destroy()
+public class ItemBonus : ItemPlayerModifier
+{ 
+
+    public override void Loot(PlayerEntity playerEntity)
     {
-        Disable();
-    }
-
-    public void InitDestroy(float delay = 0, float fireEndDelay = 0f)
-    {
-        if (destroyedTriggered) return;
-
-        delay += fireEndDelay;
-
-        if (delay > 0)
-        {
-            destroyedTriggered = true;
-            Invoke("Destroy", delay);
-            return;
-        }
-
-        Destroy();
-    }
-
-    public void Loot(PlayerEntity playerEntity)
-    {
-        Debug.Log("Player :"+playerEntity.netId + " Looted : " + bonusBehaviour.name);
+        BonusBehaviour<PlayerEntity> bonusBehaviour = scriptableAction as BonusBehaviour<PlayerEntity>;
         bonusBehaviour.PerformAction(playerEntity);
         playerEntity.playerBonusPickUp.AddItem(bonusBehaviour);
 
-        Disable();
-
-    }
-
-    public override string ToString()
-    {
-        return bonusBehaviour.name;
+        base.Loot(playerEntity);
     }
 
 }

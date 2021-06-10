@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 5312718094060114507}
   - component: {fileID: 2432754620879918006}
   - component: {fileID: -4968927354457138858}
-  - component: {fileID: -8751740363506246774}
+  - component: {fileID: -7704902994023382733}
   m_Layer: 0
-  m_Name: Bonus
+  m_Name: Disease
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
   compressRotation: 1
   interpolateScale: 0
   syncScale: 0
---- !u!114 &-8751740363506246774
+--- !u!114 &-7704902994023382733
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5312718094065896331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c7ed3dc81a7f744aaf2919314b54a30, type: 3}
+  m_Script: {fileID: 11500000, guid: 55b429fbbae813246b50c9edf1e58256, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
@@ -167,7 +167,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a083dc015a66534baecfc16bb6db3bc, type: 2}
+  - {fileID: 2100000, guid: a2155cfd11fc6eb4ca712ac768c55463, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -9,7 +9,7 @@ public class Timer : MonoBehaviour
     [SerializeField] float duration;
     [SerializeField] bool triggerWhenDestroy;
 
-    public void Init() => StartCoroutine(StartTimer(duration));
+    public void Start() => StartCoroutine(StartTimer(duration));
 
     public void DelayedStart(float duration)
     {
@@ -34,6 +34,11 @@ public class Timer : MonoBehaviour
     {
         StopAllCoroutines();
         onTimerEnd?.Invoke();
+    }
+
+    public void StopTimer()
+    {
+        StopAllCoroutines();
     }
 
     private void OnDisable()

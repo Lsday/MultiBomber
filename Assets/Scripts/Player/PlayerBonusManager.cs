@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBonusPickUp : MonoBehaviour
+public class PlayerBonusManager : MonoBehaviour
 {
     /// <summary>
     /// Conatain all the bonus that the player had already loot

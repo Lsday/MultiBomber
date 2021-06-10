@@ -58,6 +58,11 @@ MonoBehaviour:
     exactCount: 0
     proportion: 0.288
     playersProportion: 0
+  - name: Disease
+    bonus: {fileID: 0}
+    exactCount: 3
+    proportion: 0.533
+    playersProportion: 0
   boxesCount: 26
   playersCount: 1
   bonusPercentage: 1

@@ -46,7 +46,7 @@
 
         if(timer == null) timer = GetComponent<Timer>();
 
-        timer.Init();
+        timer.Start();
         timer.onTimerEnd += TriggerBomb;
 
         alreadyTriggered = false;

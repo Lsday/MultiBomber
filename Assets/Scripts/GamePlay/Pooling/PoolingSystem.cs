@@ -11,7 +11,8 @@ public enum ItemsType
     BOX,
     BOMB,
     BONUS,
-    FLAMES
+    FLAMES,
+    DISEASE
 }
 
 
@@ -38,6 +39,11 @@ public class PoolingSystem : NetworkBehaviour
     public int bonusAmountToPool;
     #endregion
 
+    #region Disease
+    public GameObject diseasePrefabToPool;
+    public int diseaseAmountToPool;
+    #endregion
+
     #region Flames
     public GameObject flamesPrefabToPool;
     public int flamesAmountToPool;
@@ -60,6 +66,7 @@ public class PoolingSystem : NetworkBehaviour
         pooledObjects.Add(ItemsType.BOMB, new List<ItemBase>());
         pooledObjects.Add(ItemsType.BONUS, new List<ItemBase>());
         pooledObjects.Add(ItemsType.FLAMES, new List<ItemBase>());
+        pooledObjects.Add(ItemsType.DISEASE, new List<ItemBase>());
 
         if (isServer)
         {
@@ -86,6 +93,12 @@ public class PoolingSystem : NetworkBehaviour
             {
                 obj = Instantiate(flamesPrefabToPool).GetComponent<ItemBase>();
                 pooledObjects[ItemsType.FLAMES].Add(obj);
+            }
+
+            for (int i = 0; i < diseaseAmountToPool; i++)
+            {
+                obj = Instantiate(diseasePrefabToPool).GetComponent<ItemBase>();
+                pooledObjects[ItemsType.DISEASE].Add(obj);
             }
         }
         

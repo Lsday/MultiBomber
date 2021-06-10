@@ -4,29 +4,10 @@ using UnityEngine;
 using Mirror;
 public class PlayerEntity : NetworkBehaviour, IKillable
 {
-    #region Static declarations
-    public static List<PlayerEntity> instancesList = new List<PlayerEntity>();
-    public static void SortInstances()
-    {
-        // TODO : add a "creation timestamp" to sort the players with it, instead of hubidentity+localindex
-        instancesList.Sort((x, y) => {
-            var ret = x.hubIdentity.netId.CompareTo(y.hubIdentity.netId);
-            if (ret == 0) ret = x.localPlayerIndex.CompareTo(y.localPlayerIndex);
-            return ret;
-        });
-    }
-
-    /// <summary>
-    /// This function returns the number of all players (local+remote)
-    /// </summary>
-    /// <returns></returns>
-    public static int GetInstancesCount()
-    {
-        return instancesList.Count;
-    }
-    #endregion
-
     #region Properties
+
+    public static List<PlayerEntity> instancesList = new List<PlayerEntity>();
+  
     [SyncVar] public string debugName; // TODO : remove this later
     [SyncVar] public NetworkIdentity hubIdentity;
     [SyncVar] public byte localPlayerIndex;
@@ -39,12 +20,17 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
     public PlayerMovement playerMovement {get; private set;}
     public PlayerBombDropper playerBombDropper{get; private set;}
-    public PlayerBonusPickUp playerBonusPickUp{get; private set;}
+    public PlayerBonusManager playerBonusPickUp{get; private set;}
+    public PlayerDiseaseManager playerDiseaseManager { get; private set; }
+
+   
 
     // TODO : private variables
     public Animator animator;
     public Renderer avatarRenderer;
     public Material avatarMaterial;
+
+   
     #endregion
 
     #region Init
@@ -56,8 +42,31 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
         playerMovement = GetComponent<PlayerMovement>();
         playerBombDropper = GetComponent<PlayerBombDropper>();
-        playerBonusPickUp = GetComponent<PlayerBonusPickUp>();
-       
+        playerBonusPickUp = GetComponent<PlayerBonusManager>();
+
+        playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
+        playerDiseaseManager.Init(this);
+
+    }
+
+
+
+    /// <summary>
+    /// This function returns the number of all players (local+remote)
+    /// </summary>
+    /// <returns></returns>
+    public static int GetInstancesCount()
+    {
+        return instancesList.Count;
+    }
+    public static void SortInstances()
+    {
+        // TODO : add a "creation timestamp" to sort the players with it, instead of hubidentity+localindex
+        instancesList.Sort((x, y) => {
+            var ret = x.hubIdentity.netId.CompareTo(y.hubIdentity.netId);
+            if (ret == 0) ret = x.localPlayerIndex.CompareTo(y.localPlayerIndex);
+            return ret;
+        });
     }
 
     /// <summary>

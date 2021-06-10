@@ -1518,6 +1518,8 @@ MonoBehaviour:
   bombAmountToPool: 100
   bonusPrefabToPool: {fileID: 5312718094065896331, guid: b6a67a708afdff74784655addb5c0317, type: 3}
   bonusAmountToPool: 100
+  diseasePrefabToPool: {fileID: 5312718094065896331, guid: d62f6e88275b45348a89f5d8525c6822, type: 3}
+  diseaseAmountToPool: 10
   flamesPrefabToPool: {fileID: 1708823365755688, guid: 521afbc6d6fca8748abadfd8e72a2b95, type: 3}
   flamesAmountToPool: 100
 --- !u!114 &618848645

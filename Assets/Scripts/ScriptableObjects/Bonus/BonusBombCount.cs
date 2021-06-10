@@ -9,5 +9,4 @@ public class BonusBombCount : BonusBehaviour<PlayerEntity>
     {
         player.playerBombDropper.RpcModifyBombCount(bombCountModifier);
     }
-
 }

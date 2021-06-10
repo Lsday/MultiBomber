@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 7299415106740637389}
   - component: {fileID: 161878465008676798}
   - component: {fileID: 2718188998225735062}
+  - component: {fileID: 1020116337010221406}
+  - component: {fileID: 6882409918411526273}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -149,6 +151,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemBonusList: []
+--- !u!114 &1020116337010221406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340615587193445658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e312205cc455a048adc7e8acdeba81d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  diseaseBehaviours:
+  - {fileID: 11400000, guid: 72fab200141e88c44baf64c1f2df4011, type: 2}
+--- !u!114 &6882409918411526273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340615587193445658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89104537a8ddb374095192a8af2128ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 20
+  triggerWhenDestroy: 0
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

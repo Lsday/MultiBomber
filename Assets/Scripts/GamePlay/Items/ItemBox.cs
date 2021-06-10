@@ -19,8 +19,14 @@ public class ItemBox : ItemBase, IDestroyable
         if(bonus != null)
         {
             ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
-            itemBonus.bonusBehaviour = bonus;
+            itemBonus.scriptableAction = bonus;
             itemBonus.Teleport(transform.position);
+
+        }
+        else
+        {
+            ItemDisease itemDisease = PoolingSystem.instance.GetPoolObject(ItemsType.DISEASE) as ItemDisease;
+            itemDisease.Teleport(transform.position);
         }
         
         //bonusDropBehaviour.PerformAction(this);
@@ -49,6 +55,6 @@ public class ItemBox : ItemBase, IDestroyable
 
     public override string ToString()
     {
-        return bonus==null ? type.ToString():"Box:"+bonus.name;
+        return bonus==null ? "Disease" : "Box:"+bonus.name  ;
     }
 }

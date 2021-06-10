@@ -151,28 +151,15 @@ public class PlayerMovement : NetworkBehaviour
             transform.forward = new Vector3(signX, 0, signZ).normalized;
         }
 
-        ////
-        ///
-
     }
 
     [ClientRpc]
     public void RpcModifySpeed(int amount)
     {
-        if (speed < speedMax && speed > startSpeed)
-            speed += amount;
+        speed = Mathf.Clamp(speed + amount, startSpeed, speedMax);
     }
 
-    [ClientRpc]
-    public void RpcDecreaseSpeed()
-    {
-        if (speed > 1)
-        {
-            speed -= 1;
-        }
-
-    }
-
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = dbgCol;

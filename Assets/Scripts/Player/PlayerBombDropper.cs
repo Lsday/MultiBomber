@@ -80,26 +80,14 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void RpcModifyBombCount(int amount)
     {
-        bombCount += amount;
-
-        if (bombCount <= 0)
-            bombCount = 1;
-
-        if (bombCount >= bombMaxOnMap)
-            bombCount = bombMaxOnMap;
+        bombCount = Mathf.Clamp(bombCount+amount, 1, bombMaxOnMap);
     }
 
     [ClientRpc]
     public void RpcModifyFlamesPower(int amount)
     {
 
-        flamesPower += amount;
-
-        if (flamesPower <= 0)
-            flamesPower = 1;
-
-        if (flamesPower >= flamePowerMax)
-            flamesPower = flamePowerMax;
+        flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
 
     }
 

@@ -13,10 +13,15 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     [SyncVar] public byte localPlayerIndex;
     [SyncVar] public Color defaultColor;
 
+
+
     /// <summary>
     /// The device (physical=keyboard,gamepad or virtual=bot) used to control this player
     /// </summary>
     public DeviceEntity controllerDevice;
+
+    [Range(0.1f,0.5f)]
+    public float deathThreshold = 0.3f;
 
     public PlayerMovement playerMovement {get; private set;}
     public PlayerBombDropper playerBombDropper{get; private set;}
@@ -46,7 +51,6 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
         playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
         playerDiseaseManager.Init(this);
-
     }
 
 
@@ -54,7 +58,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     /// <summary>
     /// This function returns the number of all players (local+remote)
     /// </summary>
-    /// <returns></returns>
+    /// <returns>int</returns>
     public static int GetInstancesCount()
     {
         return instancesList.Count;
@@ -69,8 +73,24 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         });
     }
 
+    public static PlayerEntity GetMajorPlayer(int x, int y)
+    {
+        float maxOccupation = 0;
+        PlayerEntity player = null;
+        for (int i = 0; i < instancesList.Count; i++)
+        {
+            float o = instancesList[i].GetTileOccupation(x, y);
+            if ( o > maxOccupation)
+            {
+                maxOccupation = o;
+                player = instancesList[i];
+            }
+        }
+
+        return player;
+    }
     /// <summary>
-    /// Pointer to the NetworkIndentity of the PlayerHub which created this player.
+    /// Set the pointer to the NetworkIndentity of the PlayerHub which created this player.
     /// </summary>
     /// <param name="identity"></param>
     public void SetHubIdentity(NetworkIdentity identity)
@@ -125,6 +145,25 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         ApplyColor();
     }
 
+    public float GetTileOccupation(int x,int y)
+    {
+
+        if (Mathf.Abs(playerMovement.currentTileX - x) > 2 || Mathf.Abs(playerMovement.currentTileY - y) > 2)
+            return 0f;
+
+        for(int i = 0; i < playerMovement.tiles.Length; i++)
+        {
+            if(playerMovement.tiles[i].tile != null)
+            {
+                if(playerMovement.tiles[i].tile.x == x && playerMovement.tiles[i].tile.y == y)
+                {
+                    return playerMovement.tiles[i].occupation;
+                }
+            }
+        }
+
+        return 0;
+    }
 
     void ApplyColor()
     {
@@ -141,9 +180,34 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         ApplyColor();
     }
 
+    void OnDrawGizmos()
+    {
+        if (CheckDeath())
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(transform.position, Vector3.one);
+        }
+    }
+
+    private bool CheckDeath()
+    {
+        for (int i = 0; i < playerMovement.tiles.Length; i++)
+        {
+            if (playerMovement.tiles[i].occupation > deathThreshold)
+            {
+                if(playerMovement.tiles[i].tile.temperature > 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void Kill()
     {
-        Debug.Log(hubIdentity.name + "  Player is Dead");
+        Debug.Log(hubIdentity.name + " Player is Dead");
     }
     #endregion
 }

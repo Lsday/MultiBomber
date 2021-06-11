@@ -4,6 +4,12 @@ using Mirror;
 public class PlayerMovement : NetworkBehaviour
 {
 
+    public struct TileOccupation
+    {
+        public Tile tile;
+        public float occupation;
+    }
+
     #region Properties
     [SyncVar] bool isRunning;
     PlayerEntity playerEntity;
@@ -17,8 +23,12 @@ public class PlayerMovement : NetworkBehaviour
 
     public SO_Bool gameStarted;
 
-    private int currentTileX;
-    private int currentTileY;
+    public int currentTileX;
+    public int currentTileY;
+
+    private Tile currentTile;
+
+    public TileOccupation[] tiles = new TileOccupation[4];
 
     private Vector3 currentTileCenter;
     private Vector3 currentOffsetFromCenter;
@@ -26,8 +36,6 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 movementClampHigh;
     private Vector3 lastPosition;
 
-    private Tile majorTile;
-    private Tile minorTile;
     #endregion
 
     GenericGrid<Tile> grid;
@@ -47,11 +55,11 @@ public class PlayerMovement : NetworkBehaviour
 
     public void SetWorldPosition(Vector3 position)
     {
+        grid = LevelBuilder.grid;
+
         transform.position = position;
         UpdateTileCoordinates();
         ComputeMovementLimits();
-
-        grid = LevelBuilder.grid;
     }
 
 
@@ -103,12 +111,14 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    
+
     private void Move(float h, float v)
     {
-        UpdateTileCoordinates();
-        //ComputeBombOverlap();
-        ComputeMovementLimits();
 
+        UpdateTileCoordinates();
+
+        ComputeMovementLimits();
 
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
@@ -167,19 +177,38 @@ public class PlayerMovement : NetworkBehaviour
     
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            if(tiles[i].tile != null)
+            {
+                
+                Gizmos.color = new Color(0f, 1f, 0f, tiles[i].occupation);
+                Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one);
+
+                if(tiles[i].occupation > playerEntity.deathThreshold)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one*0.3f);
+
+                }
+            }
+            
+        }
+        return;
+
+
         Gizmos.color = dbgCol;
 
         //Gizmos.color = Color.red;
         if (LevelBuilder.grid != null)
         {
-
             Gizmos.DrawWireCube(currentTileCenter, Vector3.one * 0.95f);
         }
 
         //Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(debugPivot, 0.5f);
         Gizmos.DrawLine(transform.position, transform.position + debugDir);
-
 
         //Gizmos.color = pivotWall ? Color.red : Color.green;
         Gizmos.DrawWireSphere(testWallPivot, 0.49f);
@@ -201,47 +230,46 @@ public class PlayerMovement : NetworkBehaviour
 
         if (currentTileX != tilex || currentTileY != tiley)
         {
-            // TODO : récupérer le code de l'ancien projet pour définir majorTile
-            if (majorTile != null && majorTile.type == ElementType.Player)
+            currentTile = grid.GetGridObject(transform.position);
+
+            if (currentTile != null)
             {
-                majorTile.SetType(ElementType.Empty);
-
-            }
-
-            Vector3 worldPosition = transform.position;
-            majorTile = grid.GetGridObject(worldPosition);
-
-            if (majorTile != null)
-            {
-                currentTileX = majorTile.x;
-                currentTileY = majorTile.y;
-                if (majorTile.type == ElementType.Empty)
-                {
-                    majorTile.SetType(ElementType.Player);
-
-
-                }
-
-                if (majorTile.type == ElementType.Item)
-                {
-
-                    if (majorTile.item != null)
-                    {
-                        if (isServer)
-                        {
-                            ((ILootable)majorTile.item).Loot(playerEntity);
-                        }
-
-                        majorTile.SetType(ElementType.Player);
-                    }
-                    else
-                        majorTile.SetType(ElementType.Player);
-
-
-
-                }
+                currentTileX = currentTile.x;
+                currentTileY = currentTile.y;
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
-                currentOffsetFromCenter = worldPosition - currentTileCenter;
+            }
+        }
+
+        currentOffsetFromCenter = transform.position - currentTileCenter;
+
+        ComputeTilesOccupation();
+    }
+
+    private void ComputeTilesOccupation()
+    {
+        int signX = Utils.RoundedSign(currentOffsetFromCenter.x);
+        int signY = Utils.RoundedSign(currentOffsetFromCenter.z);
+
+        tiles[0].tile = currentTile;
+        tiles[1].tile = signX == 0 ? null : grid.GetGridObject(currentTileX + signX, currentTileY);
+        tiles[2].tile = signY == 0 ? null : grid.GetGridObject(currentTileX, currentTileY + signY);
+        tiles[3].tile = signX == 0 || signY == 0 ? null : grid.GetGridObject(currentTileX + signX, currentTileY + signY);
+
+        Vector3 playerOrigin = new Vector3(transform.position.x - 0.5f, 0, transform.position.z - 0.5f);
+        for (int i=0; i < 4; i++)
+        {
+            if (tiles[i].tile != null)
+            {
+                Vector3 origin = grid.GetGridObjectWorldPosition(tiles[i].tile.x, tiles[i].tile.y);
+
+                float x_overlap = Mathf.Max(0, Mathf.Min(playerOrigin.x + 1, origin.x + 1) - Mathf.Max(playerOrigin.x, origin.x));
+                float z_overlap = Mathf.Max(0, Mathf.Min(playerOrigin.z + 1, origin.z + 1) - Mathf.Max(playerOrigin.z, origin.z));
+
+                tiles[i].occupation = x_overlap * z_overlap;
+            }
+            else
+            {
+                tiles[i].occupation = 0;
             }
         }
     }
@@ -369,7 +397,7 @@ public class PlayerMovement : NetworkBehaviour
         float cellSize = grid.GetCellsize();
         float radius = cellSize * 0.5f;
 
-        // is the player input direction is only on one axis (true) or diagonal (false)
+        // is the player input direction only on one axis (true) or diagonal (false)
         bool singleAxis = dirSignX != 0 ^ dirSignZ != 0;
 
         // calculate the corner position around which the player will turn

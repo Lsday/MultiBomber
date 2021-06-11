@@ -1384,6 +1384,7 @@ GameObject:
   - component: {fileID: 618848639}
   - component: {fileID: 618848644}
   - component: {fileID: 618848645}
+  - component: {fileID: 618848646}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1406,6 +1407,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   totalPlayersCount: {fileID: 11400000, guid: 5a3f6384940da834db1a09c00d9edd70, type: 2}
+  spacing: 2
+  blockMaterial: {fileID: 2100000, guid: c2b27b40d102e86488799738633bc451, type: 2}
   mapSize: 7
   bonusSettings: {fileID: 11400000, guid: 4da12222d3ba730409b5a00011c8637c, type: 2}
   block_I: {fileID: 4300008, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
@@ -1415,9 +1418,8 @@ MonoBehaviour:
   block_U: {fileID: 0}
   block_O: {fileID: 4300010, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-  boxPrcent: 20
+  boxPercent: 20
   playerStartPositions: []
-  blockMaterial: {fileID: 2100000, guid: c2b27b40d102e86488799738633bc451, type: 2}
 --- !u!4 &618848640
 Transform:
   m_ObjectHideFlags: 0
@@ -1518,8 +1520,6 @@ MonoBehaviour:
   bombAmountToPool: 100
   bonusPrefabToPool: {fileID: 5312718094065896331, guid: b6a67a708afdff74784655addb5c0317, type: 3}
   bonusAmountToPool: 100
-  diseasePrefabToPool: {fileID: 5312718094065896331, guid: d62f6e88275b45348a89f5d8525c6822, type: 3}
-  diseaseAmountToPool: 10
   flamesPrefabToPool: {fileID: 1708823365755688, guid: 521afbc6d6fca8748abadfd8e72a2b95, type: 3}
   flamesAmountToPool: 100
 --- !u!114 &618848645
@@ -1535,6 +1535,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelBuilder: {fileID: 0}
+--- !u!114 &618848646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618848638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dcdd89bf7496d34ea003fd4dee97ec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  lootThreshold: 0.1
 --- !u!1 &694083271
 GameObject:
   m_ObjectHideFlags: 0

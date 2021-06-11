@@ -14,9 +14,18 @@ public class Tile
 
     public PlayerEntity playerEntity{ get; private set; }
 
-public bool IsDirty => throw new NotImplementedException();
+    public bool IsDirty => throw new NotImplementedException();
 
-    public byte temperature;
+    private byte _temperature = 0;
+    public byte temperature {
+        get { return _temperature; }
+
+        set
+        {
+            _temperature = value;
+            grid.OnGridObjectModified(this);
+        }
+    }
     #endregion
 
     #region Constructor
@@ -42,11 +51,14 @@ public bool IsDirty => throw new NotImplementedException();
 
     public override string ToString()
     {
-        if(item != null)
+        //return _temperature.ToString();
+
+        if (item != null)
         {
             return item.ToString();
         }
-        return type.ToString();
+        return type.ToString() + "("+_temperature+")";
+        
     }
     public void ClearTile()
     {

@@ -151,28 +151,21 @@ public class ItemFlames : ItemBase
     */
     private void RemoveHeat()
     {
-        if (heatRemoved) return;
+        if (heatRemoved || !initialized) return;
 
         heatRemoved = true;
 
+        Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition);
+        tile.temperature--;
+
+        for (int i = 1; i <= currentPower; i++)
+        {
+            tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction * i);
+            if(tile != null) tile.temperature--;
+        }
+
         // on remet le prevPower à zéro, pour repartir du début de la flamme
         prevPower = 0;
-
-        // suppression de la chaleur sur toute la longueur de l'explosion
-        //UpdateHeat(-1);
-
-        /*
-        // suppression de la chaleur au centre de l'explosion
-        gameSettings.level.AddHeat(CellX, CellZ, -1);
-
-        // reset de la valeur de la case du centre de l'explosion
-        ElementType t = gameSettings.level.GetCellType(CellX, CellZ);
-        if (t == ElementType.Explosion || t == ElementType.Fire)
-        {
-            //Debug.Log("clear fire >");
-            gameSettings.level.SetCellElement(sourcePosition, null);
-        }
-        */
     }
 
     private void UpdateHeat(int heatValue = 1)
@@ -186,15 +179,15 @@ public class ItemFlames : ItemBase
         {
             Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction * i);
 
+            tile.temperature++;
+
             if (tile.item is IDestroyable)
             {
                 if (isServer)
                 {
                     ((IDestroyable)tile.item).InitDestroy(0.05f , lifeTime - age);
                 }
-               
             }
-            //gameSettings.level.AddHeat((int)(CellX + i * direction.x), CellZ, heatValue);
         }
         prevPower = pow;
     }
@@ -266,6 +259,10 @@ public class ItemFlames : ItemBase
         main.startSize = 1f + maxPower * 0.05f;
 
         _particles.Play();
+
+        // update the tile temperature at the center of the explosion
+        Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition);
+        tile.temperature++;
 
         initialized = true;
     }

@@ -24,7 +24,7 @@ public enum Direction : byte
 public struct CreateMapMessage : NetworkMessage
 {
     public byte mapSize;
-    public byte boxPrcent;
+    public byte boxPercent;
 };
 public struct ClearMapMessage : NetworkMessage {};
 
@@ -74,6 +74,16 @@ public class LevelBuilder : NetworkBehaviour
     public SO_Int totalPlayersCount;
 
     /// <summary>
+    /// Spacing between alternated walls
+    /// </summary>
+    [Range(2, 5)]
+    public byte spacing;
+
+
+
+    public Material blockMaterial;
+
+    /// <summary>
     /// The size of the Map
     /// </summary>
     [Header("Map Size")]
@@ -94,14 +104,14 @@ public class LevelBuilder : NetworkBehaviour
     public GameObject boxPrefab;
 
     /// <summary>
-    /// number of boxs in the map in pourcent
+    /// number of boxes in the map in pourcent
     /// </summary>
     [Range(0, 100)]
-    public byte boxPrcent;
+    public byte boxPercent;
 
+    [HideInInspector]
     public Vector3[] playerStartPositions;
 
-    public Material blockMaterial;
     #endregion
 
     #region Init
@@ -125,7 +135,7 @@ public class LevelBuilder : NetworkBehaviour
 
 
         CalculatePlayerStartPositions(totalPlayersCount.value);
-        CalculateWallsAndBoxsPositions();
+        CalculateWallsAndBoxsPositions(spacing);
         CreateWalls();
         CreateBoxs();
         AssignBonuses();
@@ -160,7 +170,7 @@ public class LevelBuilder : NetworkBehaviour
     {
         if (!isServer) return;
 
-        int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - boxPrcent / 100f));
+        int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - (boxPercent/100f)));
 
         // Randomize boxs positions
         for (int i = 0; i < boxCount; i++)
@@ -225,7 +235,7 @@ public class LevelBuilder : NetworkBehaviour
         wallShapes.Add(9, new MeshShape { mesh = block_I, rotation = 0 }); // TOP AND BOTTOM NOT EMPTY
 
     }
-    void CalculateWallsAndBoxsPositions()
+    void CalculateWallsAndBoxsPositions(int spacing = 2)
     {
         int width = grid.GetWidth();
         int height = grid.GetHeight();
@@ -234,7 +244,7 @@ public class LevelBuilder : NetworkBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                bool isWall = (i % 2 == 0 && j % 2 == 0);
+                bool isWall = (i % spacing == 0 && j % spacing == 0);
                 isWall = isWall || (i == 0 || j == 0 || i == width - 1 || j == height - 1);
 
                 if (isWall)
@@ -506,7 +516,7 @@ public class LevelBuilder : NetworkBehaviour
         //Debug.Log("Receive Map CallBack");
 
         mapSize = msg.mapSize;
-        boxPrcent = msg.boxPrcent;
+        boxPercent = msg.boxPercent;
 
         Init();
 
@@ -551,6 +561,6 @@ public class LevelBuilder : NetworkBehaviour
 
     public void CreateMap()
     {
-        NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPrcent = this.boxPrcent });
+        NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
     }
 }

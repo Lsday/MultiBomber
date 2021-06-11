@@ -15,7 +15,9 @@ public class PlayerBombDropper : NetworkBehaviour
     public int flamesPower = 1;
     public int flamePowerMax = 15;
 
-    bool canDropbomb = true;
+    [SyncVar] bool canDropbomb = true;
+
+    Filter currentFilter;
 
     private void Start()
     {

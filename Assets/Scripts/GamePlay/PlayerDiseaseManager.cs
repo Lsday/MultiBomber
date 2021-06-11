@@ -8,10 +8,7 @@ using UnityEngine;
 public class PlayerDiseaseManager : MonoBehaviour
 {
     Timer timer;
-    
-    public DiseaseBehaviour[] diseaseBehaviours;
-
-    DiseaseBehaviour actualDisease;
+    Disease currentDisease;
     PlayerEntity player;
 
     public void Init(PlayerEntity player)
@@ -21,23 +18,23 @@ public class PlayerDiseaseManager : MonoBehaviour
         timer.onTimerEnd += EndDisease;
     }
 
-    public void StartDisease()
+    public void StartDisease(Disease disease)
     {
-        int rnd = UnityEngine.Random.Range(0, diseaseBehaviours.Length);
 
-        actualDisease = diseaseBehaviours[rnd];
-        actualDisease.PerformAction(player);
-        timer.DelayedStart(actualDisease.duration);
-        Debug.Log("start disease" + actualDisease.ToString());
-        
+        currentDisease = disease;
+        disease.PerformAction(player);
+        timer.DelayedStart(currentDisease.duration);
+        Debug.Log("start disease" + currentDisease.ToString());
+
     }
 
     public void EndDisease()
     {
-        Debug.Log("end disease" + actualDisease.ToString());
-        ((IActionReverse)actualDisease).UnPerformAction(player);
-        actualDisease = null;
-        timer.onTimerEnd -= EndDisease;
+        Debug.Log("end disease" + currentDisease.ToString());
+        currentDisease.UnPerformAction(player);
+        currentDisease = null;
+
+        //timer.onTimerEnd -= EndDisease;
     }
 
     public void SpreadDisease(PlayerEntity[] nearbyPlayerEntity)

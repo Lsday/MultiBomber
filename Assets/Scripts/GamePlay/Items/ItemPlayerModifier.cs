@@ -39,11 +39,11 @@ public class ItemPlayerModifier : ItemBase, ILootable, IDestroyable
     public override string ToString()
     {
         if (scriptableAction)
-        {
             return scriptableAction.name;
-        }
-        else
-            return "Disease";
+
+        return name;
+        
+        
         
     }
 

@@ -37,6 +37,8 @@ public class PlayerMovement : NetworkBehaviour
     Vector2Int overlapBombCoordinates = Vector2Int.zero;
     float overlapBombDistance;
     */
+
+    public Filter currentFilter;
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -64,6 +66,9 @@ public class PlayerMovement : NetworkBehaviour
             // 
             Vector2 moveVector = playerEntity.controllerDevice.inputs.GetMoveVector();
 
+            if (currentFilter)
+               ((IFilterVector)currentFilter).FilterVector(moveVector, out moveVector);
+            
             float horizontal = moveVector.x;
             float vertical = moveVector.y;
 

@@ -37,6 +37,12 @@ public class PlayerDiseaseManager : NetworkBehaviour
 
     public void EndDisease()
     {
+        RpcEndDisease();
+    }
+
+    [ClientRpc]
+    public void RpcEndDisease()
+    {
         Debug.Log("End of " + currentDisease.ToString());
         currentDisease.UnPerformAction(player);
         currentDisease = null;
@@ -50,6 +56,7 @@ public class PlayerDiseaseManager : NetworkBehaviour
         {
             playerTarget.playerDiseaseManager.EndDisease();
         }
+
         playerTarget.playerDiseaseManager.StartDisease(currentDisease, elapsedDiseaseTime);
 
     }

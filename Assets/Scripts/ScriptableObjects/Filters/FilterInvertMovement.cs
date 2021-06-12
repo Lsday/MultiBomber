@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableAction/Filter/InvertMovement", fileName = "InvertMovement")]
+[CreateAssetMenu(menuName = "ScriptableAction/Filter/FilterInvertMovement", fileName = "FilterInvertMovement")]
 
 public class FilterInvertMovement : Filter , IFilterVector
 {

@@ -13,9 +13,11 @@ public class PlayerMovement : NetworkBehaviour
     #region Properties
     [SyncVar] bool isRunning;
     PlayerEntity playerEntity;
+    NetworkTransform networkTransform;
+
 
     public float startSpeed = 3;
-    public float speed = 3;
+    [SyncVar] private float speed = 3;
     public float speedMax = 10;
 
     [Range(0f, 0.5f)]
@@ -55,6 +57,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         playerEntity = GetComponent<PlayerEntity>();
         lastPosition = transform.position;
+
+        networkTransform = GetComponent<NetworkTransform>();
     }
 
     public void SetWorldPosition(Vector3 position)
@@ -79,8 +83,8 @@ public class PlayerMovement : NetworkBehaviour
             Vector2 moveVector = playerEntity.controllerDevice.inputs.GetMoveVector();
 
             if (currentFilter)
-               ((IFilterVector)currentFilter).FilterVector(moveVector, out moveVector);
-            
+                ((IFilterVector)currentFilter).FilterVector(moveVector, out moveVector);
+
             float horizontal = moveVector.x;
             float vertical = moveVector.y;
 
@@ -115,7 +119,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    
+
 
     private void Move(float h, float v)
     {
@@ -178,26 +182,26 @@ public class PlayerMovement : NetworkBehaviour
         speed = Mathf.Clamp(speed + amount, startSpeed, speedMax);
     }
 
-    
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         for (int i = 0; i < tiles.Length; i++)
         {
-            if(tiles[i].tile != null)
+            if (tiles[i].tile != null)
             {
-                
+
                 Gizmos.color = new Color(0f, 1f, 0f, tiles[i].occupation);
                 Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one);
 
-                if(tiles[i].occupation > playerEntity.deathThreshold)
+                if (tiles[i].occupation > playerEntity.deathThreshold)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one*0.3f);
+                    Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one * 0.3f);
 
                 }
             }
-            
+
         }
         return;
 
@@ -260,7 +264,7 @@ public class PlayerMovement : NetworkBehaviour
         tiles[3].tile = signX == 0 || signY == 0 ? null : grid.GetGridObject(currentTileX + signX, currentTileY + signY);
 
         Vector3 playerOrigin = new Vector3(transform.position.x - 0.5f, 0, transform.position.z - 0.5f);
-        for (int i=0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (tiles[i].tile != null)
             {
@@ -301,9 +305,9 @@ public class PlayerMovement : NetworkBehaviour
 
         movementClampHigh.x = Mathf.Max(movementClampHigh.x, transform.position.x);
         movementClampHigh.z = Mathf.Max(movementClampHigh.z, transform.position.z);
-       
+
     }
-    
+
     //TODO : remove debug
     Vector3 debugPivot;
     Vector3 debugDir;
@@ -326,8 +330,8 @@ public class PlayerMovement : NetworkBehaviour
         // get position sign within the Tile
         // posSignX positive = the player is on the right side of the Tile
         // posSignZ positive = the player is on the upper side of the tile
-        int posSignX = Utils.RoundedSign(offset.x,0.01f);
-        int posSignZ = Utils.RoundedSign(offset.z,0.01f);
+        int posSignX = Utils.RoundedSign(offset.x, 0.01f);
+        int posSignZ = Utils.RoundedSign(offset.z, 0.01f);
 
         // the player is perfectly aligned on an axis, no turn is possible in this case
         if (posSignX == 0 || posSignZ == 0)
@@ -360,11 +364,11 @@ public class PlayerMovement : NetworkBehaviour
         bool blockingX = grid.GetGridObject(currentTileX + dirSignX, currentTileY).type >= ElementType.Block;
         bool blockingZ = grid.GetGridObject(currentTileX, currentTileY + dirSignZ).type >= ElementType.Block;
 
-        if(blockingDestTile)
+        if (blockingDestTile)
         {
             int dx = dirSignX;
             int dz = dirSignZ;
-            if(blockingX && dirSignX!=0 && dirSignZ!=0)
+            if (blockingX && dirSignX != 0 && dirSignZ != 0)
             {
                 dx = 0;
             }
@@ -373,7 +377,7 @@ public class PlayerMovement : NetworkBehaviour
             {
                 dz = 0;
             }
-            
+
             blockingDestTile = grid.GetGridObject(currentTileX + dx, currentTileY + dz).type >= ElementType.Block;
         }
 
@@ -493,5 +497,20 @@ public class PlayerMovement : NetworkBehaviour
 
         return newPosition;
     }
+
+
+    public void SetToSpeedMax() => speed = speedMax;
+    public void SetToSpeedMin() => speed = startSpeed;
+    public float GetSpeed()
+    {
+        return speed;
+    }
+    public void SetSpeed(float speed) => this.speed = speed;
+    public void Teleport(Vector3 position) => networkTransform.ServerTeleport(position);
+    
+       
+    
+
+
 }
 

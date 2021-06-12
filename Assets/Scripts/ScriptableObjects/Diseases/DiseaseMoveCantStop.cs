@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableAction/Diseases/DiseaseInvertMovement", fileName = "DiseaseInvertMovement")]
+[CreateAssetMenu(menuName = "ScriptableAction/Diseases/DiseaseMoveCantStop", fileName = "DiseaseMoveCantStop")]
 
-public class DiseaseInvertMovement : Disease
+public class DiseaseMoveCantStop : Disease
 {
     public Filter filter;
-
     public override void PerformAction(PlayerEntity player)
     {
         player.playerMovement.currentFilter = filter;

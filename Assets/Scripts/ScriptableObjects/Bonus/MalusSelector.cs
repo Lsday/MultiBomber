@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "ScriptableAction/DiseaseBehaviour/MalusSelector", fileName = "MalusSelector")]
+[CreateAssetMenu(menuName = "ScriptableAction/Bonus/MalusSelector", fileName = "MalusSelector")]
 public class MalusSelector : BonusBehaviour<PlayerEntity> 
 {
     public Disease[] diseases;

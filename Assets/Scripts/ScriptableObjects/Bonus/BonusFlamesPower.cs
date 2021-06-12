@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "ScriptableAction/BonusBehaviour/BonusFlamesPower", fileName = "BonusFlamesPower")]
+[CreateAssetMenu(menuName = "ScriptableAction/Bonus/BonusFlamesPower", fileName = "BonusFlamesPower")]
 public class BonusFlamesPower : BonusBehaviour<PlayerEntity>
 {
     public int flamePowerModifier;

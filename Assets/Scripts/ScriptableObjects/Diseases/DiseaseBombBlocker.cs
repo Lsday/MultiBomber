@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableAction/DiseaseBehaviour/DiseaseBombBlocker", fileName = "DiseaseBombBlocker")]
+[CreateAssetMenu(menuName = "ScriptableAction/Diseases/DiseaseBombBlocker", fileName = "DiseaseBombBlocker")]
 
 public class DiseaseBombBlocker : Disease
 {

@@ -60,9 +60,9 @@ MonoBehaviour:
     playersProportion: 0
   - name: Disease
     bonus: {fileID: 11400000, guid: 0bb8d7fe3dc561142a10625730017b8c, type: 2}
-    exactCount: 3
+    exactCount: 10
     proportion: 1
     playersProportion: 0
-  boxesCount: 26
-  playersCount: 1
+  boxesCount: 25
+  playersCount: 2
   bonusPercentage: 1

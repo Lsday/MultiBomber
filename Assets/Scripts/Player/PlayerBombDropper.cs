@@ -19,6 +19,8 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public Filter currentFilter;
 
+    [SyncVar] bool bombShit = false;
+
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -45,6 +47,14 @@ public class PlayerBombDropper : NetworkBehaviour
             playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
         
     }
+
+    //private void Update()
+    //{
+    //    if (bombShit)
+    //    {
+    //        PlaceBomb();
+    //    }
+    //}
 
     public void PlaceBomb()
     {
@@ -94,8 +104,12 @@ public class PlayerBombDropper : NetworkBehaviour
     }
 
     public void ToggleCanDropBomb() => canDropbomb = !canDropbomb;
-    
-    
+
+    public void ToggleBombShit() => bombShit = !bombShit;
+
+     
+
+
 
 
 }

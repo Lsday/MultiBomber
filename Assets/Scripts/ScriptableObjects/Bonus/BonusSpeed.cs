@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableAction/BonusBehaviour/BonusSpeed", fileName = "BonusSpeed")]
+[CreateAssetMenu(menuName = "ScriptableAction/Bonus/BonusSpeed", fileName = "BonusSpeed")]
 public class BonusSpeed : BonusBehaviour<PlayerEntity>
 {
     public int speedModifier;

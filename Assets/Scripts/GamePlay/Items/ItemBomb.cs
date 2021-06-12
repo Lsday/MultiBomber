@@ -85,7 +85,7 @@
         if (alreadyTriggered) return;
         alreadyTriggered = true;
 
-        timer.DelayedStart(delay);
+        timer.StartTimer(delay);
     }
 }
    

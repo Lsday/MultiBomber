@@ -8,30 +8,30 @@ using UnityEngine;
 
 public class PlayerDiseaseManager : NetworkBehaviour
 {
-    Timer timer;
+    public Timer deasiseTimer;
     Disease currentDisease;
     PlayerEntity player;
 
     public void Init(PlayerEntity player)
     {
         this.player = player;
-        timer = GetComponent<Timer>();
-        timer.onTimerEnd += EndDisease;
+        deasiseTimer = GetComponent<Timer>();
+        deasiseTimer.onTimerEnd += EndDisease;
     }
 
    
-    public void StartDisease(Disease disease)
+    public void StartDisease(Disease disease, float diseasTimer)
     {
-        RpcStartDisease(disease);
+        RpcStartDisease(disease,  diseasTimer);
     }
 
     [ClientRpc]
-    private void RpcStartDisease( Disease disease)
+    private void RpcStartDisease(Disease disease, float diseasTimer)
     {
-        
         currentDisease = disease;
+        deasiseTimer.StopTimer();
+        deasiseTimer.StartTimer(diseasTimer);
         disease.PerformAction(player);
-        timer.DelayedStart(currentDisease.duration);
         Debug.Log("Start of " + currentDisease.ToString());
     }
 
@@ -42,9 +42,16 @@ public class PlayerDiseaseManager : NetworkBehaviour
         currentDisease = null;
     }
 
-    public void SpreadDisease(PlayerEntity[] nearbyPlayerEntity)
+    public void SpreadDisease(PlayerEntity playerTarget)
     {
-        
+        float elapsedDiseaseTime = Time.time - deasiseTimer.elapsedTime;
+
+        if (playerTarget.playerDiseaseManager.currentDisease!=null)
+        {
+            playerTarget.playerDiseaseManager.EndDisease();
+        }
+        playerTarget.playerDiseaseManager.StartDisease(currentDisease, elapsedDiseaseTime);
+
     }
 }
    

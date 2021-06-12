@@ -8,12 +8,13 @@ public class Timer : MonoBehaviour
     public Action onTimerEnd;
     [SerializeField] float duration;
     [SerializeField] bool triggerWhenDestroy;
+    public float elapsedTime;
 
     //public void Start() => StartCoroutine(StartTimer(duration));
 
-    public void StartTimer() => StartCoroutine(StartTimer(duration));
+    public void StartTimer() => StartCoroutine(StartTimerCoroutine(duration));
 
-    public void DelayedStart(float duration)
+    public void StartTimer(float duration)
     {
         if (Mathf.Approximately(duration, 0))
         {
@@ -22,12 +23,13 @@ public class Timer : MonoBehaviour
         else
         {
             StopAllCoroutines();
-            StartCoroutine(StartTimer(duration));
+            StartCoroutine(StartTimerCoroutine(duration));
         }
     } 
 
-    private  IEnumerator StartTimer(float duration)
+    private  IEnumerator StartTimerCoroutine(float duration)
     {
+        elapsedTime = Time.time;
         yield return new WaitForSeconds(duration);
         onTimerEnd?.Invoke();
     }

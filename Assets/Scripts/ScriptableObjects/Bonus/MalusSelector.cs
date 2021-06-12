@@ -10,7 +10,7 @@ public class MalusSelector : BonusBehaviour<PlayerEntity>
     {
         int rnd = UnityEngine.Random.Range(0, diseases.Length);
 
-        player.playerDiseaseManager.StartDisease(diseases[rnd]);
+        player.playerDiseaseManager.StartDisease(diseases[rnd],20);
     }
 
 }

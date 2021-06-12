@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fa73ce476b48647a402926f5f4b4a4, type: 3}
   m_Name: DiseaseInvertMovement
   m_EditorClassIdentifier: 
-  duration: 0
-  filter: {fileID: 0}
+  duration: 20
+  filter: {fileID: 11400000, guid: 59b19ff15e2dd3f499555efac28b9482, type: 2}

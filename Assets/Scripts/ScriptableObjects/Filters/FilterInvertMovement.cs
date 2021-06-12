@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,4 +15,5 @@ public class FilterInvertMovement : Filter , IFilterVector
         output  = input * -1 ;
     }
 }
+
 

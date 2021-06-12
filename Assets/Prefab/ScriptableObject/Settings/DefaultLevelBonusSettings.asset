@@ -59,7 +59,7 @@ MonoBehaviour:
     proportion: 0.288
     playersProportion: 0
   - name: Disease
-    bonus: {fileID: 0}
+    bonus: {fileID: 11400000, guid: 0bb8d7fe3dc561142a10625730017b8c, type: 2}
     exactCount: 3
     proportion: 1
     playersProportion: 0

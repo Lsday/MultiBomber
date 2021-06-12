@@ -36,9 +36,13 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 movementClampHigh;
     private Vector3 lastPosition;
 
-    #endregion
+    public Filter currentFilter;
 
     GenericGrid<Tile> grid;
+
+    #endregion
+
+
     /*
     bool overlapBomb = false;
     Vector3 overlapBombPosition = Vector3.zero;
@@ -46,7 +50,7 @@ public class PlayerMovement : NetworkBehaviour
     float overlapBombDistance;
     */
 
-    public Filter currentFilter;
+
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();

@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   duration: 20
+  diseases:
+  - {fileID: 11400000, guid: 5008bedf17a0f744a941bd55db01cbf5, type: 2}

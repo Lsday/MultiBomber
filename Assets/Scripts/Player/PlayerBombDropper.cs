@@ -17,7 +17,7 @@ public class PlayerBombDropper : NetworkBehaviour
 
     [SyncVar] bool canDropbomb = true;
 
-    Filter currentFilter;
+    public Filter currentFilter;
 
     private void Start()
     {

@@ -26,21 +26,20 @@ public class PlayerDiseaseManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcStartDisease(Disease disease)
+    private void RpcStartDisease( Disease disease)
     {
+        
         currentDisease = disease;
         disease.PerformAction(player);
         timer.DelayedStart(currentDisease.duration);
-        Debug.Log("start disease" + currentDisease.ToString());
+        Debug.Log("Start of " + currentDisease.ToString());
     }
 
     public void EndDisease()
     {
-        Debug.Log("end disease" + currentDisease.ToString());
+        Debug.Log("End of " + currentDisease.ToString());
         currentDisease.UnPerformAction(player);
         currentDisease = null;
-
-        //timer.onTimerEnd -= EndDisease;
     }
 
     public void SpreadDisease(PlayerEntity[] nearbyPlayerEntity)

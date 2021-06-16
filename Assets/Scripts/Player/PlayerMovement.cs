@@ -1,5 +1,6 @@
 using UnityEngine;
 using Mirror;
+using System;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -41,6 +42,8 @@ public class PlayerMovement : NetworkBehaviour
     public Filter currentFilter;
 
     GenericGrid<Tile> grid;
+
+    public Action OnTileEntered;
 
     #endregion
 
@@ -238,6 +241,8 @@ public class PlayerMovement : NetworkBehaviour
 
         if (currentTileX != tilex || currentTileY != tiley)
         {
+           
+
             currentTile = grid.GetGridObject(transform.position);
 
             if (currentTile != null)
@@ -246,6 +251,8 @@ public class PlayerMovement : NetworkBehaviour
                 currentTileY = currentTile.y;
                 currentTileCenter = grid.GetGridObjectWorldCenter(currentTileX, currentTileY);
             }
+
+            OnTileEntered?.Invoke();
         }
 
         currentOffsetFromCenter = transform.position - currentTileCenter;

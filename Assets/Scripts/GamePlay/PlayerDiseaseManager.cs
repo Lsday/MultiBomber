@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerDiseaseManager : NetworkBehaviour
 {
     public Timer deasiseTimer;
-    Disease currentDisease;
+    public Disease currentDisease;
     PlayerEntity player;
 
     public void Init(PlayerEntity player)
@@ -28,6 +28,9 @@ public class PlayerDiseaseManager : NetworkBehaviour
     [ClientRpc]
     private void RpcStartDisease(Disease disease, float diseasTimer)
     {
+        if (currentDisease != null)
+                    EndDisease();
+        
         currentDisease = disease;
         deasiseTimer.StopTimer();
         deasiseTimer.StartTimer(diseasTimer);
@@ -37,7 +40,11 @@ public class PlayerDiseaseManager : NetworkBehaviour
 
     public void EndDisease()
     {
-        RpcEndDisease();
+        if (isServer)
+        {
+            RpcEndDisease();
+        }
+      
     }
 
     [ClientRpc]

@@ -25,6 +25,7 @@ public class PlayerBombDropper : NetworkBehaviour
     {
         playerEntity = GetComponent<PlayerEntity>();
         LinkInputActions();
+        
     }
 
     private void OnEnable()
@@ -36,7 +37,11 @@ public class PlayerBombDropper : NetworkBehaviour
     {
         if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
         {
-            playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
+            if (playerEntity.controllerDevice.inputs.onDropBombAction != null)
+            {
+                playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
+            }
+            
             playerEntity.controllerDevice.inputs.onDropBombAction += PlaceBomb;
         }
     }
@@ -48,13 +53,44 @@ public class PlayerBombDropper : NetworkBehaviour
         
     }
 
-    //private void Update()
-    //{
-    //    if (bombShit)
-    //    {
-    //        PlaceBomb();
-    //    }
-    //}
+    
+    public void SubscribeBombShitEvent()
+    {
+        if (isServer)
+        {
+            RpcSubscribeBombShitEvent();
+        }
+        else
+        {
+            playerEntity.playerMovement.OnTileEntered += PlaceBomb;
+        }
+           
+    }
+
+    [ClientRpc]
+    public void RpcSubscribeBombShitEvent()
+    {
+        playerEntity.playerMovement.OnTileEntered += PlaceBomb;
+    }
+
+
+    public void UnSubscribeBombShitEvent()
+    {
+        if (isServer)
+        {
+            RpcUnSubscribeBombShitEvent();
+        }
+        else
+        playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+    }
+
+    [ClientRpc]
+    public void RpcUnSubscribeBombShitEvent()
+    {
+        playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+    }
+
+
 
     public void PlaceBomb()
     {

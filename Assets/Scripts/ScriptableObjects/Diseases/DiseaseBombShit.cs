@@ -6,12 +6,12 @@ public class DiseaseBombShit : Disease
 {
     public override void PerformAction(PlayerEntity player)
     {
-        player.playerBombDropper.ToggleBombShit();
+        player.playerBombDropper.SubscribeBombShitEvent();
     }
 
     public override void UnPerformAction(PlayerEntity player)
     {
-        player.playerBombDropper.ToggleBombShit();
+        player.playerBombDropper.UnSubscribeBombShitEvent();
     }
 
 }

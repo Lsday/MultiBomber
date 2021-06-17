@@ -562,5 +562,6 @@ public class LevelBuilder : NetworkBehaviour
     public void CreateMap()
     {
         NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
+        NetworkServer.SendToAll(new GameStartedMessage {});
     }
 }

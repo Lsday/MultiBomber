@@ -14,9 +14,6 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
-    public LevelBuilder levelBuilder;
-   
-
 
     private void Awake()
     {
@@ -24,17 +21,12 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        //NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
+        NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
 
-        levelBuilder = GetComponent<LevelBuilder>();
-       
-       
     }
 
-
-
-    //private void GameStartedCallBack( GameStartedMessage arg2)
-    //{
-    //    onGameStarted?.Invoke();
-    //}
+    private void GameStartedCallBack(GameStartedMessage arg)
+    {
+        onGameStarted?.Invoke();
+    }
 }

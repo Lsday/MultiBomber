@@ -21,7 +21,7 @@ public class MapOptionsUI : NetworkBehaviour
     }
     private void StartGame()
     {
-        GameManager.instance.levelBuilder.CreateMap();
+        //GameManager.instance.levelBuilder.CreateMap();
         NetworkServer.SendToAll(new GameStartedMessage { });
 
     }

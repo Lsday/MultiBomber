@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BonusFlamesPower -1
   m_EditorClassIdentifier: 
   description: Diminue la puissance des flammes
+  sprite: {fileID: 5860025163644826426, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
   flamePowerModifier: -1

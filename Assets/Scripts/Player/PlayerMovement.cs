@@ -45,6 +45,7 @@ public class PlayerMovement : NetworkBehaviour
 
     public Action OnTileEntered;
 
+    Vector2Int currentDirection;
     #endregion
 
 
@@ -60,6 +61,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         playerEntity = GetComponent<PlayerEntity>();
         lastPosition = transform.position;
+        transform.forward = Vector3.back;
+        currentDirection = Vector2Int.down;
 
         networkTransform = GetComponent<NetworkTransform>();
     }
@@ -69,6 +72,10 @@ public class PlayerMovement : NetworkBehaviour
         grid = LevelBuilder.grid;
 
         transform.position = position;
+        
+        transform.forward = Vector3.back;
+        currentDirection = Vector2Int.down;
+
         UpdateTileCoordinates();
         ComputeMovementLimits();
     }
@@ -86,7 +93,7 @@ public class PlayerMovement : NetworkBehaviour
             Vector2 moveVector = playerEntity.controllerDevice.inputs.GetMoveVector();
 
             if (currentFilter)
-                ((IFilterVector)currentFilter).FilterVector(moveVector, out moveVector);
+                ((IFilterVector)currentFilter).FilterVector(moveVector, currentDirection, out moveVector);
 
             float horizontal = moveVector.x;
             float vertical = moveVector.y;
@@ -175,6 +182,9 @@ public class PlayerMovement : NetworkBehaviour
         if (signX != 0 || signZ != 0)
         {
             transform.forward = new Vector3(signX, 0, signZ).normalized;
+
+            currentDirection.x = signX;
+            currentDirection.y = signZ;
         }
 
     }
@@ -206,8 +216,8 @@ public class PlayerMovement : NetworkBehaviour
             }
 
         }
-        return;
 
+        /*
 
         Gizmos.color = dbgCol;
 
@@ -229,6 +239,7 @@ public class PlayerMovement : NetworkBehaviour
 
         //Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(intersect, 0.3f);
+        */
     }
 
     private void UpdateTileCoordinates()

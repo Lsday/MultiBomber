@@ -4,22 +4,16 @@
 
 public class FilterCantStopMovement : Filter, IFilterVector
 {
-    public void FilterVector(Vector2 input, out Vector2 output)
+
+    public void FilterVector(Vector2 input, Vector2 currentDirection, out Vector2 output)
     {
-        output = new Vector2();
-
-        if (input.x >= 0)
-            output.x = 1;
-
-        if (input.x < 0)
-            output.x = -1;
-
-        if (input.y >= 0)
-            output.y = 1;
-
-        if (input.y < 0)
-            output.y = -1;
-
-       
+        if(input.x == 0 && input.y == 0)
+        {
+            output = currentDirection;
+        }
+        else
+        {
+            output = input;
+        }
     }
 }

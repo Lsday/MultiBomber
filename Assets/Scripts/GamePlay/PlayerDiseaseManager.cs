@@ -8,32 +8,32 @@ using UnityEngine;
 
 public class PlayerDiseaseManager : NetworkBehaviour
 {
-    public Timer deasiseTimer;
+    public Timer diseaseTimer;
     public Disease currentDisease;
     PlayerEntity player;
 
     public void Init(PlayerEntity player)
     {
         this.player = player;
-        deasiseTimer = GetComponent<Timer>();
-        deasiseTimer.onTimerEnd += EndDisease;
+        diseaseTimer = GetComponent<Timer>();
+        diseaseTimer.onTimerEnd += EndDisease;
     }
 
    
-    public void StartDisease(Disease disease, float diseasTimer)
+    public void StartDisease(Disease disease, float duration)
     {
-        RpcStartDisease(disease,  diseasTimer);
+        RpcStartDisease(disease,  duration);
     }
 
     [ClientRpc]
-    private void RpcStartDisease(Disease disease, float diseasTimer)
+    private void RpcStartDisease(Disease disease, float duration)
     {
         if (currentDisease != null)
                     EndDisease();
         
         currentDisease = disease;
-        deasiseTimer.StopTimer();
-        deasiseTimer.StartTimer(diseasTimer);
+        diseaseTimer.StopTimer();
+        diseaseTimer.StartTimer(duration);
         disease.PerformAction(player);
         Debug.Log("Start of " + currentDisease.ToString());
     }
@@ -50,14 +50,22 @@ public class PlayerDiseaseManager : NetworkBehaviour
     [ClientRpc]
     public void RpcEndDisease()
     {
-        Debug.Log("End of " + currentDisease.ToString());
-        currentDisease.UnPerformAction(player);
-        currentDisease = null;
+        if (currentDisease != null)
+        {
+            Debug.Log("End of " + currentDisease.ToString());
+            currentDisease.UnPerformAction(player);
+            currentDisease = null;
+        }
+        else
+        {
+            Debug.LogWarning("End of currentDisease = NULL");
+        }
+        
     }
 
     public void SpreadDisease(PlayerEntity playerTarget)
     {
-        float elapsedDiseaseTime = Time.time - deasiseTimer.elapsedTime;
+        float elapsedDiseaseTime = Time.time - diseaseTimer.elapsedTime;
 
         if (playerTarget.playerDiseaseManager.currentDisease!=null)
         {

@@ -19,7 +19,7 @@ public class ItemBox : ItemBase, IDestroyable
         if(bonus != null)
         {
             ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
-            itemBonus.scriptableAction = bonus;
+            itemBonus.SetBonus(bonus);
             itemBonus.Teleport(transform.position);
         }
        

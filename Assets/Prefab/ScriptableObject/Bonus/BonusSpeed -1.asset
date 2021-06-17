@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BonusSpeed -1
   m_EditorClassIdentifier: 
   description: Diminue la vitesse de deplacement
+  sprite: {fileID: -7583409310137716746, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
   speedModifier: -1

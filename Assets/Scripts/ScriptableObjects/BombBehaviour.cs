@@ -13,10 +13,12 @@ public class BombBehaviour : ScriptableAction<ItemBase>
 
         ItemBomb bomb = obj as ItemBomb;
 
-        Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
-        for (int i = 0; i < directions.Length; i++)
+        //Vector3Int[] directions = { Vector3Int.forward, Vector3Int.left, Vector3Int.right, Vector3Int.back };
+        for (int i = 0; i < Globals.Vector3_directions.Length; i++)
         {
-            Tile tile = LevelBuilder.grid.GetGridObject(bomb.parentTile.x + directions[i].x , bomb.parentTile.y + directions[i].z );
+            Vector3Int dir = Globals.Vector3_directions[i];
+
+            Tile tile = LevelBuilder.grid.GetGridObject(bomb.parentTile.x + dir.x , bomb.parentTile.y + dir.z );
 
             if (tile.type < ElementType.Block || tile.item is IDestroyable)
             {

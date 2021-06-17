@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BonusGoldenFlames
   m_EditorClassIdentifier: 
   description: Puissance des flammes au MAX
+  sprite: {fileID: 2614870373251885436, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
   flamePowerModifier: 15

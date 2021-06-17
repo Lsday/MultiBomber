@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: BonusBombCount -1
   m_EditorClassIdentifier: 
   description: Diminue le nombre de bombes max
+  sprite: {fileID: -7833671090200325546, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
   bombCountModifier: -1

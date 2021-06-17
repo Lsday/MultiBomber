@@ -13,5 +13,12 @@ MonoBehaviour:
   m_Name: MalusSelector
   m_EditorClassIdentifier: 
   description: 
+  sprite: {fileID: -6338023803479276477, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
   diseases:
+  - {fileID: 11400000, guid: 3477aecc50ad3914daff73eae63e0848, type: 2}
+  - {fileID: 11400000, guid: b583f42d96df9fa439ed81a9c1234985, type: 2}
+  - {fileID: 11400000, guid: 5008bedf17a0f744a941bd55db01cbf5, type: 2}
+  - {fileID: 11400000, guid: c4c9925779fc985459d666311854c576, type: 2}
+  - {fileID: 11400000, guid: 81568b79352103d4186d02c67d505e65, type: 2}
+  - {fileID: 11400000, guid: d0a1e71f725c7794fb81ce5fd9bdd328, type: 2}
   - {fileID: 11400000, guid: 29ef38d6e0923fa41936b9e04c8a9136, type: 2}

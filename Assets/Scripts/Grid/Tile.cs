@@ -51,7 +51,7 @@ public class Tile
 
     public override string ToString()
     {
-        //return _temperature.ToString();
+        return _temperature.ToString();
 
         if (item != null)
         {

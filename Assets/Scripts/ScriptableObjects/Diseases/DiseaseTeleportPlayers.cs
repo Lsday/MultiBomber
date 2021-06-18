@@ -9,6 +9,7 @@ public class DiseaseTeleportPlayers : Disease
     {
         int rnd;
         PlayerEntity opositePlayer;
+        
 
         do
         {

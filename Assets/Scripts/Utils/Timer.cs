@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour
 {
     public Action onTimerEnd;
     [SerializeField] float duration;
-    [SerializeField] bool triggerWhenDestroy;
+    [SerializeField] bool triggerWhenDisable;
     public float elapsedTime;
 
     //public void Start() => StartCoroutine(StartTimer(duration));
@@ -27,7 +27,7 @@ public class Timer : MonoBehaviour
         }
     } 
 
-    private  IEnumerator StartTimerCoroutine(float duration)
+    private IEnumerator StartTimerCoroutine(float duration)
     {
         elapsedTime = Time.time;
         yield return new WaitForSeconds(duration);
@@ -47,7 +47,7 @@ public class Timer : MonoBehaviour
 
     private void OnDisable()
     {
-        if (triggerWhenDestroy)
+        if (triggerWhenDisable)
             onTimerEnd?.Invoke();
     }
 

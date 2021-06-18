@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Disease : ScriptableAction<PlayerEntity>
 {
-    public float duration;
+    public float duration = 20;
 
     public abstract override void PerformAction(PlayerEntity input);
 

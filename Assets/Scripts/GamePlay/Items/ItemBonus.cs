@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ItemBonus : ItemPlayerModifier
+public class ItemBonus : ItemPlayerModifier, IDestroyable
 {
 
     

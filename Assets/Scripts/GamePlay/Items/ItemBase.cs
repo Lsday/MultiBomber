@@ -78,7 +78,7 @@ public abstract class ItemBase : PoolableObject
     // remove the item from its tile only if it is still registered in it
     public void RemoveFromTile()
     {
-        if(parentTile != null && parentTile.item == this)
+        if (parentTile != null && parentTile.item == this)
         {
             parentTile.ClearTile();
         }

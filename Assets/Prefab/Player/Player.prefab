@@ -115,7 +115,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   startSpeed: 3
-  speed: 3
   speedMax: 10
   cornerSliding: 0.3
   gameStarted: {fileID: 11400000, guid: a20b66596b11f3a41a957844de20d546, type: 2}
@@ -137,11 +136,12 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerEntity: {fileID: 0}
-  bombCount: 1
+  bombCount: 10
   bombOnMap: 0
   bombMaxOnMap: 10
   flamesPower: 1
   flamePowerMax: 15
+  currentFilter: {fileID: 0}
 --- !u!114 &2718188998225735062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +167,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e312205cc455a048adc7e8acdeba81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  diseaseTimer: {fileID: 0}
+  currentDisease: {fileID: 0}
 --- !u!114 &6882409918411526273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 20
   triggerWhenDestroy: 0
+  elapsedTime: 0
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

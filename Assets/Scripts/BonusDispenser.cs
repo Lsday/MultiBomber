@@ -27,7 +27,6 @@ public class BonusDispenser
         // randomize boxes index list
         rnd.Shuffle(indices);
        
-
         // assign all bonus into boxes
         int boxIndex = 0;
         int bonusLeft = 1;

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 860df7b0ff294a24cb2c34b93be241ba, type: 3}
-  m_Name: DiseaseMoveCantStop
+  m_Script: {fileID: 11500000, guid: 0c57f0e76bdf8594b9dcdd4c80836ba8, type: 3}
+  m_Name: DiseaseInvertCantStop
   m_EditorClassIdentifier: 
   duration: 20
   filter: {fileID: 11400000, guid: 745d9b97d663cb74d95b6b7a22e10817, type: 2}

@@ -5,6 +5,8 @@ using System;
 public class PlayerMovement : NetworkBehaviour
 {
 
+    
+
     public struct TileOccupation
     {
         public Tile tile;
@@ -80,6 +82,18 @@ public class PlayerMovement : NetworkBehaviour
         ComputeMovementLimits();
     }
 
+    void ReadInputs()
+    {
+ 
+        playerEntity.currentInputData.movement = playerEntity.controllerDevice.inputs.GetMoveVector();
+        playerEntity.currentInputData.direction = currentDirection;
+        playerEntity.currentInputData.speed = speed;
+
+        if (currentFilter)
+        {
+            currentFilter.FilterData(ref playerEntity.currentInputData);
+        }
+    }
 
     void Update()
     {
@@ -90,13 +104,10 @@ public class PlayerMovement : NetworkBehaviour
             if (playerEntity.controllerDevice == null || !Application.isFocused) return;
 
             // 
-            Vector2 moveVector = playerEntity.controllerDevice.inputs.GetMoveVector();
+            ReadInputs();
 
-            if (currentFilter)
-                ((IFilterVector)currentFilter).FilterVector(moveVector, currentDirection, out moveVector);
-
-            float horizontal = moveVector.x;
-            float vertical = moveVector.y;
+            float horizontal = playerEntity.currentInputData.movement.x;
+            float vertical = playerEntity.currentInputData.movement.y;
 
             if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
             {
@@ -140,7 +151,7 @@ public class PlayerMovement : NetworkBehaviour
 
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
-        float travelDistance = (Time.deltaTime * speed);
+        float travelDistance = (Time.deltaTime * playerEntity.currentInputData.speed);
 
         int moveX = Utils.RoundedSign(h);
         int moveZ = Utils.RoundedSign(v);
@@ -186,6 +197,8 @@ public class PlayerMovement : NetworkBehaviour
             currentDirection.x = signX;
             currentDirection.y = signZ;
         }
+
+        playerEntity.currentInputData.direction = currentDirection;
 
     }
 
@@ -516,16 +529,11 @@ public class PlayerMovement : NetworkBehaviour
         return newPosition;
     }
 
-
-    public void SetToSpeedMax() => speed = speedMax;
-    public void SetToSpeedMin() => speed = startSpeed;
-    public float GetSpeed()
+    public void Teleport(Vector3 position)
     {
-        return speed;
+        networkTransform.ServerTeleport(position);
+        UpdateTileCoordinates();
     }
-    public void SetSpeed(float speed) => this.speed = speed;
-    public void Teleport(Vector3 position) => networkTransform.ServerTeleport(position);
-    
        
     
 

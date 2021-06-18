@@ -11,7 +11,7 @@ public class SO_LevelBonusSettings : ScriptableObject
         public int count;
         public string name;
         [SerializeField]
-        public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
+        public BonusBehaviour<PlayerEntity> bonus;
     }
 
 
@@ -21,7 +21,7 @@ public class SO_LevelBonusSettings : ScriptableObject
         public string name;
 
         [SerializeField]
-        public BonusBehaviour<PlayerEntity> bonus; // TODO : remplacer par le pointeur vers le scriptableobject du bonus
+        public BonusBehaviour<PlayerEntity> bonus;
 
         [Range(0,10)]
         public int exactCount;

@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableAction/Diseases/DiseaseMoveCantStop", fileName = "DiseaseMoveCantStop")]
+[CreateAssetMenu(menuName = "ScriptableAction/Diseases/DiseaseFromFilter", fileName = "DiseaseFromFilter")]
 
-public class DiseaseMoveCantStop : Disease
+public class DiseaseFromFilter : Disease
 {
     public Filter filter;
+
     public override void PerformAction(PlayerEntity player)
     {
         player.playerMovement.currentFilter = filter;

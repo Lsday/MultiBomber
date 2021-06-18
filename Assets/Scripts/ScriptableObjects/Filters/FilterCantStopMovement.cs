@@ -2,18 +2,13 @@
 
 [CreateAssetMenu(menuName = "ScriptableAction/Filter/FilterCantStopMovement", fileName = "FilterCantStopMovement")]
 
-public class FilterCantStopMovement : Filter, IFilterVector
+public class FilterCantStopMovement : Filter
 {
-
-    public void FilterVector(Vector2 input, Vector2 currentDirection, out Vector2 output)
+    public override void FilterData(ref PlayerInputData dataIn)
     {
-        if(input.x == 0 && input.y == 0)
+        if (dataIn.movement.x == 0 && dataIn.movement.y == 0)
         {
-            output = currentDirection;
-        }
-        else
-        {
-            output = input;
+            dataIn.movement = dataIn.direction;
         }
     }
 }

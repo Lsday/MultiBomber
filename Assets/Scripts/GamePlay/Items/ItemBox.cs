@@ -23,7 +23,6 @@ public class ItemBox : ItemBase, IDestroyable
             itemBonus.Teleport(transform.position);
         }
        
-
         // reset bonus
         bonus = null;
 
@@ -33,7 +32,7 @@ public class ItemBox : ItemBase, IDestroyable
     public void InitDestroy(float delay = 0f,float fireEndDelay = 0f)
     {
         if (destroyedTriggered) return;
-
+        
         delay += fireEndDelay;
 
         if (delay > 0)

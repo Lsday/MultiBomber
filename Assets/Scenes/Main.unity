@@ -1662,7 +1662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5121e16278da42546b6af1b1882dea0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameLenght: 15
+  gameLength: 45
   gameAlmostEnd: 5
   gameTimerUI: {fileID: 0}
   startTimer: 0
@@ -3163,7 +3163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1263698999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9030054, y: -0.9090681, z: 0.19207048}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4900,15 +4900,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6603819420190709590, guid: f62ab3ac28001004e9ce8c18c51625eb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.3414135
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6603819420190709590, guid: f62ab3ac28001004e9ce8c18c51625eb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.890605
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6603819420190709590, guid: f62ab3ac28001004e9ce8c18c51625eb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.080051
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6603819420190709590, guid: f62ab3ac28001004e9ce8c18c51625eb, type: 3}
       propertyPath: m_LocalRotation.w

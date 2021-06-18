@@ -4,6 +4,8 @@ using UnityEngine;
 using Mirror;
 public class PlayerEntity : NetworkBehaviour, IKillable
 {
+    
+
     #region Properties
 
     public static List<PlayerEntity> instancesList = new List<PlayerEntity>();
@@ -13,7 +15,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     [SyncVar] public byte localPlayerIndex;
     [SyncVar] public Color defaultColor;
 
-
+    public PlayerInputData currentInputData;
 
     /// <summary>
     /// The device (physical=keyboard,gamepad or virtual=bot) used to control this player
@@ -28,7 +30,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     public PlayerBonusManager playerBonusPickUp{get; private set;}
     public PlayerDiseaseManager playerDiseaseManager { get; private set; }
 
-   
+    
 
     // TODO : private variables
     public Animator animator;

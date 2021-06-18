@@ -19,7 +19,7 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public Filter currentFilter;
 
-    [SyncVar] bool bombShit = false;
+    //[SyncVar] bool bombShit = false;
 
     private void Start()
     {
@@ -33,6 +33,13 @@ public class PlayerBombDropper : NetworkBehaviour
         LinkInputActions();
     }
 
+    private void OnDisable()
+    {
+        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
+            playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
+
+    }
+
     void LinkInputActions()
     {
         if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
@@ -41,17 +48,11 @@ public class PlayerBombDropper : NetworkBehaviour
             {
                 playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
             }
-            
+
             playerEntity.controllerDevice.inputs.onDropBombAction += PlaceBomb;
         }
     }
 
-    private void OnDisable()
-    {
-        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
-            playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
-        
-    }
 
     
     public void SubscribeBombShitEvent()
@@ -64,7 +65,6 @@ public class PlayerBombDropper : NetworkBehaviour
         {
             playerEntity.playerMovement.OnTileEntered += PlaceBomb;
         }
-           
     }
 
     [ClientRpc]
@@ -81,7 +81,9 @@ public class PlayerBombDropper : NetworkBehaviour
             RpcUnSubscribeBombShitEvent();
         }
         else
-        playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+        {
+            playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+        }
     }
 
     [ClientRpc]
@@ -89,8 +91,6 @@ public class PlayerBombDropper : NetworkBehaviour
     {
         playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
     }
-
-
 
     public void PlaceBomb()
     {
@@ -141,9 +141,6 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public void ToggleCanDropBomb() => canDropbomb = !canDropbomb;
 
-    public void ToggleBombShit() => bombShit = !bombShit;
-
-     
 
 
 

@@ -2,11 +2,11 @@
 
 [CreateAssetMenu(menuName = "ScriptableAction/Filter/FilterInvertMovement", fileName = "FilterInvertMovement")]
 
-public class FilterInvertMovement : Filter , IFilterVector
+public class FilterInvertMovement : Filter
 {
-    public void FilterVector(Vector2 input, Vector2 currentDirection, out Vector2 output)
+    public override void FilterData(ref PlayerInputData dataIn)
     {
-        output  = input * -1 ;
+        dataIn.movement *= -1;
     }
 }
 

@@ -21,7 +21,7 @@ MonoBehaviour:
   - name: Bomb -
     bonus: {fileID: 11400000, guid: f0019a68c8f4c10428ecaee840db7f66, type: 2}
     exactCount: 0
-    proportion: 0.5
+    proportion: 0
     playersProportion: 0
   - name: Fire +
     bonus: {fileID: 11400000, guid: b1953d41da9f1f6439308d64a494b4a3, type: 2}
@@ -31,17 +31,17 @@ MonoBehaviour:
   - name: Fire -
     bonus: {fileID: 11400000, guid: 7a78a0e4a23cb4a429f93fb22740d2ef, type: 2}
     exactCount: 0
-    proportion: 0.5
+    proportion: 0
     playersProportion: 0
   - name: Roller +
     bonus: {fileID: 11400000, guid: 56126229172752c48910021deeb99c85, type: 2}
     exactCount: 0
-    proportion: 0.5
+    proportion: 0.319
     playersProportion: 0
   - name: Roller -
     bonus: {fileID: 11400000, guid: 6f18f96667ab6434d891f64fdfa18eae, type: 2}
     exactCount: 0
-    proportion: 0.5
+    proportion: 0
     playersProportion: 0
   - name: Kick
     bonus: {fileID: 0}
@@ -55,13 +55,13 @@ MonoBehaviour:
     playersProportion: 0
   - name: Golden Flame
     bonus: {fileID: 11400000, guid: f0204addfe9bf164083e75d7ebcf1a05, type: 2}
-    exactCount: 0
-    proportion: 0.288
+    exactCount: 1
+    proportion: 0
     playersProportion: 0
   - name: Disease
     bonus: {fileID: 11400000, guid: 0bb8d7fe3dc561142a10625730017b8c, type: 2}
-    exactCount: 10
-    proportion: 1
+    exactCount: 3
+    proportion: 0
     playersProportion: 0
   boxesCount: 25
   playersCount: 2

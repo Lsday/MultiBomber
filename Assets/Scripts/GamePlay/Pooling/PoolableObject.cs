@@ -150,6 +150,7 @@ public class PoolableObject : NetworkBehaviour
     {
         if (activeState)
         {
+
             name = dbgName+" Disabled";
             StoreState();
 
@@ -174,8 +175,8 @@ public class PoolableObject : NetworkBehaviour
             {
                 Teleport(hiddenPosition);
             }
-            
         }
+        
     }
 
     public virtual void Teleport(Vector3 position)

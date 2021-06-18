@@ -1,4 +1,7 @@
-﻿public class ItemBomb : ItemBase, IDestroyable
+﻿using UnityEngine;
+
+
+public class ItemBomb : ItemBase, IDestroyable
 {
     public PlayerBombDropper bombDropper;
     Timer timer;
@@ -6,31 +9,24 @@
 
     public int flamesPower = 1;
    
-
-
     public BombBehaviour bombBehaviour;
     public FlamesDropBehaviour flamesBehaviour;
 
     public Direction explosionDirection;
 
-
-    public void Init()
+    public override void Awake()
     {
+        base.Awake();
 
-        //Debug.Log("Bomb Init");
-        
-        //timer = GetComponent<Timer>();
-        //timer.Init();
-        //timer.onTimerEnd += Triggerbomb;
-        //alreadySetToExplose = false;
+        if (timer == null)
+        {
+            timer = GetComponent<Timer>();
+            timer.onTimerEnd += TriggerBomb;
+        }
     }
 
     protected override void OnDisable()
     {
-        //Debug.Log( "Bomb " + netId + " Disabled");
-
-        if (timer != null)
-            timer.onTimerEnd -= TriggerBomb;
 
         explosionDirection = Direction.None;
         alreadyTriggered = false;
@@ -40,26 +36,40 @@
 
     protected override void OnEnable()
     {
-        //Debug.Log("Bomb " + netId + " Enabled");
-
         base.OnEnable();
 
-        if(timer == null) timer = GetComponent<Timer>();
-
         timer.StartTimer();
-        timer.onTimerEnd += TriggerBomb;
 
         alreadyTriggered = false;
     }
 
+    // fire end delay = how many time is left before the end of this explosion
+    public void InitDestroy(float delay = 0f, float fireEndDelay = 0f)
+    {
+        if (alreadyTriggered) return;
+        alreadyTriggered = true;
+
+        timer.StartTimer(delay);
+    }
+
+    public void Destroy()
+    {
+        if (alreadyTriggered) return;
+        alreadyTriggered = true;
+
+        timer.EndTimerEarly();
+    }
+
     private void TriggerBomb()
     {
+
         alreadyTriggered = true;
 
         if (isServer)
         {
             BombExplosion();
         }
+
     }
 
     private void BombExplosion()
@@ -72,21 +82,6 @@
         Disable();
     }
 
-    public void Destroy()
-    {
-        if (alreadyTriggered) return;
-        alreadyTriggered = true;
-
-        timer.EndTimerEarly();
-    }
-
-    public void InitDestroy(float delay = 0f, float fireEndDelay = 0f)
-    {
-        if (alreadyTriggered) return;
-        alreadyTriggered = true;
-
-        timer.StartTimer(delay);
-    }
 }
    
 

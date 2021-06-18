@@ -22,20 +22,25 @@ public class PlayerDiseaseManager : NetworkBehaviour
    
     public void StartDisease(Disease disease, float duration)
     {
-        RpcStartDisease(disease,  duration);
+        if (currentDisease != null)
+            EndDisease();
+
+        if(disease != currentDisease)
+        {
+            RpcStartDisease(disease, duration);
+        }
+        
     }
 
     [ClientRpc]
     private void RpcStartDisease(Disease disease, float duration)
     {
-        if (currentDisease != null)
-                    EndDisease();
-        
+        Debug.Log("Start of " + disease.ToString());
         currentDisease = disease;
         diseaseTimer.StopTimer();
         diseaseTimer.StartTimer(duration);
         disease.PerformAction(player);
-        Debug.Log("Start of " + currentDisease.ToString());
+        
     }
 
     public void EndDisease()
@@ -66,12 +71,13 @@ public class PlayerDiseaseManager : NetworkBehaviour
     public void SpreadDisease(PlayerEntity playerTarget)
     {
         float elapsedDiseaseTime = Time.time - diseaseTimer.elapsedTime;
-
+        /*
         if (playerTarget.playerDiseaseManager.currentDisease!=null)
         {
             playerTarget.playerDiseaseManager.EndDisease();
         }
-
+        */
+        Debug.Log("Spread "+ currentDisease.ToString()+" to "+ playerTarget.name);
         playerTarget.playerDiseaseManager.StartDisease(currentDisease, elapsedDiseaseTime);
 
     }

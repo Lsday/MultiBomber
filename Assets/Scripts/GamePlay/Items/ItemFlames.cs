@@ -69,6 +69,7 @@ public class ItemFlames : ItemBase
 
     public void ResetData()
     {
+
         age = 0;
         currentPower = 0;
         prevPower = 0;
@@ -86,15 +87,16 @@ public class ItemFlames : ItemBase
         }
     }
 
+
     private void Update()
     {
         if (!initialized) return;
 
 
         // suppression de la chaleur un peu avant la fin de a visibilité de l'explosion
-        if (age >= lifeTime - fadeoutDuration)
+        if (!heatRemoved && age >= lifeTime - fadeoutDuration)
         {
-            if (!heatRemoved) RemoveHeat();
+            RemoveHeat();
         }
 
 
@@ -168,7 +170,7 @@ public class ItemFlames : ItemBase
         prevPower = 0;
     }
 
-    private void UpdateHeat(int heatValue = 1)
+    private void UpdateHeat()
     {
         if (currentPower == 0 || LevelBuilder.grid == null) return;
 
@@ -181,26 +183,34 @@ public class ItemFlames : ItemBase
 
             tile.temperature++;
 
-            if (tile.item is IDestroyable)
+            if (isServer)
             {
-                if (isServer)
+                if (tile.item is IDestroyable)
                 {
                     ((IDestroyable)tile.item).InitDestroy(0.05f , lifeTime - age);
+                    
+                    // update endPower on this obstacle
+                    endPower = i;
+                    currentPower = i;
+                    pow = i;
+                    break;
                 }
             }
         }
         prevPower = pow;
+
     }
 
     private float ComputeLimit(float maxPower)
     {
+
         float limitPower = 0;
 
         for (int i = 1; i <= maxPower; i++)
         {
             Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction * i);
 
-            if (tile.type >= ElementType.Block)
+            if (tile.type >= ElementType.Block || tile.type == ElementType.Item)
             {
                 // Allow destruction of nearby objects
                 if (tile.item is IDestroyable)
@@ -227,9 +237,15 @@ public class ItemFlames : ItemBase
         }
     }
 
+
+    [ClientRpc]
+    private void RpcInit(Vector3 position, Vector3 direction, float maxPower, float extraTime)
+    {
+        Init(position, direction, maxPower, extraTime);
+    }
+
     private void Init(Vector3 startPosition, Vector3 direction, float maxPower, float extraTime)
     {
-
         transform.position = startPosition;
 
         sourcePosition = startPosition;
@@ -267,11 +283,6 @@ public class ItemFlames : ItemBase
         initialized = true;
     }
 
-    [ClientRpc]
-    private void RpcInit(Vector3 position, Vector3 direction, float maxPower, float extraTime)
-    {
-        Init(position, direction, maxPower, extraTime);
-    }
 
     //TODO : voir avec le prefab dans l'autre projet pour chopper le setup correct du callback
     public void SetSparks(bool state)
@@ -309,7 +320,6 @@ public class ItemFlames : ItemBase
 
     public override void Disable()
     {
-
         RemoveHeat();
 
         ResetData();
@@ -317,7 +327,7 @@ public class ItemFlames : ItemBase
         // multiple flames can be spwaned on the same tile
         // force a clear tile here to leave the Tile clean when all the flames are removed
         parentTile?.ClearTile();
-
+        
         base.Disable();
     }
 }

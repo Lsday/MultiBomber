@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameTimer : MonoBehaviour
 {
     
-    public double gameLenght = 45;
+    public double gameLength = 45;
     public double gameAlmostEnd = 30;
     public GameTimerUI gameTimerUI;
     public double startTimer;
@@ -18,6 +18,9 @@ public class GameTimer : MonoBehaviour
 
     public event GameState onGameAlmostEnded;
     public event GameState onGameEnded;
+
+    int _minutes;
+    int _seconds;
 
     void Start()
     {
@@ -37,16 +40,16 @@ public class GameTimer : MonoBehaviour
         {
             
             gameTimer = NetworkTime.time - startTimer - NetworkTime.offset;
-            gameTimerUI.SetTimer((gameLenght - gameTimer).ToString());
+            UpdateTimer((float)(gameLength - gameTimer));
 
-            if (gameTimer >= (gameLenght - gameAlmostEnd) && isGameAlmostEnded == false)
+            if (gameTimer >= (gameLength - gameAlmostEnd) && isGameAlmostEnded == false)
             {
                 isGameAlmostEnded = true;
                 onGameAlmostEnded?.Invoke();
                 Debug.Log("Game almost ended");
             }
 
-            if (gameTimer >= gameLenght && isGameEnded == false)
+            if (gameTimer >= gameLength && isGameEnded == false)
             {
                 isGameEnded = true;
                 onGameEnded?.Invoke();
@@ -55,7 +58,21 @@ public class GameTimer : MonoBehaviour
             }
         }
         else
-            gameTimerUI.SetTimer("0");
+            gameTimerUI.SetTimer("-");
+    }
 
+    private void UpdateTimer(float value)
+    {
+        int minutes = Mathf.FloorToInt(value / 60);
+        int seconds = Mathf.FloorToInt(value - (minutes * 60));
+        int milliseconds = Mathf.FloorToInt((value % 1) * 1000);
+
+        if (_minutes != minutes || _seconds != seconds || true)
+        {
+            gameTimerUI.SetTimer(string.Format("{0}:{1}.{2}", minutes.ToString("00"), seconds.ToString("00"), milliseconds.ToString("000")));
+        }
+
+        _minutes = minutes;
+        _seconds = seconds;
     }
 }

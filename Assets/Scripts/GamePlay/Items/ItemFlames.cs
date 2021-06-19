@@ -172,6 +172,7 @@ public class ItemFlames : ItemBase
 
     private void UpdateHeat()
     {
+        
         if (currentPower == 0 || LevelBuilder.grid == null) return;
 
         int pow = Mathf.RoundToInt(currentPower);

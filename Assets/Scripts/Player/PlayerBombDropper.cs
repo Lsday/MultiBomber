@@ -1,7 +1,4 @@
 using Mirror;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBombDropper : NetworkBehaviour
@@ -19,13 +16,14 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public Filter currentFilter;
 
+
     //[SyncVar] bool bombShit = false;
 
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
         LinkInputActions();
-        
+
     }
 
     private void OnEnable()
@@ -54,9 +52,10 @@ public class PlayerBombDropper : NetworkBehaviour
     }
 
 
-    
+
     public void SubscribeBombShitEvent()
     {
+        Debug.Log("SubscribeBombShitEvent");
         if (isServer)
         {
             RpcSubscribeBombShitEvent();
@@ -70,12 +69,14 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void RpcSubscribeBombShitEvent()
     {
+        Debug.Log("RpcSubscribeBombShitEvent");
         playerEntity.playerMovement.OnTileEntered += PlaceBomb;
     }
 
 
     public void UnSubscribeBombShitEvent()
     {
+        Debug.Log("UnSubscribeBombShitEvent");
         if (isServer)
         {
             RpcUnSubscribeBombShitEvent();
@@ -89,43 +90,64 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void RpcUnSubscribeBombShitEvent()
     {
+        Debug.Log("RpcUnSubscribeBombShitEvent");
         playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
     }
 
     public void PlaceBomb()
     {
+        Debug.Log("PlaceBomb");
         if (!canDropbomb) return;
-        
+
         if (playerEntity.hubIdentity.isLocalPlayer && bombOnMap < bombCount)
         {
             if (isServer)
                 DropBomb();
-            
+
             else
                 CmdDropBomb();
         }
     }
 
     [Command]
-    private void CmdDropBomb() => DropBomb();
-    
+    private void CmdDropBomb()
+    {
+        Debug.Log("CmdDropBomb");
+        DropBomb();
+      
+    }
+
     [ClientRpc]
     public void RpcDecrementBombOnMap()
     {
+        Debug.Log("RpcDecrementBombOnMap");
         if (bombOnMap > 0)
             bombOnMap--;
     }
 
     [ClientRpc]
-    public void AddBombOnMap() => bombOnMap++;
-    
-    [ClientRpc]
-    public void RpcModifyBombCount(int amount) => bombCount = Mathf.Clamp(bombCount + amount, 1, bombMaxOnMap);
+    public void AddBombOnMap()
+    {
+        Debug.Log("AddBombOnMap");
+        bombOnMap++;
+    }
 
     [ClientRpc]
-    public void RpcModifyFlamesPower(int amount) => flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
+    public void RpcModifyBombCount(int amount)
+    {
+        Debug.Log("RpcModifyBombCount");
+        bombCount = Mathf.Clamp(bombCount + amount, 1, bombMaxOnMap);
+    }
+
+    [ClientRpc]
+    public void RpcModifyFlamesPower(int amount)
+    {
+        Debug.Log("RpcModifyFlamesPower");
+        flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
+    } 
     private void DropBomb()
     {
+        Debug.Log("DropBomb");
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
 
         if (tile.type < ElementType.Block)
@@ -139,10 +161,11 @@ public class PlayerBombDropper : NetworkBehaviour
         }
     }
 
-    public void ToggleCanDropBomb() => canDropbomb = !canDropbomb;
-
-
-
+    public void ToggleCanDropBomb()
+    {
+        Debug.Log("ToggleCanDropBomb");
+        canDropbomb = !canDropbomb;
+    } 
 
 
 }

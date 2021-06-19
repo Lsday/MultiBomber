@@ -154,6 +154,8 @@ public class PoolableObject : NetworkBehaviour
             name = dbgName+" Disabled";
             StoreState();
 
+            activeState = false;
+
             for (int i = 0; i < components.Length; i++)
             {
                 components[i].enabled = false;
@@ -169,7 +171,7 @@ public class PoolableObject : NetworkBehaviour
                 animComponent.enabled = false;
             }
 
-            activeState = false;
+          
 
             if (isServer)
             {

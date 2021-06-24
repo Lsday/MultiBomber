@@ -136,7 +136,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerEntity: {fileID: 0}
-  bombCount: 10
+  bombCount: 1
   bombOnMap: 0
   bombMaxOnMap: 10
   flamesPower: 1
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 20
-  triggerWhenDestroy: 0
+  triggerWhenDisable: 0
   elapsedTime: 0
 --- !u!95 &3076946526444299341
 Animator:

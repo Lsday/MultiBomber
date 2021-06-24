@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using Mirror;
 
 public class ItemBomb : ItemBase, IDestroyable
 {
@@ -27,23 +27,26 @@ public class ItemBomb : ItemBase, IDestroyable
         }
     }
 
-    protected override void OnDisable()
+    protected void OnDisable()
     {
-        //Debug.Log("BOMB OnDisable");
+
         explosionDirection = Direction.None;
         alreadyTriggered = false;
 
-        base.OnDisable();
     }
 
-    protected override void OnEnable()
+    protected void OnEnable()
     {
-        //Debug.Log("BOMB OnEnable");
-        base.OnEnable();
 
         timer.StartTimer();
 
         alreadyTriggered = false;
+    }
+
+    [ClientRpc]
+    public void RpcInitDestroy(float delay, float endDelay)
+    {
+        InitDestroy(delay, endDelay);
     }
 
     // fire end delay = how many time is left before the end of this explosion

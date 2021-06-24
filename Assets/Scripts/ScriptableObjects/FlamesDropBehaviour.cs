@@ -28,7 +28,7 @@ public class FlamesDropBehaviour : DropBehaviour<ItemBase>
 
     void SpawnFlames(Vector3 position , Vector3 direction , float power)
     {
-        ItemFlames flames = PoolingSystem.instance.GetPoolObject(ItemsType.FLAMES) as ItemFlames; // TODO : revoir le pooling system pour prendre des prefab en entrée
+        ItemFlames flames = PoolingSystem.instance.GetPoolObject(ItemsType.FLAMES, position) as ItemFlames; // TODO : revoir le pooling system pour prendre des prefab en entrée
 
         flames.InitServer(position, direction,power);
 

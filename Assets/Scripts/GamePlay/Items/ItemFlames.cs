@@ -60,10 +60,8 @@ public class ItemFlames : ItemBase
         _particles = this.GetComponent<ParticleSystem>();
     }
 
-    protected override void OnEnable()
+    void OnEnable()
     {
-        base.OnEnable();
-
         ResetData();
     }
 
@@ -188,8 +186,11 @@ public class ItemFlames : ItemBase
             {
                 if (tile.item is IDestroyable)
                 {
-                    ((IDestroyable)tile.item).InitDestroy(0.05f , lifeTime - age);
-                    
+                    if (isServer)
+                    {
+                        ((IDestroyable)tile.item).RpcInitDestroy(0.05f, lifeTime - age);
+                    }
+
                     // update endPower on this obstacle
                     endPower = i;
                     currentPower = i;
@@ -230,7 +231,7 @@ public class ItemFlames : ItemBase
     [Server]
     public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
-        Teleport(position);
+       // Teleport(position);
 
         if (isServer)
         {

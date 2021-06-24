@@ -120,6 +120,7 @@ namespace Mirror
                 Debug.LogError($"Exception in MessageHandler: {e.GetType().Name} {e.Message}\n{e.StackTrace}");
                 conn.Disconnect();
             }
+            
         };
     }
 }

@@ -1,14 +1,23 @@
 ﻿using UnityEngine;
+using Mirror;
 
 public class ItemPlayerModifier : ItemBase, ILootable, IDestroyable
 {
 
     public ScriptableAction<PlayerEntity> scriptableAction;
-    bool destroyedTriggered = false;
+    protected bool destroyedTriggered = false;
 
     public void Destroy()
     {
+        destroyedTriggered = false;
         Disable();
+    }
+
+
+    [ClientRpc]
+    public void RpcInitDestroy(float delay, float endDelay)
+    {
+        InitDestroy(delay, endDelay);
     }
 
     public virtual void InitDestroy(float delay = 0, float fireEndDelay = 0f)

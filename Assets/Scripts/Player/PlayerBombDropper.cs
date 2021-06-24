@@ -90,13 +90,11 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void RpcUnSubscribeBombShitEvent()
     {
-        Debug.Log("RpcUnSubscribeBombShitEvent");
         playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
     }
 
     public void PlaceBomb()
     {
-        Debug.Log("PlaceBomb");
         if (!canDropbomb) return;
 
         if (playerEntity.hubIdentity.isLocalPlayer && bombOnMap < bombCount)
@@ -112,7 +110,6 @@ public class PlayerBombDropper : NetworkBehaviour
     [Command]
     private void CmdDropBomb()
     {
-        Debug.Log("CmdDropBomb");
         DropBomb();
       
     }
@@ -120,7 +117,6 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void RpcDecrementBombOnMap()
     {
-        Debug.Log("RpcDecrementBombOnMap");
         if (bombOnMap > 0)
             bombOnMap--;
     }
@@ -128,32 +124,28 @@ public class PlayerBombDropper : NetworkBehaviour
     [ClientRpc]
     public void AddBombOnMap()
     {
-        Debug.Log("AddBombOnMap");
         bombOnMap++;
     }
 
     [ClientRpc]
     public void RpcModifyBombCount(int amount)
     {
-        Debug.Log("RpcModifyBombCount");
         bombCount = Mathf.Clamp(bombCount + amount, 1, bombMaxOnMap);
     }
 
     [ClientRpc]
     public void RpcModifyFlamesPower(int amount)
     {
-        Debug.Log("RpcModifyFlamesPower");
         flamesPower = Mathf.Clamp(flamesPower + amount, 1, flamePowerMax);
     } 
     private void DropBomb()
     {
-        Debug.Log("DropBomb");
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
 
         if (tile.type < ElementType.Block)
         {
-            ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB) as ItemBomb;
-            bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
+            ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB, LevelBuilder.grid.GetGridObjectWorldCenter(transform.position)) as ItemBomb;
+            //bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
             bomb.bombDropper = this;
             bomb.flamesPower = flamesPower;
 
@@ -163,7 +155,6 @@ public class PlayerBombDropper : NetworkBehaviour
 
     public void ToggleCanDropBomb()
     {
-        Debug.Log("ToggleCanDropBomb");
         canDropbomb = !canDropbomb;
     } 
 

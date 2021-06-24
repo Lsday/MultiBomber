@@ -187,11 +187,11 @@ public class LevelBuilder : NetworkBehaviour
             //Calculate Box Position
             Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
 
-            ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX) as ItemBox;
+            ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, boxTilePosition) as ItemBox;
 
             actualBoxes.Add(box);
 
-            box.Teleport(boxTilePosition);
+            //box.Teleport(boxTilePosition);
 
 
         }

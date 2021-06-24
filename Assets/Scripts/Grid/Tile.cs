@@ -54,15 +54,12 @@ public class Tile
     }
     public void ClearTile()
     {
-        Debug.Log("ClearTile Start");
         item = null;
         type = ElementType.Empty;
         grid.OnGridObjectModified(this);
-        Debug.Log("ClearTile End");
     }
     public void SetTile(ItemBase item)
     {
-        Debug.Log("SetTile");
         bool changed = false;
 
         if(this.item != item)
@@ -85,25 +82,21 @@ public class Tile
     }
     public void SetItem(ItemBase item)
     {
-        Debug.Log("SetItem");
         this.item = item;
         grid.OnGridObjectModified(this);
     }
     public void ClearItem()
     {
-        Debug.Log("ClearItem");
         item = null;
         grid.OnGridObjectModified(this);
     }
     public void SetType(ElementType type)
     {
-        Debug.Log("SetType");
         this.type = type;
         grid.OnGridObjectModified(this);
     }
     public void ClearType()
     {
-        Debug.Log("ClearType");
         type = ElementType.Empty;
         grid.OnGridObjectModified(this);
     }

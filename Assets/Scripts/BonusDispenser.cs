@@ -19,7 +19,7 @@ public class BonusDispenser
         System.Random rnd = new System.Random();
         
         int[] indices = new int[boxList.Count];
-        for(int i=0;i< boxList.Count; i++)
+        for(int i = 0 ; i < boxList.Count ; i++)
         {
             indices[i] = i;
         }
@@ -28,22 +28,22 @@ public class BonusDispenser
         rnd.Shuffle(indices);
        
         // assign all bonus into boxes
-        int boxIndex = 0;
+        int pickIndex = 0;
         int bonusLeft = 1;
-        while (boxIndex < boxList.Count && bonusLeft > 0)
+        while (pickIndex < indices.Length && bonusLeft > 0)
         {
             bonusLeft = 0;
-            for (int i = 0; i < bonusStocks.Length; i++)
+            for (int i = 0 ; i < bonusStocks.Length ; i++)
             {
                 if (bonusStocks[i].count > 0)
                 {
-                    boxList[indices[boxIndex]].bonus = bonusStocks[i].bonus;
+                    boxList[indices[pickIndex]].bonus = bonusStocks[i].bonus;
                     bonusStocks[i].count--;
-                    boxIndex++;
+                    pickIndex++;
                     bonusLeft += bonusStocks[i].count;
 
                     // early exit
-                    if (boxIndex > boxList.Count) break;
+                    if (pickIndex >= indices.Length) break;
                 }
             }
         }

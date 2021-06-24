@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8269ea2024ef3d642821da335a338530, type: 2}
+  - {fileID: 2100000, guid: e08de99e42558c947badff755823c566, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  activeState: 0
-  dbgName: 
   type: 1024
-  bonusDropBehaviour: {fileID: 11400000, guid: 5259f4be430502a4d984c3c4041bf891, type: 2}
+  bonus: {fileID: 0}
+  explosionScale: 1.3
+  rendererObject: {fileID: 937318091605541281}

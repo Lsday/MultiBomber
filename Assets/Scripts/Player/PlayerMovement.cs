@@ -255,6 +255,12 @@ public class PlayerMovement : NetworkBehaviour
         */
     }
 
+    [ClientRpc]
+    private void RpcUpdateTileCoordinates()
+    {
+        UpdateTileCoordinates();
+    }
+
     private void UpdateTileCoordinates()
     {
         if (grid == null) return;
@@ -532,7 +538,13 @@ public class PlayerMovement : NetworkBehaviour
     public void Teleport(Vector3 position)
     {
         networkTransform.ServerTeleport(position);
+
         UpdateTileCoordinates();
+
+        if (isServer)
+        {
+            RpcUpdateTileCoordinates();
+        }
     }
        
     

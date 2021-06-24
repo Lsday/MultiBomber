@@ -10,6 +10,50 @@ public class ItemBox : ItemBase, IDestroyable
 
     bool destroyedTriggered = false;
 
+    public float explosionScale = 1.3f;
+
+    private float explodeProgress = 0f;
+    float destructionDuration = 0.5f;
+
+    public Renderer rendererObject;
+    private MaterialPropertyBlock propertyBlock;
+
+    void ResetVariables()
+    {
+        if (propertyBlock == null)
+            propertyBlock = new MaterialPropertyBlock();
+
+        myTransform.localScale = Vector3.one;
+        explodeProgress = 0;
+        rendererObject.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        propertyBlock.SetFloat("_NoiseValue", 0);
+        rendererObject.SetPropertyBlock(propertyBlock);
+    }
+    private IEnumerator UpdateMaterialData()
+    {
+        while (destroyedTriggered)
+        {
+            explodeProgress += Time.fixedDeltaTime / destructionDuration;
+            propertyBlock.SetFloat("_NoiseValue", explodeProgress);
+            myTransform.localScale = Vector3.one * Mathf.Lerp(1f, explosionScale, explodeProgress / destructionDuration);
+            rendererObject.SetPropertyBlock(propertyBlock);
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+    }
+
+    void StartDestroyAnimation(float duration)
+    {
+        ResetVariables();
+        if (duration == 0) return;
+        // disable shadows when destroying a bonus
+        rendererObject.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+        // set the destruction time
+        destructionDuration = duration;
+        
+        StartCoroutine(this.UpdateMaterialData());
+    }
+
     public void Destroy()
     {
         destroyedTriggered = false;
@@ -18,9 +62,9 @@ public class ItemBox : ItemBase, IDestroyable
 
         if(bonus != null)
         {
-            ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS) as ItemBonus;
+            ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS, transform.position) as ItemBonus;
             itemBonus.SetBonus(bonus);
-            itemBonus.Teleport(transform.position);
+            //itemBonus.Teleport(transform.position);
         }
        
         // reset bonus
@@ -29,16 +73,26 @@ public class ItemBox : ItemBase, IDestroyable
         Disable();
     }
 
+
+    [ClientRpc]
+    public void RpcInitDestroy(float delay, float endDelay)
+    {
+        InitDestroy(delay, endDelay);
+    }
+
+
     public void InitDestroy(float delay = 0f,float fireEndDelay = 0f)
     {
         if (destroyedTriggered) return;
-        
+
         delay += fireEndDelay;
 
         if (delay > 0)
         {
             destroyedTriggered = true;
             Invoke("Destroy", delay);
+
+            StartDestroyAnimation(fireEndDelay);
             return;
         }
 

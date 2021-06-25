@@ -93,6 +93,7 @@ public class PrefabPoolManager
         // set position/rotation and set active
         next.transform.position = position;
         next.transform.rotation = rotation;
+
         next.gameObject.SetActive(true);
         return next.gameObject;
     }

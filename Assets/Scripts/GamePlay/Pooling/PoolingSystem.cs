@@ -82,7 +82,7 @@ public class PoolingSystem : NetworkBehaviour
         go.gameObject.SetActive(true);
 
         NetworkServer.Spawn(go.gameObject);
-
+        
         return go;
     }
 

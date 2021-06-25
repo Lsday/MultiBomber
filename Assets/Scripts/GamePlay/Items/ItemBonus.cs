@@ -123,10 +123,11 @@ public class ItemBonus : ItemPlayerModifier
 
         StartDestroyAnimation(fireEndDelay);
     }
-
+    
     public void Enable()
     {
         ResetVariables();
     }
+    
 }
 

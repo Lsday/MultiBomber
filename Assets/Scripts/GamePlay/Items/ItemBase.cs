@@ -12,10 +12,15 @@ public abstract class ItemBase : PoolableObject
 
     #region UnityCallbacks
 
-    #endregion
 
-    #region Mirror Messages
-
+    public Vector3 position2D
+    {
+        get
+        {
+            Vector3 pos = transform.position;
+            return new Vector3(pos.x, 0, pos.z);
+        }
+    }
 
     public override void OnStartClient()
     {
@@ -23,20 +28,8 @@ public abstract class ItemBase : PoolableObject
         PlaceOnTile();
     }
 
-    [ClientRpc]
-    public void RpcPlaceOnTile(Vector3 position)
-    {
-        //Debug.Log(name+" RpcPlaceOnTile execute");
-        //parenttile = levelbuilder.grid?.getgridobject(position);
-        //parenttile?.settile(this);
-        PlaceOnTile(position);
-    }
-
-    #endregion
-
     public void PlaceOnTile()
     {
-        //Debug.Log(name+" PlaceOnTile");
         parentTile = LevelBuilder.grid.GetGridObject(transform.position);
         parentTile?.SetTile(this);
     }
@@ -70,11 +63,15 @@ public abstract class ItemBase : PoolableObject
 
     public override void Disable() // DISABLE
     {
-        //Debug.Log("Disable");
         RemoveFromTile();
-        parentTile?.ClearTile();
+        //parentTile?.ClearTile();
         base.Disable();
     }
+
+
+    #endregion
+
+    #region Mirror Messages
 
     [Server]
     public override void Teleport(Vector3 position) // TODO : NE DEVRAIT SE FAIRE QUE COTE SERVEUR
@@ -93,5 +90,12 @@ public abstract class ItemBase : PoolableObject
         }
     }
 
-    
+    [ClientRpc]
+    public void RpcPlaceOnTile(Vector3 position)
+    {
+        PlaceOnTile(position);
+    }
+
+    #endregion
+
 }

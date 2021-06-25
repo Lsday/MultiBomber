@@ -18,6 +18,11 @@ public class ItemBox : ItemBase, IDestroyable
     public Renderer rendererObject;
     private MaterialPropertyBlock propertyBlock;
 
+    void OnEnable()
+    {
+        ResetVariables();
+    }
+
     void ResetVariables()
     {
         if (propertyBlock == null)
@@ -27,6 +32,7 @@ public class ItemBox : ItemBase, IDestroyable
         explodeProgress = 0;
         rendererObject.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         propertyBlock.SetFloat("_NoiseValue", 0);
+        propertyBlock.SetFloat("_RandomValue", Random.Range(0.7f, 1f)); // set random color
         rendererObject.SetPropertyBlock(propertyBlock);
     }
     private IEnumerator UpdateMaterialData()
@@ -62,9 +68,8 @@ public class ItemBox : ItemBase, IDestroyable
 
         if(bonus != null)
         {
-            ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS, transform.position) as ItemBonus;
+            ItemBonus itemBonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS, position2D ) as ItemBonus;
             itemBonus.SetBonus(bonus);
-            //itemBonus.Teleport(transform.position);
         }
        
         // reset bonus

@@ -48,6 +48,7 @@ public class PlayerMovement : NetworkBehaviour
     public Action OnTileEntered;
 
     Vector2Int currentDirection;
+    Vector2Int previousInput;
     #endregion
 
 
@@ -174,8 +175,16 @@ public class PlayerMovement : NetworkBehaviour
 
         if (signX == 0 && signZ == 0)
         {
-            signX = Utils.RoundedSign(h);
-            signZ = Utils.RoundedSign(v);
+
+            if (moveX != previousInput.x || moveZ == 0 && moveX != currentDirection.x)
+            {
+                signX = moveX;
+            }
+            
+            if (moveZ != previousInput.y || moveX == 0 && moveZ != currentDirection.y)
+            {
+                signZ = moveZ;
+            }
         }
         else
         {
@@ -192,14 +201,16 @@ public class PlayerMovement : NetworkBehaviour
 
         if (signX != 0 || signZ != 0)
         {
-            transform.forward = new Vector3(signX, 0, signZ).normalized;
-
             currentDirection.x = signX;
             currentDirection.y = signZ;
+
+            transform.forward = new Vector3(signX, 0, signZ).normalized;
         }
 
         playerEntity.currentInputData.direction = currentDirection;
 
+        previousInput.x = moveX;
+        previousInput.y = moveZ;
     }
 
     [ClientRpc]

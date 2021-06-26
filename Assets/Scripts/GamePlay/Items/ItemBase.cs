@@ -36,14 +36,12 @@ public abstract class ItemBase : PoolableObject
 
     public void PlaceOnTile(Vector3 position)
     {
-        //Debug.Log(name+" PlaceOnTile");
         parentTile = LevelBuilder.grid.GetGridObject(position);
         parentTile?.SetTile(this);
     }
 
     public void PlaceOnTile(Tile tile)
     {
-        //Debug.Log(name+" PlaceOnTile");
         parentTile = tile;
         parentTile?.SetTile(this);
     }
@@ -51,23 +49,23 @@ public abstract class ItemBase : PoolableObject
     // remove the item from its tile only if it is still registered in it
     public void RemoveFromTile()
     {
-        //Debug.Log(name + " RemoveFromTile Start");
         if (parentTile != null && parentTile.item == this)
         {
             parentTile.ClearTile();
         }
         parentTile = null;
-        //type = ElementType.Empty;
-        //Debug.Log(name + "RemoveFromTile End");
     }
 
-    public override void Disable() // DISABLE
+    public override void Disable()
     {
         RemoveFromTile();
-        //parentTile?.ClearTile();
         base.Disable();
     }
 
+    public void OnDisable()
+    {
+        RemoveFromTile();
+    }
 
     #endregion
 

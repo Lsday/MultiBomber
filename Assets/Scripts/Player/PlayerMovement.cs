@@ -51,6 +51,15 @@ public class PlayerMovement : NetworkBehaviour
     Vector2Int previousInput;
     #endregion
 
+    public PlayerAnimations playerAnimations;
+
+    public float Speed
+    {
+        get
+        {
+            return speed;
+        }
+    }
 
     /*
     bool overlapBomb = false;
@@ -139,6 +148,9 @@ public class PlayerMovement : NetworkBehaviour
                 //playerEntity.animator.SetBool("IsRunning", isRunning);
             }
         }
+
+        // ANIM-TODO : à bouger
+        playerAnimations.UpdateAnimations(isRunning);
     }
 
 

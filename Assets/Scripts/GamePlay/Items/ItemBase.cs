@@ -62,7 +62,7 @@ public abstract class ItemBase : PoolableObject
         base.Disable();
     }
 
-    public void OnDisable()
+    public virtual void OnDisable()
     {
         RemoveFromTile();
     }

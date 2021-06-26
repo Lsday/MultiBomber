@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2718188998225735062}
   - component: {fileID: 1020116337010221406}
   - component: {fileID: 6882409918411526273}
+  - component: {fileID: 5444521041224956325}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -121,6 +122,7 @@ MonoBehaviour:
   currentTileX: 0
   currentTileY: 0
   currentFilter: {fileID: 0}
+  playerAnimations: {fileID: 5444521041224956325}
 --- !u!114 &161878465008676798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +188,21 @@ MonoBehaviour:
   duration: 20
   triggerWhenDisable: 0
   elapsedTime: 0
+--- !u!114 &5444521041224956325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340615587193445658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf42c144e510f649abf1baaa47c97de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 3076946526444299341}
+  playerEntity: {fileID: 471709280951393523}
+  playerMovement: {fileID: 7299415106740637389}
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3
@@ -196,7 +213,7 @@ Animator:
   m_GameObject: {fileID: 1022638314612746890}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5bc7fa045638d374badc02d0ff50ea46, type: 2}
+  m_Controller: {fileID: 9100000, guid: e329cbcef633dad4bb9173f1856f330b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

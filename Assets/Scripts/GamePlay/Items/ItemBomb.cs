@@ -27,7 +27,7 @@ public class ItemBomb : ItemBase, IDestroyable
         }
     }
 
-    protected void OnDisable()
+    public override void OnDisable()
     {
 
         explosionDirection = Direction.None;

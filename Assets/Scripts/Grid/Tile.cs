@@ -43,13 +43,13 @@ public class Tile
     public override string ToString()
     {
        
-        return _temperature.ToString();
+        //return _temperature.ToString();
 
-        //if (item != null)
-        //{
-        //    return item.ToString();
-        //}
-        //return type.ToString() + "("+_temperature+")";
+        if (item != null)
+        {
+            return item.ToString();
+        }
+        return type.ToString() + "("+_temperature+")";
         
     }
     public void ClearTile()

@@ -14,6 +14,10 @@ public class LootManager : NetworkBehaviour
             for (int i = 0; i < PlayerEntity.instancesList.Count; i++)
             {
                 PlayerEntity player = PlayerEntity.instancesList[i];
+
+                if (player.isDead) continue;
+
+
                 PlayerMovement.TileOccupation[] tiles = player.playerMovement.tiles;
 
                 for (int j = 0; j < tiles.Length; j++)

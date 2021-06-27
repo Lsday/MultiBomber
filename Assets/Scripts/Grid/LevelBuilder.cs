@@ -163,7 +163,7 @@ public class LevelBuilder : NetworkBehaviour
         for (int i = 0; i < count; i++)
         {
             // send the position to the PlayerMovement script assigned to this player entity
-            PlayerEntity.instancesList[i].SendMessage("SetWorldPosition", playerStartPositions[i] * size + offset);
+            PlayerEntity.instancesList[i].SetSpawnPosition(playerStartPositions[i] * size + offset);
         }
     }
     private void CreateBoxs()

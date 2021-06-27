@@ -98,9 +98,11 @@ MonoBehaviour:
   defaultColor: {r: 0, g: 0, b: 0, a: 0}
   controllerDevice: {fileID: 0}
   deathThreshold: 0.3
-  animator: {fileID: 0}
+  animator: {fileID: 3076946526444299341}
   avatarRenderer: {fileID: 0}
   avatarMaterial: {fileID: 0}
+  deathCount: 0
+  isDead: 0
 --- !u!114 &7299415106740637389
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,9 +202,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf42c144e510f649abf1baaa47c97de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 3076946526444299341}
+  animator: {fileID: 3076946526444299341}
   playerEntity: {fileID: 471709280951393523}
   playerMovement: {fileID: 7299415106740637389}
+  deathDelay: 1
 --- !u!95 &3076946526444299341
 Animator:
   serializedVersion: 3

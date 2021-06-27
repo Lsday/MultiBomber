@@ -1,32 +1,72 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
+
+    public Action OnPlayerDiedAnimEnded;
 
     int _speedHash = Animator.StringToHash("Speed");
     int _deadHash = Animator.StringToHash("Dead");
     int _stunHash = Animator.StringToHash("Stun");
     int _punchHash = Animator.StringToHash("Punch");
 
-    public Animator _animator;
+    public Animator animator;
     public PlayerEntity playerEntity;
     public PlayerMovement playerMovement;
 
     int state = -1;
+    float deathDelay;
+    float minDeathDelay = 2f;
+
+
+    //public void Init(PlayerEntity playerEntity)
+    //{
+    //     this.playerEntity = playerEntity;
+    //}
+
+    public void Awake()
+    {
+        playerEntity = GetComponent<PlayerEntity>();
+        playerEntity.OnPlayerDied += PlayerDie;
+
+        AnimationClip[] animClips = AnimationUtility.GetAnimationClips(animator.gameObject);
+        for (int i = 0; i < animClips.Length; i++)
+        {
+            if (animClips[i].name == "Death")
+            {
+                deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
+            }
+        }
+    }
+
+    void PlayerDie()
+    {
+        animator.SetBool(_deadHash, true);
+        Invoke("PlayerDiedAnimEnded", deathDelay);
+
+    }
+
+    void PlayerDiedAnimEnded()
+    {
+        animator.SetBool(_deadHash, false);
+        OnPlayerDiedAnimEnded?.Invoke();
+    }
 
     public void UpdateAnimations(bool isMoving)
     {
         if (isMoving)
         {
             state = _speedHash;
-            _animator.SetFloat(_speedHash, playerMovement.Speed);
+            animator.SetFloat(_speedHash, playerMovement.Speed);
         }
         else if (state != 0)
         {
             state = 0;
-            _animator.SetFloat(_speedHash, 0);
+            animator.SetFloat(_speedHash, 0);
         }
     }
 

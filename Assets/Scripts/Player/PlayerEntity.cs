@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-public class PlayerEntity : NetworkBehaviour, IKillable
+using System;
+public class PlayerEntity : NetworkBehaviour
 {
-    
+
+    public Action OnPlayerDied;
+    public Action<Vector3> OnPlayerSpawned;
 
     #region Properties
 
@@ -29,21 +32,28 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     public PlayerBombDropper playerBombDropper{get; private set;}
     public PlayerBonusManager playerBonusPickUp{get; private set;}
     public PlayerDiseaseManager playerDiseaseManager { get; private set; }
+    public PlayerAnimations playerAnimation { get; private set; }
 
-    
+   
 
     // TODO : private variables
-    public Animator animator;
     public Renderer avatarRenderer;
     public Material avatarMaterial;
 
-   
+    [SyncVar] public int deathCount;
+    [SyncVar] public bool isDead;
+
+    public Vector3 spawnPoint;
+
+    
+    
+
+
     #endregion
 
     #region Init
     private void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
         avatarRenderer = GetComponentInChildren<Renderer>();
         avatarMaterial = avatarRenderer.material;
 
@@ -53,6 +63,10 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
         playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
         playerDiseaseManager.Init(this);
+
+
+        playerAnimation = GetComponent<PlayerAnimations>();
+        playerAnimation.OnPlayerDiedAnimEnded += KillPlayer;
     }
 
 
@@ -75,6 +89,12 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         });
     }
 
+    public void SetSpawnPosition(Vector3 position)
+    {
+        spawnPoint = position;
+        OnPlayerSpawned?.Invoke(position);
+    }
+
     public static PlayerEntity GetMajorPlayer(int x, int y)
     {
         float maxOccupation = 0;
@@ -82,7 +102,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         for (int i = 0; i < instancesList.Count; i++)
         {
             float o = instancesList[i].GetTileOccupation(x, y);
-            if ( o > maxOccupation)
+            if ( o > maxOccupation && !instancesList[i].isDead)
             {
                 maxOccupation = o;
                 player = instancesList[i];
@@ -111,11 +131,20 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
     private void OnEnable()
     {
+       
+
         // Add this Player to the local instances list, to keep track of all the available players
         instancesList.Add(this);
 
         // Sort the instances list, to keep the same order on all clients and the server
         if (hubIdentity) SortInstances();
+
+        isDead = false;
+        if (spawnPoint!=null)
+        {
+            OnPlayerSpawned?.Invoke(spawnPoint);
+        }
+        
     }
 
     private void OnDisable()
@@ -123,6 +152,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         instancesList.Remove(this);
         if (hubIdentity) SortInstances();
     }
+
     #endregion
 
     #region Local functions
@@ -140,7 +170,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
         if (isServer)
         {
-            defaultColor = Random.ColorHSV(0,1,0,1,0.7f,1f);
+            defaultColor = UnityEngine.Random.ColorHSV(0,1,0,1,0.7f,1f);
             RpcSetColor(defaultColor);
         }
 
@@ -149,6 +179,7 @@ public class PlayerEntity : NetworkBehaviour, IKillable
 
     public float GetTileOccupation(int x,int y)
     {
+
 
         if (Mathf.Abs(playerMovement.currentTileX - x) > 2 || Mathf.Abs(playerMovement.currentTileY - y) > 2)
             return 0f;
@@ -173,6 +204,30 @@ public class PlayerEntity : NetworkBehaviour, IKillable
     }
     #endregion
 
+    
+    private void Update()
+    {
+        if (!isServer) return;
+
+        if (CheckDeath())
+        {
+            isDead = true;
+            deathCount++;
+            RPCPlayerDeath();
+        }
+    }
+
+    [ClientRpc]
+    void RPCPlayerDeath()
+    {
+        OnPlayerDied?.Invoke();
+    }
+
+    void KillPlayer()
+    {
+        
+        gameObject.SetActive(false);
+    }
 
     #region Network functions
     [ClientRpc]
@@ -191,6 +246,8 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         }
     }
 
+    
+
     private bool CheckDeath()
     {
         for (int i = 0; i < playerMovement.tiles.Length; i++)
@@ -207,9 +264,11 @@ public class PlayerEntity : NetworkBehaviour, IKillable
         return false;
     }
 
-    public void Kill()
-    {
-        Debug.Log(hubIdentity.name + " Player is Dead");
-    }
+   
+    
+
+   
+   
+
     #endregion
 }

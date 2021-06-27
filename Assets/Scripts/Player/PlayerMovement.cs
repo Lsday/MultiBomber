@@ -5,7 +5,8 @@ using System;
 public class PlayerMovement : NetworkBehaviour
 {
 
-    
+    public Action OnPlayerMoved;
+    public Action OnPlayerStopMoved;
 
     public struct TileOccupation
     {
@@ -77,6 +78,8 @@ public class PlayerMovement : NetworkBehaviour
         currentDirection = Vector2Int.down;
 
         networkTransform = GetComponent<NetworkTransform>();
+
+        playerEntity.OnPlayerSpawned += SetWorldPosition;
     }
 
     public void SetWorldPosition(Vector3 position)
@@ -94,7 +97,6 @@ public class PlayerMovement : NetworkBehaviour
 
     void ReadInputs()
     {
- 
         playerEntity.currentInputData.movement = playerEntity.controllerDevice.inputs.GetMoveVector();
         playerEntity.currentInputData.direction = currentDirection;
         playerEntity.currentInputData.speed = speed;
@@ -108,6 +110,9 @@ public class PlayerMovement : NetworkBehaviour
     void Update()
     {
         if (!gameStarted.value) return;
+
+        if (playerEntity.isDead) return;
+
 
         if (playerEntity.hubIdentity.isLocalPlayer)
         {

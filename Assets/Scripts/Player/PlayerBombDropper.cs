@@ -1,5 +1,6 @@
-using Mirror;
 using UnityEngine;
+using Mirror;
+using System;
 
 public class PlayerBombDropper : NetworkBehaviour
 {
@@ -96,6 +97,8 @@ public class PlayerBombDropper : NetworkBehaviour
     public void PlaceBomb()
     {
         if (!canDropbomb) return;
+        if (playerEntity.isDead) return;
+
 
         if (playerEntity.hubIdentity.isLocalPlayer && bombOnMap < bombCount)
         {

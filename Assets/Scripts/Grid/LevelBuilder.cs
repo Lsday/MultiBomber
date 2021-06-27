@@ -214,7 +214,7 @@ public class LevelBuilder : NetworkBehaviour
     {
         return new Tile(grid, x, y);
     }
-    private int GetMapDimension(int mapSize)
+    public int GetMapDimension(int mapSize)
     {
         return mapSize * 2 + 1;
     }

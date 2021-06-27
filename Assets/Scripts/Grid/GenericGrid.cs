@@ -79,7 +79,6 @@ public class GenericGrid<TGridObject>
     {
         return new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize + originPosition;
     }
-
     public Vector3 GetGridObjectWorldCenter(Vector3 worldPosition)
     {
         int x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
@@ -87,7 +86,6 @@ public class GenericGrid<TGridObject>
 
         return new Vector3(x + 0.5f, 0, y + 0.5f) * cellSize + originPosition;
     }
-
     public void GetXY(Vector3 worldPosition, out int x, out int y)
     {
 
@@ -137,7 +135,6 @@ public class GenericGrid<TGridObject>
         }
         
     }
-
     public void ClearGridDebug()
     {
         for (int x = 0; x < gridArray.GetLength(0); x++)
@@ -148,6 +145,10 @@ public class GenericGrid<TGridObject>
             }
         }
     }
-
+   
+    public Vector2Int GetGridDimensions()
+    {
+        return new Vector2Int(gridArray.GetLength(0), gridArray.GetLength(1));
+    }
 
 }

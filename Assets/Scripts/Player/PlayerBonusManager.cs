@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,5 +20,15 @@ public class PlayerBonusManager : MonoBehaviour
         itemBonusList.Remove(item);
     }
 
-   
+    public void GiveAllBonusBack()
+    {
+        for (int i = 0; i < itemBonusList.Count; i++)
+        {
+            BonusGiveBackManager.instance.AddBonus(itemBonusList[i]);
+        }
+
+        itemBonusList.Clear();
+    }
+
+    
 }

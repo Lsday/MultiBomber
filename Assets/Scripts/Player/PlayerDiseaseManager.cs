@@ -17,6 +17,8 @@ public class PlayerDiseaseManager : NetworkBehaviour
         this.player = player;
         diseaseTimer = GetComponent<Timer>();
         diseaseTimer.onTimerEnd += EndDisease;
+
+        player.OnPlayerDied += EndDisease;
     }
 
    
@@ -45,6 +47,8 @@ public class PlayerDiseaseManager : NetworkBehaviour
 
     public void EndDisease()
     {
+        if (!currentDisease) return;
+
         if (isServer)
         {
             RpcEndDisease();

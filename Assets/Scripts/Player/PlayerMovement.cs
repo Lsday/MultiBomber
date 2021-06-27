@@ -80,6 +80,12 @@ public class PlayerMovement : NetworkBehaviour
         networkTransform = GetComponent<NetworkTransform>();
 
         playerEntity.OnPlayerSpawned += SetWorldPosition;
+        playerEntity.OnPlayerDied += ResetSpeed;
+    }
+
+    private void ResetSpeed()
+    {
+        speed = startSpeed;
     }
 
     public void SetWorldPosition(Vector3 position)

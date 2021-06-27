@@ -30,7 +30,7 @@ public class PlayerEntity : NetworkBehaviour
 
     public PlayerMovement playerMovement {get; private set;}
     public PlayerBombDropper playerBombDropper{get; private set;}
-    public PlayerBonusManager playerBonusPickUp{get; private set;}
+    public PlayerBonusManager playerBonusManager{get; private set;}
     public PlayerDiseaseManager playerDiseaseManager { get; private set; }
     public PlayerAnimations playerAnimation { get; private set; }
 
@@ -45,9 +45,6 @@ public class PlayerEntity : NetworkBehaviour
 
     public Vector3 spawnPoint;
 
-    
-    
-
 
     #endregion
 
@@ -59,7 +56,7 @@ public class PlayerEntity : NetworkBehaviour
 
         playerMovement = GetComponent<PlayerMovement>();
         playerBombDropper = GetComponent<PlayerBombDropper>();
-        playerBonusPickUp = GetComponent<PlayerBonusManager>();
+        playerBonusManager = GetComponent<PlayerBonusManager>();
 
         playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
         playerDiseaseManager.Init(this);
@@ -211,6 +208,8 @@ public class PlayerEntity : NetworkBehaviour
 
         if (CheckDeath())
         {
+            if (isDead) return;
+            
             isDead = true;
             deathCount++;
             RPCPlayerDeath();
@@ -225,7 +224,7 @@ public class PlayerEntity : NetworkBehaviour
 
     void KillPlayer()
     {
-        
+        playerBonusManager.GiveAllBonusBack();
         gameObject.SetActive(false);
     }
 

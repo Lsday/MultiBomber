@@ -33,14 +33,15 @@ public class PlayerAnimations : MonoBehaviour
         playerEntity = GetComponent<PlayerEntity>();
         playerEntity.OnPlayerDied += PlayerDie;
 
-        AnimationClip[] animClips = AnimationUtility.GetAnimationClips(animator.gameObject);
-        for (int i = 0; i < animClips.Length; i++)
-        {
-            if (animClips[i].name == "Death")
-            {
-                deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
-            }
-        }
+        //AnimationClip[] animClips = AnimationUtility.GetAnimationClips(animator.gameObject);
+        //for (int i = 0; i < animClips.Length; i++)
+        //{
+        //    if (animClips[i].name == "Death")
+        //    {
+        //        deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
+        //    }
+        //}
+        deathDelay = minDeathDelay;
     }
 
     void PlayerDie()

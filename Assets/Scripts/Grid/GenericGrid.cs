@@ -23,6 +23,7 @@ public class GenericGrid<TGridObject>
     TextMeshPro[,] debugTextArray;
 
 
+
     public GenericGrid(int width, int height, float cellSize, Vector3 originPosition, Func<GenericGrid<TGridObject>, int, int, TGridObject> constructor)
     {
 
@@ -30,6 +31,7 @@ public class GenericGrid<TGridObject>
         this.height = height;
         this.cellSize = cellSize;
         this.originPosition = originPosition;
+
 
         gridArray = new TGridObject[width, height];
 
@@ -150,5 +152,6 @@ public class GenericGrid<TGridObject>
     {
         return new Vector2Int(gridArray.GetLength(0), gridArray.GetLength(1));
     }
+
 
 }

@@ -7,7 +7,7 @@ public class PlayerEntity : NetworkBehaviour
 {
 
     public Action OnPlayerDied;
-    public Action<Vector3> OnPlayerSpawned;
+    public Action<Vector3> OnPlayerSpawnPosition;
 
     #region Properties
 
@@ -55,7 +55,9 @@ public class PlayerEntity : NetworkBehaviour
         avatarMaterial = avatarRenderer.material;
 
         playerMovement = GetComponent<PlayerMovement>();
+
         playerBombDropper = GetComponent<PlayerBombDropper>();
+        
         playerBonusManager = GetComponent<PlayerBonusManager>();
 
         playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
@@ -89,7 +91,7 @@ public class PlayerEntity : NetworkBehaviour
     public void SetSpawnPosition(Vector3 position)
     {
         spawnPoint = position;
-        OnPlayerSpawned?.Invoke(position);
+        OnPlayerSpawnPosition?.Invoke(position);
     }
 
     public static PlayerEntity GetMajorPlayer(int x, int y)
@@ -128,8 +130,6 @@ public class PlayerEntity : NetworkBehaviour
 
     private void OnEnable()
     {
-       
-
         // Add this Player to the local instances list, to keep track of all the available players
         instancesList.Add(this);
 
@@ -139,9 +139,8 @@ public class PlayerEntity : NetworkBehaviour
         isDead = false;
         if (spawnPoint!=null)
         {
-            OnPlayerSpawned?.Invoke(spawnPoint);
+            OnPlayerSpawnPosition?.Invoke(spawnPoint);
         }
-        
     }
 
     private void OnDisable()
@@ -204,31 +203,35 @@ public class PlayerEntity : NetworkBehaviour
     
     private void Update()
     {
-        if (!isServer) return;
+        if (!isServer || isDead) return;
 
         if (CheckDeath())
         {
-            if (isDead) return;
-            
             isDead = true;
             deathCount++;
+
+            playerBonusManager.GiveAllBonusBack();
+            
             RPCPlayerDeath();
+            
         }
     }
+
+    void KillPlayer()
+    {
+        gameObject.SetActive(false);
+    }
+
+    #region Network functions
 
     [ClientRpc]
     void RPCPlayerDeath()
     {
         OnPlayerDied?.Invoke();
+        
     }
 
-    void KillPlayer()
-    {
-        playerBonusManager.GiveAllBonusBack();
-        gameObject.SetActive(false);
-    }
 
-    #region Network functions
     [ClientRpc]
     void RpcSetColor(Color newColor)
     {
@@ -262,12 +265,6 @@ public class PlayerEntity : NetworkBehaviour
 
         return false;
     }
-
-   
-    
-
-   
-   
 
     #endregion
 }

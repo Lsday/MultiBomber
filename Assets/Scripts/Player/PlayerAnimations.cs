@@ -22,33 +22,26 @@ public class PlayerAnimations : MonoBehaviour
     float deathDelay;
     float minDeathDelay = 2f;
 
-
-    //public void Init(PlayerEntity playerEntity)
-    //{
-    //     this.playerEntity = playerEntity;
-    //}
-
     public void Awake()
     {
         playerEntity = GetComponent<PlayerEntity>();
         playerEntity.OnPlayerDied += PlayerDie;
 
-        //AnimationClip[] animClips = AnimationUtility.GetAnimationClips(animator.gameObject);
-        //for (int i = 0; i < animClips.Length; i++)
-        //{
-        //    if (animClips[i].name == "Death")
-        //    {
-        //        deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
-        //    }
-        //}
-        deathDelay = minDeathDelay;
+        // Get the death animation duration
+        AnimationClip[] animClips = animator.runtimeAnimatorController.animationClips;
+        for (int i = 0; i < animClips.Length; i++)
+        {
+            if (animClips[i].name == "Death")
+            {
+                deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
+            }
+        }
     }
 
     void PlayerDie()
     {
         animator.SetBool(_deadHash, true);
         Invoke("PlayerDiedAnimEnded", deathDelay);
-
     }
 
     void PlayerDiedAnimEnded()
@@ -71,8 +64,7 @@ public class PlayerAnimations : MonoBehaviour
         }
     }
 
-    // anim de mort
-    //_animator.SetBool(_deadHash, true);
+    //TODO
 
     //anim d'étourdissement = le player est bloqué sur place le temps de l'anim
     //_animator.SetBool(_stunHash, true);

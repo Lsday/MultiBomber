@@ -8,7 +8,7 @@
 
 - Scene lobby avec un avatar pour chaque joueur local du pc.
 
-Seul le joueur 1 peut agir les réglages généraux (navigation dans les menus, choix de la map, des options...), les autres ne peuvent qu'agir sur leur données personnelles (pseudo, avatar, couleur...)
+Seul le joueur 1 peut agir sur les réglages généraux (navigation dans les menus, choix de la map, des options...), les autres ne peuvent agir que sur leurs données personnelles (pseudo, avatar, couleur...)
 
 La liste des serveurs disponibles apparaît, ainsi qu'une option pour héberger sa propre partie.
 
@@ -20,10 +20,12 @@ La liste des serveurs disponibles apparaît, ainsi qu'une option pour héberger 
 
 *** Jusqu'à ce point précis, si un joueur branche sa manette sur l'une des machines connectées à cette partie, son Player sera pris en compte. ***
 
-Une fois que tous les joueurs sont ready, le joueur 1 a alors accès à un bouton permettant de passer à la sélection du niveau de jeu
+Une fois que tous les joueurs sont prêts (option "Ready" activée), le joueur 1 du serveur a alors accès à un bouton permettant de passer à la sélection du niveau de jeu
 
 - Scene de setup de la map : l'écran permet de choisir la map de jeu ainsi que les options de la partie (durée, mode de jeu, bonus présents, etc...)
 (On peut aussi éventuellement réfléchir à un système de votes pour que tous les joueurs puissent donner leur avis sur les réglages)
+
+Dans le cas où un mode de jeu par équipe est sélectionné, un écran supplémentaire permet de répartir les joueurs dans les équipes.
 
 
 Une fois que les réglages de la map sont ok, la partie peut commencer.

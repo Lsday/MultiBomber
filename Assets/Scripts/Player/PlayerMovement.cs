@@ -62,13 +62,6 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-    /*
-    bool overlapBomb = false;
-    Vector3 overlapBombPosition = Vector3.zero;
-    Vector2Int overlapBombCoordinates = Vector2Int.zero;
-    float overlapBombDistance;
-    */
-
 
     private void Start()
     {
@@ -79,11 +72,11 @@ public class PlayerMovement : NetworkBehaviour
 
         networkTransform = GetComponent<NetworkTransform>();
 
-        playerEntity.OnPlayerSpawned += SetWorldPosition;
-        playerEntity.OnPlayerDied += ResetSpeed;
+        playerEntity.OnPlayerSpawnPosition += SetWorldPosition;
+        playerEntity.OnPlayerDied += ResetVariables;
     }
 
-    private void ResetSpeed()
+    private void ResetVariables()
     {
         speed = startSpeed;
     }
@@ -132,14 +125,11 @@ public class PlayerMovement : NetworkBehaviour
 
             if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
             {
-                Move(horizontal, vertical);
-                isRunning = true;
-                //playerEntity.animator.SetBool("IsRunning", isRunning);
+                isRunning = Move(horizontal, vertical);
             }
             else
             {
                 isRunning = false;
-                //playerEntity.animator.SetBool("IsRunning", isRunning);
             }
 
         }
@@ -150,13 +140,6 @@ public class PlayerMovement : NetworkBehaviour
             {
                 UpdateTileCoordinates();
                 lastPosition = transform.position;
-                isRunning = true;
-                //playerEntity.animator.SetBool("IsRunning", isRunning);
-            }
-            else if (isRunning)
-            {
-                isRunning = false;
-                //playerEntity.animator.SetBool("IsRunning", isRunning);
             }
         }
 
@@ -166,7 +149,7 @@ public class PlayerMovement : NetworkBehaviour
 
 
 
-    private void Move(float h, float v)
+    private bool Move(float h, float v)
     {
 
         UpdateTileCoordinates();
@@ -234,6 +217,8 @@ public class PlayerMovement : NetworkBehaviour
 
         previousInput.x = moveX;
         previousInput.y = moveZ;
+
+        return signX != 0 || signZ != 0;
     }
 
     [ClientRpc]

@@ -23,8 +23,18 @@ public class PlayerBombDropper : NetworkBehaviour
     private void Start()
     {
         playerEntity = GetComponent<PlayerEntity>();
+        playerEntity.OnPlayerDied += ResetVariables;
+
         LinkInputActions();
 
+    }
+
+    public void ResetVariables()
+    {
+        flamesPower = 1;
+        bombOnMap = 0;
+        bombCount = 1;
+        canDropbomb = true;
     }
 
     private void OnEnable()
@@ -148,10 +158,8 @@ public class PlayerBombDropper : NetworkBehaviour
         if (tile.type < ElementType.Block)
         {
             ItemBomb bomb = PoolingSystem.instance.GetPoolObject(ItemsType.BOMB, LevelBuilder.grid.GetGridObjectWorldCenter(transform.position)) as ItemBomb;
-            //bomb.Teleport(LevelBuilder.grid.GetGridObjectWorldCenter(transform.position));
             bomb.bombDropper = this;
             bomb.flamesPower = flamesPower;
-
             AddBombOnMap();
         }
     }

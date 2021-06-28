@@ -45,6 +45,18 @@ public class PlayerEntity : NetworkBehaviour
 
     public Vector3 spawnPoint;
 
+    /// <summary>
+    /// How long the player is locked in place
+    /// </summary>
+    float lockTime = 0f;
+
+    public bool IsLocked
+    {
+        get
+        {
+            return lockTime > 0f;
+        }
+    }
 
     #endregion
 
@@ -68,6 +80,11 @@ public class PlayerEntity : NetworkBehaviour
         playerAnimation.OnPlayerDiedAnimEnded += KillPlayer;
     }
 
+    public void ResetVariables()
+    {
+        lockTime = 0;
+        isDead = false;
+    }
 
 
     /// <summary>
@@ -133,10 +150,11 @@ public class PlayerEntity : NetworkBehaviour
         // Add this Player to the local instances list, to keep track of all the available players
         instancesList.Add(this);
 
+        ResetVariables();
+
         // Sort the instances list, to keep the same order on all clients and the server
         if (hubIdentity) SortInstances();
 
-        isDead = false;
         if (spawnPoint!=null)
         {
             OnPlayerSpawnPosition?.Invoke(spawnPoint);
@@ -175,8 +193,6 @@ public class PlayerEntity : NetworkBehaviour
 
     public float GetTileOccupation(int x,int y)
     {
-
-
         if (Mathf.Abs(playerMovement.currentTileX - x) > 2 || Mathf.Abs(playerMovement.currentTileY - y) > 2)
             return 0f;
 
@@ -205,9 +221,16 @@ public class PlayerEntity : NetworkBehaviour
     {
         if (!isServer || isDead) return;
 
+        if(lockTime > 0)
+        {
+            lockTime -= Time.deltaTime;
+        }
+
         if (CheckDeath())
         {
             isDead = true;
+
+            // TODO : créer une classe de scoring
             deathCount++;
 
             playerBonusManager.GiveAllBonusBack();
@@ -215,6 +238,11 @@ public class PlayerEntity : NetworkBehaviour
             RPCPlayerDeath();
             
         }
+    }
+
+    public void SetLockTime(float duration)
+    {
+        lockTime = duration;
     }
 
     void KillPlayer()

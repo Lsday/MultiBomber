@@ -22,6 +22,9 @@ public class PlayerAnimations : MonoBehaviour
     float deathDelay;
     float minDeathDelay = 2f;
 
+    float stunDuration = 0f;
+    float punchDuration = 0f;
+
     public void Awake()
     {
         playerEntity = GetComponent<PlayerEntity>();
@@ -34,6 +37,16 @@ public class PlayerAnimations : MonoBehaviour
             if (animClips[i].name == "Death")
             {
                 deathDelay = Mathf.Max(minDeathDelay, animClips[i].averageDuration);
+            }
+
+            if (animClips[i].name == "Stun")
+            {
+                stunDuration = animClips[i].averageDuration;
+            }
+
+            if (animClips[i].name == "Punch")
+            {
+                punchDuration = animClips[i].averageDuration;
             }
         }
     }
@@ -64,13 +77,32 @@ public class PlayerAnimations : MonoBehaviour
         }
     }
 
-    //TODO
 
-    //anim d'étourdissement = le player est bloqué sur place le temps de l'anim
-    //_animator.SetBool(_stunHash, true);
+    public void Stun(float duration = 0)
+    {
+        StartCoroutine(PlayStun(duration));
+    }
 
-    //anim coup de poing = le player est bloqué sur place le temps du coup de poing (0.3s)
-    //_animator.SetTrigger(_punchHash);
+    IEnumerator PlayStun(float duration)
+    {
+        duration = Mathf.Max(duration, stunDuration);
+        animator.SetBool(_stunHash, true);
+        playerEntity.SetLockTime(duration);
+        yield return new WaitForSeconds(duration);
+        animator.SetBool(_stunHash, false);
+    }
 
-    // ==> prévoir un Timer qui permet de définir une durée d'immobilisation du joueur = désactivation temporaire des inputs
+    public void Punch()
+    {
+        StartCoroutine(PlayPunch());
+    }
+
+    IEnumerator PlayPunch()
+    {
+        animator.SetTrigger(_punchHash);
+        playerEntity.SetLockTime(punchDuration);
+        yield return new WaitForSeconds(punchDuration);
+        animator.SetBool(_stunHash, false);
+    }
+
 }

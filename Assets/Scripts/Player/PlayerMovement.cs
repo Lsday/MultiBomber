@@ -110,7 +110,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (!gameStarted.value) return;
 
-        if (playerEntity.isDead) return;
+        if (playerEntity.isDead || playerEntity.IsLocked) return;
 
 
         if (playerEntity.hubIdentity.isLocalPlayer)

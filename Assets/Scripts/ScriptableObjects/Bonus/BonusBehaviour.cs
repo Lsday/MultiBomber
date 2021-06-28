@@ -6,6 +6,7 @@ public abstract class BonusBehaviour : ScriptableAction
     protected string description;
 
     public Sprite sprite;
+    public Color burnColor = Color.black;
     public override void PerformAction(GameObject obj) { }
 
 }
@@ -16,6 +17,7 @@ public class BonusBehaviour<T> : ScriptableAction<T>
     protected string description;
 
     public Sprite sprite;
+    public Color burnColor = Color.black;
     public override void PerformAction(T obj) { }
 
 }
@@ -26,6 +28,7 @@ public class BonusBehaviour<T1,T2> : ScriptableAction<T1, T2>
     protected string description;
 
     public Sprite sprite;
+    public Color burnColor = Color.black;
     public override void PerformAction(T1 obj, T2 obj2) { }
 
 }

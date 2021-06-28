@@ -89,7 +89,7 @@ public class LevelBuilder : NetworkBehaviour
 
     public SO_LevelBonusSettings bonusSettings;
 
-    #region Meshs
+    #region Meshes
     [Header("Wall Meshes")]
     public Mesh block_I;
     public Mesh block_T;

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Puissance des flammes au MAX
   sprite: {fileID: 2614870373251885436, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
+  burnColor: {r: 1, g: 0.89267164, b: 0.4669811, a: 0.46666667}
   flamePowerModifier: 15

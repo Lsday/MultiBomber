@@ -63,7 +63,7 @@ public class PlayerBombDropper : NetworkBehaviour
     }
 
 
-
+    // TODO : ne fonctionne pas si le player ne bouge pas après avoir chié sa première série de bombes
     public void SubscribeBombShitEvent()
     {
         Debug.Log("SubscribeBombShitEvent");

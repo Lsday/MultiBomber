@@ -58,7 +58,7 @@ public class PlayerMovement : NetworkBehaviour
     {
         get
         {
-            return speed;
+            return playerEntity.currentInputData.speed;
         }
     }
 
@@ -222,7 +222,7 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void RpcModifySpeed(int amount)
+    public void RpcModifySpeed(float amount)
     {
         speed = Mathf.Clamp(speed + amount, startSpeed, speedMax);
     }

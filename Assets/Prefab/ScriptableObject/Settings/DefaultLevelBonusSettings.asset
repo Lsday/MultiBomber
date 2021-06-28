@@ -16,7 +16,7 @@ MonoBehaviour:
   - name: Bomb +
     bonus: {fileID: 11400000, guid: 90a375be85bb27c418c82356d3e60fa2, type: 2}
     exactCount: 0
-    proportion: 0.462
+    proportion: 0.733
     playersProportion: 0
   - name: Bomb -
     bonus: {fileID: 11400000, guid: f0019a68c8f4c10428ecaee840db7f66, type: 2}
@@ -36,7 +36,7 @@ MonoBehaviour:
   - name: Roller +
     bonus: {fileID: 11400000, guid: 56126229172752c48910021deeb99c85, type: 2}
     exactCount: 0
-    proportion: 0.09
+    proportion: 0.396
     playersProportion: 0
   - name: Roller -
     bonus: {fileID: 11400000, guid: 6f18f96667ab6434d891f64fdfa18eae, type: 2}
@@ -60,9 +60,9 @@ MonoBehaviour:
     playersProportion: 0
   - name: Disease
     bonus: {fileID: 11400000, guid: 0bb8d7fe3dc561142a10625730017b8c, type: 2}
-    exactCount: 3
+    exactCount: 10
     proportion: 0
     playersProportion: 0
-  boxesCount: 100
-  playersCount: 2
-  bonusPercentage: 0.6
+  boxesCount: 52
+  playersCount: 1
+  bonusPercentage: 1

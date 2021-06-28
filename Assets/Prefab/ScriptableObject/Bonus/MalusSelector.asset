@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   sprite: {fileID: -6338023803479276477, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
+  burnColor: {r: 1, g: 0.4198113, b: 0.87528646, a: 1}
   diseases:
   - {fileID: 11400000, guid: 3477aecc50ad3914daff73eae63e0848, type: 2}
   - {fileID: 11400000, guid: b583f42d96df9fa439ed81a9c1234985, type: 2}

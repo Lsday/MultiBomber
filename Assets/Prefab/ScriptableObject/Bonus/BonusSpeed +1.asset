@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Augmente la vitesse de deplacement
   sprite: {fileID: -68751727340038015, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
-  speedModifier: 1
+  burnColor: {r: 0, g: 0, b: 0, a: 0}
+  speedModifier: 0.5

@@ -11,6 +11,7 @@
         _Metallic ("Metallic", Range(0,1)) = 0.0
         [PerRendererData] _SpriteUV("SpriteUV",Vector) = (0, 0, 0.5, 0.5)
         [PerRendererData] _NoiseValue("NoiseValue",Float) = 0
+        [PerRendererData] _BurnColor("BurnColor",Color) = (0,0,0,0)
     }
     SubShader
     {
@@ -50,13 +51,14 @@
             // put more per-instance properties here
             UNITY_DEFINE_INSTANCED_PROP(float4, _SpriteUV)
             UNITY_DEFINE_INSTANCED_PROP(float, _NoiseValue)
+            UNITY_DEFINE_INSTANCED_PROP(float4, _BurnColor)
         UNITY_INSTANCING_BUFFER_END(Props)
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float4 spriteUV = UNITY_ACCESS_INSTANCED_PROP(Props, _SpriteUV);
             float noiseValue = UNITY_ACCESS_INSTANCED_PROP(Props, _NoiseValue);
-
+            float4 burnColor = UNITY_ACCESS_INSTANCED_PROP(Props, _BurnColor);
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex * spriteUV.zw + spriteUV.xy) * _Color;
             o.Albedo = c.rgb;
@@ -71,11 +73,10 @@
 
                 o.Alpha = noise.r > noiseValue ? 1 : 0;
 
-                fixed4 burn = tex2D(_BurnTex, float2((noise.r - noiseValue) / noise.r, 0));
-
-                o.Emission = noise.r > noiseValue + 0.5 ? 0 : burn * 4;
-
                 if (o.Alpha == 0) discard;
+
+                fixed4 burn = tex2D(_BurnTex, float2((noise.r - noiseValue) / noise.r, 0));
+                o.Emission = noise.r > noiseValue + 0.5 ? 0 : lerp(burn,burnColor * burn.r,burnColor.a)*4;
             }
         }
         ENDCG

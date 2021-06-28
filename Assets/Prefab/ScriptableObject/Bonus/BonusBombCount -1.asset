@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Diminue le nombre de bombes max
   sprite: {fileID: -7833671090200325546, guid: 5ad9f5b8ad630604fb2b42d76025ddae, type: 3}
+  burnColor: {r: 0, g: 0, b: 0, a: 0}
   bombCountModifier: -1

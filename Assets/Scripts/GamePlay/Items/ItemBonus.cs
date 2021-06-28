@@ -18,7 +18,7 @@ public class ItemBonus : ItemPlayerModifier
     private MaterialPropertyBlock propertyBlock;
 
     [SyncVar(hook = nameof(SyncUV))] Vector4 spriteUV;
-
+    [SyncVar(hook = nameof(SyncColor))] Color burnColor;
     public override void Loot(PlayerEntity playerEntity)
     {
         BonusBehaviour<PlayerEntity> bonusBehaviour = scriptableAction as BonusBehaviour<PlayerEntity>;
@@ -36,6 +36,20 @@ public class ItemBonus : ItemPlayerModifier
         if(bonus != null)
         {
             UpdateTexture(bonus.sprite);
+            UpdateColor(bonus.burnColor);
+        }
+    }
+
+    void UpdateColor(Color color)
+    {
+
+        if (isServer)
+        {
+            burnColor = color;
+        }
+        else
+        {
+            SetColor(color);
         }
     }
 
@@ -75,6 +89,20 @@ public class ItemBonus : ItemPlayerModifier
     void SyncUV(Vector4 oldUV, Vector4 newUV)
     {
         SetSpriteUV(newUV);
+    }
+
+    void SyncColor(Color oldColor, Color newColor)
+    {
+        SetColor(newColor);
+    }
+
+    void SetColor(Color color)
+    {
+        if (propertyBlock == null)
+            propertyBlock = new MaterialPropertyBlock();
+
+        propertyBlock.SetColor("_BurnColor", color);
+        rendererObject.SetPropertyBlock(propertyBlock);
     }
 
     private IEnumerator UpdateMaterialData()

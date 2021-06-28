@@ -29,13 +29,14 @@ public class ItemBonus : ItemPlayerModifier
 
     public void SetBonus(BonusBehaviour<PlayerEntity> bonus)
     {
+        ResetVariables();
+
         scriptableAction = bonus;
 
         if(bonus != null)
         {
             UpdateTexture(bonus.sprite);
         }
-        
     }
 
     void UpdateTexture(Sprite sprite)

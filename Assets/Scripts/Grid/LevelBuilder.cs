@@ -79,8 +79,6 @@ public class LevelBuilder : NetworkBehaviour
     [Range(2, 5)]
     public byte spacing;
 
-
-
     public Material blockMaterial;
 
     /// <summary>
@@ -112,6 +110,7 @@ public class LevelBuilder : NetworkBehaviour
     [HideInInspector]
     public Vector3[] playerStartPositions;
 
+    static List<Tile> freeTiles = new List<Tile>();
     #endregion
 
     #region Init
@@ -137,7 +136,7 @@ public class LevelBuilder : NetworkBehaviour
         CalculatePlayerStartPositions(totalPlayersCount.value);
         CalculateWallsAndBoxsPositions(spacing);
         CreateWalls();
-        CreateBoxs();
+        CreateBoxes();
         AssignBonuses();
         AssignPlayersPositions();
     }
@@ -151,6 +150,30 @@ public class LevelBuilder : NetworkBehaviour
             GC.Collect();
             Resources.UnloadUnusedAssets();
         }
+    }
+
+
+    public static Tile[] GetFreeTiles()
+    {
+        freeTiles.Clear();
+
+        int width = grid.GetWidth();
+        int height = grid.GetHeight();
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                Tile tile = grid.GetGridObject(i, j);
+
+                if (tile.type == ElementType.Empty)
+                {
+                    freeTiles.Add(tile);
+                }
+            }
+        }
+
+        return freeTiles.ToArray();
     }
     #endregion
 
@@ -166,7 +189,7 @@ public class LevelBuilder : NetworkBehaviour
             PlayerEntity.instancesList[i].SetSpawnPosition(playerStartPositions[i] * size + offset);
         }
     }
-    private void CreateBoxs()
+    private void CreateBoxes()
     {
         if (!isServer) return;
 
@@ -179,9 +202,6 @@ public class LevelBuilder : NetworkBehaviour
             potentialBoxTile.RemoveAt(randomIndex);
         }
 
-        // Add offset to center the box on the middle of the tile 
-        Vector3 offset = new Vector3(grid.GetCellsize() / 2f, 0, grid.GetCellsize() / 2f);
-
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
             //Calculate Box Position
@@ -190,14 +210,7 @@ public class LevelBuilder : NetworkBehaviour
             ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, boxTilePosition) as ItemBox;
 
             actualBoxes.Add(box);
-
-            //box.Teleport(boxTilePosition);
-
-
         }
-
-
-
     }
 
     void AssignBonuses() { 
@@ -209,6 +222,8 @@ public class LevelBuilder : NetworkBehaviour
         }
 
     }
+
+
 
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
@@ -564,4 +579,7 @@ public class LevelBuilder : NetworkBehaviour
         NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
         NetworkServer.SendToAll(new GameStartedMessage {});
     }
+
+    
+
 }

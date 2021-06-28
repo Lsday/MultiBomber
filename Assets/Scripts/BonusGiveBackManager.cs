@@ -9,7 +9,12 @@ public class BonusGiveBackManager : MonoBehaviour
     /// <summary>
     /// time in millisecond
     /// </summary>
-    float giveBackDelay = 0.2f;
+    [Range(0f,1f)]
+    public float giveBackDelay = 0.1f;
+
+    [Range(1, 20)]
+    public int giveBackCount = 5;
+
     float timer;
     Vector2Int gridDimensions;
     
@@ -26,6 +31,7 @@ public class BonusGiveBackManager : MonoBehaviour
     public void AddBonus(BonusBehaviour<PlayerEntity> bonus)
     {
         bonusToDispatch.Enqueue(bonus);
+        timer = 0;
     }
 
     private void Update()
@@ -36,31 +42,30 @@ public class BonusGiveBackManager : MonoBehaviour
         if (bonusToDispatch.Count > 0 && timer <= 0)
         {
             timer = giveBackDelay;
-            BonusBehaviour<PlayerEntity> bonusBehaviour = bonusToDispatch.Dequeue();
+            Tile[] freeTiles = LevelBuilder.GetFreeTiles();
 
-            ItemBonus bonus =  PoolingSystem.instance.GetPoolObject(ItemsType.BONUS, GetRandomPosition()) as ItemBonus;
-            bonus.SetBonus(bonusBehaviour);
-        }
-    }
-
-    private Vector3 GetRandomPosition()
-    {
-        if (gridDimensions != null)
-        {
-            gridDimensions = LevelBuilder.grid.GetGridDimensions();
-        }
-      
-        int randX, randY;
-
-        while (true)
-        {
-            randX = Random.Range(0, gridDimensions.x);
-            randY = Random.Range(0, gridDimensions.y);
-
-            Tile tile = LevelBuilder.grid.GetGridObject(randX, randY); 
-            if (tile.item == null && tile.type == ElementType.Empty)
+            for(int i = 0 ; i < giveBackCount ; i++)
             {
-                return LevelBuilder.grid.GetGridObjectWorldCenter(randX, randY);
+                BonusBehaviour<PlayerEntity> bonusBehaviour = bonusToDispatch.Dequeue();
+                Vector3 position = Vector3.zero;
+                int r;
+                do
+                {
+                    r = Random.Range(0, freeTiles.Length - 1);
+
+                    if (freeTiles[r] != null)
+                    {
+                        position = LevelBuilder.grid.GetGridObjectWorldCenter(freeTiles[r].x, freeTiles[r].y);
+                        freeTiles[r] = null;
+                        break;
+                    }
+                }
+                while (freeTiles[r] == null);
+
+                ItemBonus bonus = PoolingSystem.instance.GetPoolObject(ItemsType.BONUS, position) as ItemBonus;
+                bonus.SetBonus(bonusBehaviour);
+
+                if (bonusToDispatch.Count == 0) break;
             }
         }
     }

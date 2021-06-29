@@ -188,6 +188,7 @@ public class ItemFlames : ItemBase
                 {
                     if (isServer)
                     {
+                        tile.item.SetRoundPosition();
                         ((IDestroyable)tile.item).RpcInitDestroy(0.05f, lifeTime - age);
                     }
 

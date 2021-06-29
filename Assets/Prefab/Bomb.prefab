@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 3
-  triggerWhenDestroy: 0
+  triggerWhenDisable: 0
   elapsedTime: 0
 --- !u!114 &2557602050653326478
 MonoBehaviour:
@@ -205,9 +205,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
-  activeState: 0
-  dbgName: 
   type: 64
+  speed: 6
   bombDropper: {fileID: 0}
   flamesPower: 1
   bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}

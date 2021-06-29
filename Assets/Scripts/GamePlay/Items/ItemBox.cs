@@ -78,13 +78,17 @@ public class ItemBox : ItemBase, IDestroyable
         Disable();
     }
 
+    [Command]
+    public void CmdInitDestroy(float delay, float endDelay)
+    {
+        RpcInitDestroy(delay, endDelay);
+    }
 
     [ClientRpc]
     public void RpcInitDestroy(float delay, float endDelay)
     {
         InitDestroy(delay, endDelay);
     }
-
 
     public void InitDestroy(float delay = 0f,float fireEndDelay = 0f)
     {

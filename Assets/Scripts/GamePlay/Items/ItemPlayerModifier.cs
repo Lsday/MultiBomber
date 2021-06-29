@@ -13,7 +13,6 @@ public class ItemPlayerModifier : ItemBase, ILootable, IDestroyable
         Disable();
     }
 
-
     [ClientRpc]
     public void RpcInitDestroy(float delay, float endDelay)
     {

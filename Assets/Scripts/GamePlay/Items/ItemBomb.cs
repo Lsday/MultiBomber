@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 
-public class ItemBomb : ItemBase, IDestroyable
+public class ItemBomb : ItemKickable, IDestroyable
 {
     public PlayerBombDropper bombDropper;
     Timer timer;
@@ -52,6 +52,7 @@ public class ItemBomb : ItemBase, IDestroyable
     // fire end delay = how many time is left before the end of this explosion
     public void InitDestroy(float delay = 0f, float fireEndDelay = 0f)
     {
+        
         //Debug.Log("InitDestroy");
         if (alreadyTriggered) return;
         alreadyTriggered = true;
@@ -84,6 +85,8 @@ public class ItemBomb : ItemBase, IDestroyable
     {
         //Debug.Log("BombExplosion");
 
+        SetRoundPosition();
+        
         bombBehaviour.PerformAction(this); // Calcul des directions que peuvent emprunter les flammes et stocke l'information dans "this"
         flamesBehaviour.PerformAction(this); // Spawn les flammes
 

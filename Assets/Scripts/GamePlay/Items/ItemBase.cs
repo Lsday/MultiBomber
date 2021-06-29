@@ -22,6 +22,10 @@ public abstract class ItemBase : PoolableObject
         }
     }
 
+    public void SetRoundPosition()
+    {
+        myTransform.position = LevelBuilder.grid.GetGridObjectWorldCenter(myTransform.position);
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();

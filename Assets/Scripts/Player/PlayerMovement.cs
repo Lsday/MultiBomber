@@ -5,7 +5,7 @@ using System;
 public class PlayerMovement : NetworkBehaviour
 {
 
-    public Action OnPlayerMoved;
+    public Action<int,int> OnPlayerMoved;
     public Action OnPlayerStopMoved;
 
     public struct TileOccupation
@@ -126,6 +126,8 @@ public class PlayerMovement : NetworkBehaviour
             if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
             {
                 isRunning = Move(horizontal, vertical);
+
+                OnPlayerMoved?.Invoke(currentDirection.x,currentDirection.y);
             }
             else
             {

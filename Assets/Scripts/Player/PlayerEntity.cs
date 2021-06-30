@@ -34,7 +34,7 @@ public class PlayerEntity : NetworkBehaviour
     public PlayerDiseaseManager playerDiseaseManager { get; private set; }
     public PlayerAnimations playerAnimation { get; private set; }
 
-   
+    public PlayerCollisions playerCollisions { get; private set; }
 
     // TODO : private variables
     public Renderer avatarRenderer;
@@ -78,6 +78,8 @@ public class PlayerEntity : NetworkBehaviour
 
         playerAnimation = GetComponent<PlayerAnimations>();
         playerAnimation.OnPlayerDiedAnimEnded += KillPlayer;
+
+        playerCollisions = GetComponent<PlayerCollisions>();
     }
 
     public void ResetVariables()

@@ -19,6 +19,7 @@ public class PlayerMovement : NetworkBehaviour
     PlayerEntity playerEntity;
     NetworkTransform networkTransform;
 
+    private float matchSpeed;
 
     public float startSpeed = 3;
     [SyncVar] private float speed = 3;
@@ -48,11 +49,17 @@ public class PlayerMovement : NetworkBehaviour
 
     public Action OnTileEntered;
 
+
     Vector2Int currentDirection;
     Vector2Int previousInput;
     #endregion
 
     public PlayerAnimations playerAnimations;
+
+    /// <summary>
+    /// the collision layer index to detect kicked elements
+    /// </summary>
+    int movingObstaclesMask;
 
     public float Speed
     {
@@ -74,6 +81,10 @@ public class PlayerMovement : NetworkBehaviour
 
         playerEntity.OnPlayerSpawnPosition += SetWorldPosition;
         playerEntity.OnPlayerDied += ResetVariables;
+        
+        movingObstaclesMask = LayerMask.GetMask("MovingObstacles");
+
+        ResetVariables();
     }
 
     private void ResetVariables()
@@ -157,10 +168,12 @@ public class PlayerMovement : NetworkBehaviour
         UpdateTileCoordinates();
 
         ComputeMovementLimits();
+        
+        UpdatePositionClamping();
 
         lastPosition = transform.position;
         Vector3 newPosition = lastPosition;
-        float travelDistance = (Time.deltaTime * playerEntity.currentInputData.speed);
+        float travelDistance = (Time.deltaTime * Mathf.Min(matchSpeed , playerEntity.currentInputData.speed));
 
         int moveX = Utils.RoundedSign(h);
         int moveZ = Utils.RoundedSign(v);
@@ -340,18 +353,25 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+
     private void ComputeMovementLimits()
     {
         if (grid == null) return;
 
-        bool leftWall = grid.GetGridObject(currentTileX - 1, currentTileY).type >= ElementType.Block;
-        bool rightWall = grid.GetGridObject(currentTileX + 1, currentTileY).type >= ElementType.Block;
+        Tile tileLeft = grid.GetGridObject(currentTileX - 1, currentTileY);
+        Tile tileRight = grid.GetGridObject(currentTileX + 1, currentTileY);
 
-        bool upWall = grid.GetGridObject(currentTileX, currentTileY + 1).type >= ElementType.Block;
-        bool downWall = grid.GetGridObject(currentTileX, currentTileY - 1).type >= ElementType.Block;
+        Tile tileUp = grid.GetGridObject(currentTileX, currentTileY + 1);
+        Tile tileDown = grid.GetGridObject(currentTileX, currentTileY - 1);
+
+        bool leftWall = tileLeft.type >= ElementType.Block;
+        bool rightWall = tileRight.type >= ElementType.Block;
+
+        bool upWall = tileUp.type >= ElementType.Block;
+        bool downWall = tileDown.type >= ElementType.Block;
 
         float cellSize = grid.GetCellsize();
-
+        
         Vector3 minOffset = new Vector3(leftWall ? 0 : -cellSize, 0, downWall ? 0 : -cellSize);
         Vector3 maxOffset = new Vector3(rightWall ? 0 : cellSize, 0, upWall ? 0 : cellSize);
 
@@ -363,7 +383,42 @@ public class PlayerMovement : NetworkBehaviour
 
         movementClampHigh.x = Mathf.Max(movementClampHigh.x, transform.position.x);
         movementClampHigh.z = Mathf.Max(movementClampHigh.z, transform.position.z);
+    }
 
+
+    public void UpdatePositionClamping()
+    {
+
+        // prevent the player to move faster than a kicked bomb on its way
+        // TODO : maybe this is cleaner to move this part in the PlayerCollision class
+        RaycastHit hit;
+        matchSpeed = playerEntity.currentInputData.speed;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 1.1f, movingObstaclesMask))
+        {
+
+            ItemKickable obj = hit.collider.GetComponent<ItemKickable>();
+            if (obj != null && hit.distance < 1f) matchSpeed = obj.speed * 0.9f;
+
+            if (currentDirection.x < 0)
+            {
+                movementClampLow.x = hit.transform.position.x + 1f;
+            }
+
+            if (currentDirection.x > 0)
+            {
+                movementClampHigh.x = hit.transform.position.x - 1f;
+            }
+
+            if (currentDirection.y < 0)
+            {
+                movementClampLow.z = hit.transform.position.z + 1f;
+            }
+
+            if (currentDirection.y > 0)
+            {
+                movementClampHigh.z = hit.transform.position.z - 1f;
+            }
+        }
     }
 
     //TODO : remove debug

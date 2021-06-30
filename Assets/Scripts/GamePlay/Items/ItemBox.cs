@@ -2,7 +2,7 @@
 using UnityEngine;
 using Mirror;
 
-public class ItemBox : ItemBase, IDestroyable
+public class ItemBox : ItemKickable, IDestroyable
 {
     //public BonusDropBehaviour bonusDropBehaviour;
     //public ItemBonus bonusToDrop;

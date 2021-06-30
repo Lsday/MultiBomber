@@ -93,7 +93,8 @@ GameObject:
   - component: {fileID: 4982475028094531313}
   - component: {fileID: -1600841224754774628}
   - component: {fileID: -3115679480132724574}
-  m_Layer: 0
+  - component: {fileID: 2725891687092290679}
+  m_Layer: 7
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,3 +172,16 @@ MonoBehaviour:
   bonus: {fileID: 0}
   explosionScale: 1.3
   rendererObject: {fileID: 937318091605541281}
+--- !u!135 &2725891687092290679
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4546237658697349989}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}

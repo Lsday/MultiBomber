@@ -132,6 +132,7 @@ public class LevelBuilder : NetworkBehaviour
 
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
+        UpdateTilesPositions();
 
         CalculatePlayerStartPositions(totalPlayersCount.value);
         CalculateWallsAndBoxsPositions(spacing);
@@ -139,6 +140,20 @@ public class LevelBuilder : NetworkBehaviour
         CreateBoxes();
         AssignBonuses();
         AssignPlayersPositions();
+    }
+
+    private void UpdateTilesPositions()
+    {
+        int width = grid.GetWidth();
+        int height = grid.GetHeight();
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                grid.GetGridObject(x, z).worldPosition = grid.GetGridObjectWorldCenter(x, z);
+            }
+        }
     }
 
     private static void ClearGrid()
@@ -570,6 +585,16 @@ public class LevelBuilder : NetworkBehaviour
             if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
             {
                 NetworkServer.SendToAll(new ClearMapMessage { });
+            }
+
+            if (GUI.Button(new Rect(500, 35, 100, 25), "Slow"))
+            {
+                Time.timeScale = 0.1f;
+            }
+
+            if (GUI.Button(new Rect(600, 35, 100, 25), "Normal"))
+            {
+                Time.timeScale = 1f;
             }
         }
     }

@@ -44,14 +44,14 @@ public class PlayerBombDropper : NetworkBehaviour
 
     private void OnDisable()
     {
-        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
+        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer && playerEntity.controllerDevice)
             playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
 
     }
 
     void LinkInputActions()
     {
-        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer)
+        if (playerEntity && playerEntity.hubIdentity.isLocalPlayer && playerEntity.controllerDevice)
         {
             if (playerEntity.controllerDevice.inputs.onDropBombAction != null)
             {

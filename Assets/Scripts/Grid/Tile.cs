@@ -13,6 +13,7 @@ public class Tile
     public ItemBase item { get; private set; }
 
     public PlayerEntity playerEntity{ get; private set; }
+    public Vector3 worldPosition;
 
     public bool IsDirty => throw new NotImplementedException();
 

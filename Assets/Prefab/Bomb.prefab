@@ -99,7 +99,8 @@ GameObject:
   - component: {fileID: 5312718094060114507}
   - component: {fileID: 5287005607426260072}
   - component: {fileID: 2557602050653326478}
-  m_Layer: 0
+  - component: {fileID: 2184463704772230255}
+  m_Layer: 7
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -206,12 +207,26 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   type: 64
+  kicked: 0
   speed: 6
   bombDropper: {fileID: 0}
   flamesPower: 1
   bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}
   flamesBehaviour: {fileID: 11400000, guid: 3e9f21ecd0bc24445b563f107a59a882, type: 2}
   explosionDirection: 0
+--- !u!135 &2184463704772230255
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312718094065896331}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5312718094065896333
 GameObject:
   m_ObjectHideFlags: 0

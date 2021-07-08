@@ -15,7 +15,7 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     #region Properties
-    [SyncVar] bool isRunning;
+    bool isRunning;
     PlayerEntity playerEntity;
     NetworkTransform networkTransform;
 
@@ -49,6 +49,8 @@ public class PlayerMovement : NetworkBehaviour
 
     public Action OnTileEntered;
 
+    int horizontalInput;
+    int verticalInput;
 
     Vector2Int currentDirection;
     Vector2Int previousInput;
@@ -90,6 +92,8 @@ public class PlayerMovement : NetworkBehaviour
     private void ResetVariables()
     {
         speed = startSpeed;
+        currentTileX = 0;
+        currentTileY = 0;
     }
 
     public void SetWorldPosition(Vector3 position)
@@ -107,8 +111,14 @@ public class PlayerMovement : NetworkBehaviour
 
     void ReadInputs()
     {
-        playerEntity.currentInputData.movement = playerEntity.controllerDevice.inputs.GetMoveVector();
-        playerEntity.currentInputData.direction = currentDirection;
+
+        if (playerEntity.hubIdentity.isLocalPlayer)
+        {
+            playerEntity.currentInputData.movement = playerEntity.controllerDevice.inputs.GetMoveVector();
+            playerEntity.currentInputData.direction = currentDirection;
+        }
+
+        // set player speed for both host and client, to get the right running animation speed 
         playerEntity.currentInputData.speed = speed;
 
         if (currentFilter)
@@ -116,6 +126,7 @@ public class PlayerMovement : NetworkBehaviour
             currentFilter.FilterData(ref playerEntity.currentInputData);
         }
     }
+
 
     void Update()
     {
@@ -134,20 +145,34 @@ public class PlayerMovement : NetworkBehaviour
             float horizontal = playerEntity.currentInputData.movement.x;
             float vertical = playerEntity.currentInputData.movement.y;
 
-            if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.1f)
+            bool prevRunning = isRunning;
+
+            if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.01f)
             {
                 isRunning = Move(horizontal, vertical);
-
-                OnPlayerMoved?.Invoke(currentDirection.x,currentDirection.y);
             }
             else
             {
                 isRunning = false;
             }
 
+            if(prevRunning != isRunning)
+            {
+
+                horizontalInput = Utils.RoundedSign(horizontal, 0.5f);
+                verticalInput = Utils.RoundedSign(vertical, 0.5f);
+
+                CmdSyncRunning(isRunning, horizontalInput, verticalInput);
+            }
+
         }
         else
         {
+            currentDirection.x = Utils.RoundedSign(transform.forward.x,0.5f);
+            currentDirection.y = Utils.RoundedSign(transform.forward.z,0.5f);
+
+            ReadInputs();
+
             Vector3 difference = transform.position - lastPosition;
             if (Mathf.Abs(difference.x) + Mathf.Abs(difference.z) > 0.01f)
             {
@@ -156,11 +181,28 @@ public class PlayerMovement : NetworkBehaviour
             }
         }
 
+        if (horizontalInput != 0 || verticalInput != 0)
+        {
+            OnPlayerMoved?.Invoke(horizontalInput, verticalInput);
+        }
+
         // ANIM-TODO : à bouger
         playerAnimations.UpdateAnimations(isRunning);
     }
 
+    [Command]
+    void CmdSyncRunning(bool runningState, int hInput, int vInput)
+    {
+        RpcSyncRunning(runningState, hInput, vInput);
+    }
 
+    [ClientRpc]
+    void RpcSyncRunning(bool runningState, int hInput, int vInput)
+    {
+        isRunning = runningState;
+        horizontalInput = hInput;
+        verticalInput = vInput;
+    }
 
     private bool Move(float h, float v)
     {
@@ -232,6 +274,7 @@ public class PlayerMovement : NetworkBehaviour
 
         previousInput.x = moveX;
         previousInput.y = moveZ;
+
 
         return signX != 0 || signZ != 0;
     }

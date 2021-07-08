@@ -68,6 +68,6 @@ MonoBehaviour:
     exactCount: 0
     proportion: 0
     playersProportion: 0
-  boxesCount: 52
+  boxesCount: 156
   playersCount: 1
-  bonusPercentage: 0.7
+  bonusPercentage: 0.8

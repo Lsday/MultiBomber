@@ -20,6 +20,16 @@ public class PlayerEntity : NetworkBehaviour
 
     public PlayerInputData currentInputData;
 
+    public static int GetEntityIndex(PlayerEntity playerEntity)
+    {
+        return instancesList.IndexOf(playerEntity);
+    }
+
+    public static PlayerEntity GetEntity(int index)
+    {
+        return instancesList[index];
+    }
+
     /// <summary>
     /// The device (physical=keyboard,gamepad or virtual=bot) used to control this player
     /// </summary>
@@ -80,6 +90,8 @@ public class PlayerEntity : NetworkBehaviour
         playerAnimation.OnPlayerDiedAnimEnded += KillPlayer;
 
         playerCollisions = GetComponent<PlayerCollisions>();
+
+        instancesList.Add(this);
     }
 
     public void ResetVariables()
@@ -150,9 +162,11 @@ public class PlayerEntity : NetworkBehaviour
     private void OnEnable()
     {
         // Add this Player to the local instances list, to keep track of all the available players
-        instancesList.Add(this);
+        //instancesList.Add(this);
 
-        ResetVariables();
+        //ResetVariables();
+
+        this.SendMessage("ResetVariables");
 
         // Sort the instances list, to keep the same order on all clients and the server
         if (hubIdentity) SortInstances();
@@ -165,8 +179,8 @@ public class PlayerEntity : NetworkBehaviour
 
     private void OnDisable()
     {
-        instancesList.Remove(this);
-        if (hubIdentity) SortInstances();
+        //instancesList.Remove(this);
+        //if (hubIdentity) SortInstances();
     }
 
     #endregion

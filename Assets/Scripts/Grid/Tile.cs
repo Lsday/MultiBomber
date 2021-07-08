@@ -50,6 +50,9 @@ public class Tile
         {
             return item.ToString();
         }
+
+        if (type == ElementType.Empty || type == ElementType.Wall) return "";
+
         return type.ToString() + "("+_temperature+")";
         
     }

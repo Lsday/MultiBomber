@@ -1520,7 +1520,7 @@ MonoBehaviour:
   block_U: {fileID: 0}
   block_O: {fileID: 4300010, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-  boxPercent: 40
+  boxPercent: 60
   playerStartPositions: []
 --- !u!4 &618848640
 Transform:

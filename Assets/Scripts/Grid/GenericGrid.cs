@@ -139,11 +139,14 @@ public class GenericGrid<TGridObject>
     }
     public void ClearGridDebug()
     {
-        for (int x = 0; x < gridArray.GetLength(0); x++)
+        if (showDebug)
         {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            for (int x = 0; x < gridArray.GetLength(0); x++)
             {
-                GameObject.Destroy(debugTextArray[x, y].gameObject);
+                for (int y = 0; y < gridArray.GetLength(1); y++)
+                {
+                    GameObject.Destroy(debugTextArray[x, y].gameObject);
+                }
             }
         }
     }

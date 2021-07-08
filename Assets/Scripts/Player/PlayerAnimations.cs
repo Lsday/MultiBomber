@@ -51,6 +51,14 @@ public class PlayerAnimations : MonoBehaviour
         }
     }
 
+    public void ResetVariables()
+    {
+        animator.SetBool(_deadHash, false);
+        animator.SetFloat(_speedHash, 0);
+        StopAllCoroutines();
+        state = 0;
+        CancelInvoke("PlayerDiedAnimEnded");
+    }
     void PlayerDie()
     {
         animator.SetBool(_deadHash, true);

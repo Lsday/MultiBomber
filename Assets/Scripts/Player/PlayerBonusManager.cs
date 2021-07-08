@@ -27,8 +27,11 @@ public class PlayerBonusManager : MonoBehaviour
             BonusGiveBackManager.instance.AddBonus(itemBonusList[i]);
         }
 
-        itemBonusList.Clear();
+        ResetVariables();
     }
 
-    
+    public void ResetVariables()
+    {
+        itemBonusList.Clear();
+    }
 }

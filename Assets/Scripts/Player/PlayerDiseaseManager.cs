@@ -21,6 +21,10 @@ public class PlayerDiseaseManager : NetworkBehaviour
         player.OnPlayerDied += EndDisease;
     }
 
+    public void ResetVariables()
+    {
+        EndDisease();
+    }
    
     public void StartDisease(Disease disease, float duration)
     {

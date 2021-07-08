@@ -127,9 +127,10 @@ public class LevelBuilder : NetworkBehaviour
 
     private void Init()
     {
-        int mapDimension = GetMapDimension(mapSize);
-        ClearGrid();
+        ClearMap();
+        
 
+        int mapDimension = GetMapDimension(mapSize);
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
 
         UpdateTilesPositions();
@@ -139,7 +140,19 @@ public class LevelBuilder : NetworkBehaviour
         CreateWalls();
         CreateBoxes();
         AssignBonuses();
-        AssignPlayersPositions();
+        AssignPlayersPositions(true);
+
+        ResetPlayers();
+    }
+
+    private void ResetPlayers()
+    {
+        int count = PlayerEntity.instancesList.Count;
+       
+        for (int i = 0; i < count; i++)
+        {
+            PlayerEntity.instancesList[i].gameObject.SendMessage("ResetVariables");
+        }
     }
 
     private void UpdateTilesPositions()
@@ -167,6 +180,26 @@ public class LevelBuilder : NetworkBehaviour
         }
     }
 
+    private static void RemoveAllItems()
+    {
+        if (grid != null)
+        {
+            int width = grid.GetWidth();
+            int height = grid.GetHeight();
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int z = 0; z < height; z++)
+                {
+                    Tile tile = grid.GetGridObject(x, z);
+                    if (tile.item)
+                    {
+                        tile.item.Disable();
+                    }
+                }
+            }
+        }
+    }
 
     public static Tile[] GetFreeTiles()
     {
@@ -192,7 +225,7 @@ public class LevelBuilder : NetworkBehaviour
     }
     #endregion
 
-    private void AssignPlayersPositions()
+    private void AssignPlayersPositions(bool activatePlayers = false)
     {
         int count = Mathf.Min(PlayerEntity.instancesList.Count, playerStartPositions.Length);
         float size = grid.GetCellsize();
@@ -202,8 +235,13 @@ public class LevelBuilder : NetworkBehaviour
         {
             // send the position to the PlayerMovement script assigned to this player entity
             PlayerEntity.instancesList[i].SetSpawnPosition(playerStartPositions[i] * size + offset);
+            if (activatePlayers)
+            {
+                PlayerEntity.instancesList[i].gameObject.SetActive(true);
+            }
         }
     }
+
     private void CreateBoxes()
     {
         if (!isServer) return;
@@ -553,15 +591,12 @@ public class LevelBuilder : NetworkBehaviour
     }
     private void ClearMapCallBack(ClearMapMessage msg)
     {
-        ItemBox[] boxs = FindObjectsOfType<ItemBox>();
+        ClearMap();
+    }
 
-        for (int i = 0; i < boxs.Length; i++)
-        {
-            boxs[i].Disable();
-            //GameObject temp = boxs[i].gameObject;
-            //temp.SetActive(false);
-        }
-
+    private void ClearMap()
+    {
+        RemoveAllItems();
         potentialBoxTile.Clear();
         wallTiles.Clear();
         ClearGrid();

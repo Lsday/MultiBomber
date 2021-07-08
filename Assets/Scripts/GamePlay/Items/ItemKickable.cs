@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Mirror;
 public class ItemKickable : ItemBase, IKickable
 {
     public bool kicked = false;
@@ -21,9 +21,27 @@ public class ItemKickable : ItemBase, IKickable
         sphereCollider = GetComponent<SphereCollider>();
 
         sphereCollider.enabled = false;
+
     }
 
     public void Kick(PlayerEntity playerEntity, int power, int h, int v)
+    {
+        if (isServer && (h == 0 || v == 0)) // one axis must be 0
+        {
+            int index = PlayerEntity.GetEntityIndex(playerEntity);
+            RpcKick((byte)index, (byte)power, (byte)(h + 1), (byte)(v + 1));
+        }
+    }
+
+
+    [Command]
+    public void CmdKick(byte entityIndex, byte power, byte h, byte v)
+    {
+        RpcKick(entityIndex, power, h, v);
+    }
+
+    [ClientRpc]
+    public void RpcKick(byte entityIndex, byte power, byte h, byte v)
     {
         if (kicked) return;
 
@@ -32,8 +50,8 @@ public class ItemKickable : ItemBase, IKickable
             grid = LevelBuilder.grid;
         }
 
-        direction.x = h;
-        direction.z = v;
+        direction.x = ((int)h)-1;
+        direction.z = ((int)v)-1;
 
         Tile obj = grid.GetGridObject(myTransform.position + direction);
 
@@ -41,7 +59,7 @@ public class ItemKickable : ItemBase, IKickable
             return;
         }
 
-        kicker = playerEntity;
+        kicker = PlayerEntity.GetEntity(entityIndex);
         kickPower = power;
         kicked = true;
 
@@ -94,11 +112,13 @@ public class ItemKickable : ItemBase, IKickable
                 }
             }
 
-                RemoveFromTile();
+            RemoveFromTile();
+
             if (kicked){
                 position += direction * speed * Time.deltaTime;
             }
             myTransform.position = position;
+
             PlaceOnTile(position);
 
             yield return new WaitForSeconds(Time.deltaTime);

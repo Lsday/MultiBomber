@@ -15,12 +15,13 @@ public class PlayerCollisions : NetworkBehaviour
         playerMovement = GetComponent<PlayerMovement>();
 
         playerMovement.OnPlayerMoved += DetectCollisions;
-
+        
         playerEntity = GetComponent<PlayerEntity>();
     }
 
     private void DetectCollisions(int h,int v)
     {
+
         if(bombKickPower > 0 || boxKickPower > 0)
         {
             int x = playerMovement.currentTileX + h;
@@ -34,7 +35,7 @@ public class PlayerCollisions : NetworkBehaviour
                 if ((h != 0 && Mathf.Abs(distance.x) <= 1f) || (v != 0 && Mathf.Abs(distance.z) <= 1f))
                 {
                     ItemKickable item = tile.item as ItemKickable;
-                    item.Kick(playerEntity, tile.type == ElementType.Bomb ? bombKickPower: boxKickPower, h, v) ;
+                    item.Kick(playerEntity, tile.type == ElementType.Bomb ? bombKickPower: boxKickPower, h, v);
                 }
 
             }

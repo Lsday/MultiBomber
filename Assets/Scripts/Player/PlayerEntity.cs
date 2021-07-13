@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using System;
+using UnityEngine.UI;
 public class PlayerEntity : NetworkBehaviour
 {
 
@@ -17,6 +18,8 @@ public class PlayerEntity : NetworkBehaviour
     [SyncVar] public NetworkIdentity hubIdentity;
     [SyncVar] public byte localPlayerIndex;
     [SyncVar] public Color defaultColor;
+    [SyncVar] public float creationTime;
+
 
     public PlayerInputData currentInputData;
 
@@ -30,6 +33,15 @@ public class PlayerEntity : NetworkBehaviour
         return instancesList[index];
     }
 
+    public static int GetAliveCount()
+    {
+        int count = 0;
+        for(int i= 0; i < instancesList.Count; i++)
+        {
+            if (!instancesList[i].isDead) count++;
+        }
+        return count;
+    }
     /// <summary>
     /// The device (physical=keyboard,gamepad or virtual=bot) used to control this player
     /// </summary>
@@ -45,6 +57,8 @@ public class PlayerEntity : NetworkBehaviour
     public PlayerAnimations playerAnimation { get; private set; }
 
     public PlayerCollisions playerCollisions { get; private set; }
+
+    public Text debugText;
 
     // TODO : private variables
     public Renderer avatarRenderer;
@@ -85,7 +99,6 @@ public class PlayerEntity : NetworkBehaviour
         playerDiseaseManager = GetComponent<PlayerDiseaseManager>();
         playerDiseaseManager.Init(this);
 
-
         playerAnimation = GetComponent<PlayerAnimations>();
         playerAnimation.OnPlayerDiedAnimEnded += KillPlayer;
 
@@ -117,6 +130,11 @@ public class PlayerEntity : NetworkBehaviour
             if (ret == 0) ret = x.localPlayerIndex.CompareTo(y.localPlayerIndex);
             return ret;
         });
+
+        for(int i = 0; i < instancesList.Count; i++)
+        {
+            instancesList[i].debugText.text = instancesList[i].hubIdentity.netId.ToString()+","+i.ToString();
+        }
     }
 
     public void SetSpawnPosition(Vector3 position)
@@ -188,7 +206,7 @@ public class PlayerEntity : NetworkBehaviour
     #region Local functions
     private void Start()
     {
-
+        Debug.Log("Start");
         if (hubIdentity.isLocalPlayer)
         {
             if (controllerDevice == null)

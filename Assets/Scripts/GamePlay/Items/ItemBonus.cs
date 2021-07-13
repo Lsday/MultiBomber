@@ -131,7 +131,10 @@ public class ItemBonus : ItemPlayerModifier
 
     void StartDestroyAnimation(float duration)
     {
+        if (!gameObject.activeInHierarchy) return;
+
         ResetVariables();
+
         if (duration == 0) return;
 
         // disable shadows when destroying a bonus

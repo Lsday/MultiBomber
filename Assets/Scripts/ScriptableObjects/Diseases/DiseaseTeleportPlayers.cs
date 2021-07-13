@@ -10,7 +10,6 @@ public class DiseaseTeleportPlayers : Disease
         int rnd;
         PlayerEntity opositePlayer;
         
-
         do
         {
             rnd = UnityEngine.Random.Range(0, PlayerEntity.instancesList.Count);

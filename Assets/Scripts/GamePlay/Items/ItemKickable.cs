@@ -1,7 +1,8 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.Collections;
 public class ItemKickable : ItemBase, IKickable
 {
     public bool kicked = false;
@@ -77,6 +78,7 @@ public class ItemKickable : ItemBase, IKickable
 
             if (obj.type >= ElementType.Block)
             {
+                // stop on obstacle
                 Vector3 destination = grid.GetGridObjectWorldCenter(position);
 
                 if (Vector3.Distance(destination, position) < 0.1f)
@@ -84,7 +86,7 @@ public class ItemKickable : ItemBase, IKickable
                     kicked = false;
                     position = destination;
 
-                    if (obj.type == this.type && kickPower > 1)
+                    if (obj.type == this.type && kickPower > 1 && obj.item != null)
                     {
                         ((ItemKickable)obj.item).Kick(kicker, kickPower - 1, (int)direction.x, (int)direction.z);
                         StopKick();
@@ -93,6 +95,7 @@ public class ItemKickable : ItemBase, IKickable
             }
             else if (PlayerEntity.GetMajorPlayer(obj.x, obj.y) != null)
             {
+                // stop on player
                 Vector3 destination = grid.GetGridObjectWorldCenter(position);
 
                 if (Vector3.Distance(destination, position) < 0.1f)
@@ -104,6 +107,7 @@ public class ItemKickable : ItemBase, IKickable
             }
             else if (obj.type == ElementType.Item)
             {
+                // destroy bonus on the way
                 Vector3 destination = grid.GetGridObjectWorldCenter(position + direction);
 
                 if (Vector3.Distance(destination, position) < 1f)
@@ -136,10 +140,11 @@ public class ItemKickable : ItemBase, IKickable
 
     public override void Disable()
     {
-        base.Disable();
+        
         kicked = false;
         kicker = null;
         GetComponent<Collider>().enabled = false;
+        base.Disable();
     }
 
     

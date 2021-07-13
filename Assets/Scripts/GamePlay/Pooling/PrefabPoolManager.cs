@@ -66,7 +66,9 @@ public class PrefabPoolManager
     // used by NetworkClient.RegisterPrefab
     GameObject SpawnHandler(SpawnMessage msg)
     {
-        return GetFromPool(msg.position, msg.rotation);
+        GameObject spawned = GetFromPool(msg.position, msg.rotation);
+
+        return spawned;
     }
 
     // used by NetworkClient.RegisterPrefab
@@ -86,7 +88,7 @@ public class PrefabPoolManager
     public GameObject GetFromPool(Vector3 position, Quaternion rotation)
     {
         PoolableObject next = PickFromPool();
-        
+
         // CreateNew might return null if max size is reached
         if (next == null) { return null; }
 
@@ -106,17 +108,19 @@ public class PrefabPoolManager
 
         // CreateNew might return null if max size is reached
         if (next == null) { return null; }
+
         return next;
     }
 
     /// 
-    /// Used to put object back into pool so they can b
+    /// Used to put object back into pool so they
     /// Should be used on server after unspawning an object
     /// Used on client by NetworkClient to unspawn objects
     /// 
     /// 
     public void PutBackInPool(PoolableObject spawned)
     {
+        //Debug.Log("PutBackInPool sc " + spawned.name);
         // disable object
         spawned.gameObject.SetActive(false);
 
@@ -126,6 +130,7 @@ public class PrefabPoolManager
 
     public void PutBackInPool(GameObject spawned)
     {
+        //Debug.Log("PutBackInPool go " + spawned.name);
         // disable object
         spawned.SetActive(false);
 

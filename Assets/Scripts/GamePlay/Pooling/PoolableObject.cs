@@ -18,10 +18,18 @@ public class PoolableObject : NetworkBehaviour
 
     public virtual void Disable()
     {
-        poolManager.PutBackInPool(this.gameObject);
+        //Debug.Log("Disable " + name);
+
+        //
 
         // tell server to send ObjectDestroyMessage, which will call UnspawnHandler on client
-        NetworkServer.UnSpawn(this.gameObject);
+        if (isServer)
+        {
+            poolManager.PutBackInPool(this.gameObject);
+            //Debug.Log("Call UNSPAWN for "+name);
+            NetworkServer.UnSpawn(this.gameObject);
+        }
+        
  
     }
 

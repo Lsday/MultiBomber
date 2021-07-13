@@ -16,8 +16,9 @@ public class DeviceEntity : MonoBehaviour
     private PlayerInput playerInput; // pointer to the InputSystem class referencing the keyboard or gamepad used to control this player (only is case of human player)
     private Gamepad myGamepad;
 
-    void Start()
+    void Awake()
     {
+        Debug.Log("Awake device");
         playerInput = GetComponent<PlayerInput>();
         
         inputs = GetComponent<PhysicalDevice>();

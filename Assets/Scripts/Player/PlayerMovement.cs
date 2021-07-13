@@ -127,7 +127,7 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
-
+    bool prevRunning;
     void Update()
     {
         if (!gameStarted.value) return;
@@ -145,7 +145,7 @@ public class PlayerMovement : NetworkBehaviour
             float horizontal = playerEntity.currentInputData.movement.x;
             float vertical = playerEntity.currentInputData.movement.y;
 
-            bool prevRunning = isRunning;
+            //bool prevRunning = isRunning;
 
             if (Mathf.Abs(horizontal) + Mathf.Abs(vertical) > 0.01f)
             {
@@ -156,15 +156,14 @@ public class PlayerMovement : NetworkBehaviour
                 isRunning = false;
             }
 
-            if(prevRunning != isRunning)
+            horizontalInput = Utils.RoundedSign(horizontal, 0.5f);
+            verticalInput = Utils.RoundedSign(vertical, 0.5f);
+
+            if (prevRunning != isRunning)
             {
-
-                horizontalInput = Utils.RoundedSign(horizontal, 0.5f);
-                verticalInput = Utils.RoundedSign(vertical, 0.5f);
-
                 CmdSyncRunning(isRunning, horizontalInput, verticalInput);
             }
-
+            prevRunning = isRunning;
         }
         else
         {
@@ -656,18 +655,15 @@ public class PlayerMovement : NetworkBehaviour
 
     public void Teleport(Vector3 position)
     {
-        networkTransform.ServerTeleport(position);
-
-        UpdateTileCoordinates();
-
-        if (isServer)
-        {
+        if (isServer) {
+            networkTransform.ServerTeleport(position);
             RpcUpdateTileCoordinates();
         }
+        else
+        {
+            transform.position = position;
+            UpdateTileCoordinates();
+        }
     }
-       
-    
-
-
 }
 

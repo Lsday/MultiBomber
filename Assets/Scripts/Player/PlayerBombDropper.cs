@@ -18,7 +18,7 @@ public class PlayerBombDropper : NetworkBehaviour
     public Filter currentFilter;
 
 
-    //[SyncVar] bool bombShit = false;
+    [SyncVar] bool bombShit = false;
 
     private void Start()
     {
@@ -74,6 +74,7 @@ public class PlayerBombDropper : NetworkBehaviour
         else
         {
             playerEntity.playerMovement.OnTileEntered += PlaceBomb;
+            bombShit = true;
         }
     }
 
@@ -82,6 +83,7 @@ public class PlayerBombDropper : NetworkBehaviour
     {
         Debug.Log("RpcSubscribeBombShitEvent");
         playerEntity.playerMovement.OnTileEntered += PlaceBomb;
+        bombShit = true;
     }
 
 
@@ -95,6 +97,7 @@ public class PlayerBombDropper : NetworkBehaviour
         else
         {
             playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+            bombShit = false;
         }
     }
 
@@ -102,6 +105,7 @@ public class PlayerBombDropper : NetworkBehaviour
     public void RpcUnSubscribeBombShitEvent()
     {
         playerEntity.playerMovement.OnTileEntered -= PlaceBomb;
+        bombShit = false;
     }
 
     public void PlaceBomb()
@@ -132,6 +136,8 @@ public class PlayerBombDropper : NetworkBehaviour
     {
         if (bombOnMap > 0)
             bombOnMap--;
+
+        if (bombShit) PlaceBomb();
     }
 
     [ClientRpc]
@@ -153,6 +159,8 @@ public class PlayerBombDropper : NetworkBehaviour
     } 
     private void DropBomb()
     {
+        if (LevelBuilder.grid == null) return;
+
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
 
         if (tile.type < ElementType.Block)

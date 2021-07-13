@@ -2,7 +2,7 @@ using Mirror;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections;
 public struct MeshShape
 {
     public Mesh mesh;
@@ -127,7 +127,7 @@ public class LevelBuilder : NetworkBehaviour
 
     private void Init()
     {
-        ClearMap();
+        //ClearMap();
         
 
         int mapDimension = GetMapDimension(mapSize);
@@ -138,10 +138,14 @@ public class LevelBuilder : NetworkBehaviour
         CalculatePlayerStartPositions(totalPlayersCount.value);
         CalculateWallsAndBoxsPositions(spacing);
         CreateWalls();
-        CreateBoxes();
-        AssignBonuses();
-        AssignPlayersPositions(true);
 
+        if (isServer)
+        {
+            CreateBoxes();
+            AssignBonuses();
+        }
+
+        AssignPlayersPositions(true);
         ResetPlayers();
     }
 
@@ -248,13 +252,14 @@ public class LevelBuilder : NetworkBehaviour
 
         int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - (boxPercent/100f)));
 
-        // Randomize boxs positions
+        // Randomize boxes positions
         for (int i = 0; i < boxCount; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, potentialBoxTile.Count);
             potentialBoxTile.RemoveAt(randomIndex);
         }
 
+        actualBoxes.Clear();
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
             //Calculate Box Position
@@ -264,6 +269,7 @@ public class LevelBuilder : NetworkBehaviour
 
             actualBoxes.Add(box);
         }
+
     }
 
     void AssignBonuses() { 
@@ -275,8 +281,6 @@ public class LevelBuilder : NetworkBehaviour
         }
 
     }
-
-
 
     public Tile TileConstructor(GenericGrid<Tile> grid, int x, int y)
     {
@@ -599,6 +603,7 @@ public class LevelBuilder : NetworkBehaviour
         RemoveAllItems();
         potentialBoxTile.Clear();
         wallTiles.Clear();
+        actualBoxes.Clear();
         ClearGrid();
     }
 
@@ -634,12 +639,31 @@ public class LevelBuilder : NetworkBehaviour
         }
     }
 
+
+    bool buildingMap = false;
     public void CreateMap()
     {
-        NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
-        NetworkServer.SendToAll(new GameStartedMessage {});
+        if (buildingMap) return;
+
+        StartCoroutine(InitMap());
+        
     }
 
+    IEnumerator InitMap()
+    {
+        buildingMap = true;
+
+        NetworkServer.SendToAll(new ClearMapMessage { });
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        NetworkServer.SendToAll(new GameStartedMessage { });
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        buildingMap = false;
+    }
     
 
 }

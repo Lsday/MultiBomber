@@ -19,8 +19,15 @@ public class PlayerCollisions : NetworkBehaviour
         playerEntity = GetComponent<PlayerEntity>();
     }
 
+    public void ResetVariables()
+    {
+        bombKickPower = 0;
+        boxKickPower = 0;
+    }
+
     private void DetectCollisions(int h,int v)
     {
+        if (LevelBuilder.grid == null) return;
 
         if(bombKickPower > 0 || boxKickPower > 0)
         {
@@ -32,7 +39,8 @@ public class PlayerCollisions : NetworkBehaviour
             if (tile.item != null &&( (tile.type == ElementType.Bomb && bombKickPower > 0) || (tile.type == ElementType.Box && boxKickPower > 0)))
             {
                 Vector3 distance = tile.worldPosition - transform.position;
-                if ((h != 0 && Mathf.Abs(distance.x) <= 1f) || (v != 0 && Mathf.Abs(distance.z) <= 1f))
+                
+                if ((h != 0 && Mathf.Abs(distance.x) <= 1.01f) || (v != 0 && Mathf.Abs(distance.z) <= 1.01f))
                 {
                     ItemKickable item = tile.item as ItemKickable;
                     item.Kick(playerEntity, tile.type == ElementType.Bomb ? bombKickPower: boxKickPower, h, v);

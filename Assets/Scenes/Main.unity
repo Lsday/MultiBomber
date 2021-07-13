@@ -1520,7 +1520,7 @@ MonoBehaviour:
   block_U: {fileID: 0}
   block_O: {fileID: 4300010, guid: a72a3930b826010449f5ed5f0dbf4522, type: 3}
   boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-  boxPercent: 60
+  boxPercent: 50
   playerStartPositions: []
 --- !u!4 &618848640
 Transform:
@@ -1619,12 +1619,12 @@ MonoBehaviour:
   prefabs:
   - type: 0
     prefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
-    startCount: 100
-    maxCount: 300
+    startCount: 200
+    maxCount: 500
   - type: 1
     prefab: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
     startCount: 25
-    maxCount: 100
+    maxCount: 150
   - type: 2
     prefab: {fileID: 5683890554072257796, guid: dba95a151fe3b0c4480f50ec751a9f5d, type: 3}
     startCount: 50
@@ -4018,6 +4018,7 @@ GameObject:
   - component: {fileID: 1486902721}
   - component: {fileID: 1486902723}
   - component: {fileID: 1486902720}
+  - component: {fileID: 1486902724}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -4071,7 +4072,7 @@ MonoBehaviour:
   offlineScene: 
   onlineScene: 
   transport: {fileID: 1486902720}
-  networkAddress: localhost
+  networkAddress: 88.161.227.4
   maxConnections: 10
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
@@ -4110,6 +4111,18 @@ MonoBehaviour:
   showGUI: 1
   offsetX: 0
   offsetY: 0
+--- !u!114 &1486902724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486902719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fafa20b27971eeb4d94065f32db764a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1493328919
 GameObject:
   m_ObjectHideFlags: 0

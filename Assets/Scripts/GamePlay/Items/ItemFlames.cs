@@ -151,7 +151,7 @@ public class ItemFlames : ItemBase
     */
     private void RemoveHeat()
     {
-        if (heatRemoved || !initialized) return;
+        if (heatRemoved || !initialized || LevelBuilder.grid == null) return;
 
         heatRemoved = true;
 
@@ -192,7 +192,7 @@ public class ItemFlames : ItemBase
                         ((IDestroyable)tile.item).RpcInitDestroy(0.05f, lifeTime - age);
                     }
 
-                    // update endPower on this obstacle
+                    // update endPower at the distance of this obstacle
                     endPower = i;
                     currentPower = i;
                     pow = i;
@@ -232,8 +232,6 @@ public class ItemFlames : ItemBase
     [Server]
     public void InitServer(Vector3 position, Vector3 direction, float maxPower, float extraTime = 0f)
     {
-       // Teleport(position);
-
         if (isServer)
         {
             RpcInit(position, direction, maxPower, extraTime);

@@ -74,45 +74,61 @@ public class ItemKickable : ItemBase, IKickable
         while (kicked)
         {
             Vector3 position = myTransform.position;
-            Tile obj = grid.GetGridObject(position + direction);
+            Tile tile = grid.GetGridObject(position);
+            Vector3 destination = tile.worldPosition;
 
-            if (obj.type >= ElementType.Block)
+            if (tile.temperature > 0)
             {
-                // stop on obstacle
-                Vector3 destination = grid.GetGridObjectWorldCenter(position);
+                kicked = false;
+                position = destination;
+                StopKick();
 
-                if (Vector3.Distance(destination, position) < 0.1f)
+                if (isServer)
                 {
-                    kicked = false;
-                    position = destination;
+                    ((IDestroyable)this).RpcInitDestroy(0.0f, 0.2f);
+                }
+            }
+            else
+            {
 
-                    if (obj.type == this.type && kickPower > 1 && obj.item != null)
+                tile = grid.GetGridObject(position + direction);
+
+                if (tile.type >= ElementType.Block)
+                {
+                    // stop on obstacle
+
+                    if (Vector3.Distance(destination, position) < 0.1f)
                     {
-                        ((ItemKickable)obj.item).Kick(kicker, kickPower - 1, (int)direction.x, (int)direction.z);
+                        kicked = false;
+                        position = destination;
+
+                        if (tile.type == this.type && kickPower > 1 && tile.item != null)
+                        {
+                            ((ItemKickable)tile.item).Kick(kicker, kickPower - 1, (int)direction.x, (int)direction.z);
+                            StopKick();
+                        }
+                    }
+                }
+                else if (PlayerEntity.GetMajorPlayerOccupation(tile.x, tile.y) > 0.5f) // a player is more than 50% on the tile
+                {
+                    // stop on player
+
+                    if (Vector3.Distance(destination, position) < 0.1f)
+                    {
+                        kicked = false;
+                        position = destination;
                         StopKick();
                     }
                 }
-            }
-            else if (PlayerEntity.GetMajorPlayer(obj.x, obj.y) != null)
-            {
-                // stop on player
-                Vector3 destination = grid.GetGridObjectWorldCenter(position);
-
-                if (Vector3.Distance(destination, position) < 0.1f)
+                else if (tile.type == ElementType.Item)
                 {
-                    kicked = false;
-                    position = destination;
-                    StopKick();
-                }
-            }
-            else if (obj.type == ElementType.Item)
-            {
-                // destroy bonus on the way
-                Vector3 destination = grid.GetGridObjectWorldCenter(position + direction);
+                    // destroy bonus on the way
+                    destination = grid.GetGridObjectWorldCenter(position + direction);
 
-                if (Vector3.Distance(destination, position) < 1f)
-                {
-                    ((ItemBonus)obj.item).InitDestroy(0, 0.2f);
+                    if (Vector3.Distance(destination, position) < 1f)
+                    {
+                        ((ItemBonus)tile.item).InitDestroy(0, 0.2f);
+                    }
                 }
             }
 

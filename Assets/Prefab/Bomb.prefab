@@ -208,7 +208,7 @@ MonoBehaviour:
   syncInterval: 0
   type: 64
   kicked: 0
-  speed: 6
+  speed: 8
   bombDropper: {fileID: 0}
   flamesPower: 1
   bombBehaviour: {fileID: 11400000, guid: da5d8854c72005c47bb2f2460cdcfe56, type: 2}

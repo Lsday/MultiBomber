@@ -58,6 +58,11 @@ public class PlayersHub : NetworkBehaviour
             CmdSpawnPlayer(netIdentity, localPlayerIndex);
         }
     }
+
+    private void OnDestroy()
+    {
+        instancesList.Remove(this);
+    }
     #endregion
 
     #region Network functions

@@ -38,11 +38,31 @@ public class PoolingSystem : NetworkBehaviour
 
     private void Start()
     {
+        
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+
+        for (int i = 0; i < prefabs.Length; i++)
+        {
+            ItemsType type = prefabs[i].type;
+            if (pooledObjects.ContainsKey(type))
+            {
+                pooledObjects[type].Destroy();
+            }
+        }
+        Utils.FreeMemory();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
         Init();
     }
 
-    private void OnDestroy()
-    {
+    void OnDestroy() {
         for (int i = 0; i < prefabs.Length; i++)
         {
             ItemsType type = prefabs[i].type;
@@ -50,17 +70,25 @@ public class PoolingSystem : NetworkBehaviour
                 pooledObjects[type].Destroy();
             }
         }
+        Utils.FreeMemory();
     }
 
     public void Init()
     {
         for(int i=0; i < prefabs.Length; i++)
         {
-            PrefabPoolManager manager = new PrefabPoolManager();
+            PrefabPoolManager manager;
+            if (pooledObjects.ContainsKey(prefabs[i].type))
+            {
+                manager = pooledObjects[prefabs[i].type];
+            }
+            else
+            {
+                manager = new PrefabPoolManager();
+                pooledObjects.Add(prefabs[i].type, manager);
+            }
 
             manager.Init(prefabs[i].prefab , prefabs[i].startCount, prefabs[i].maxCount, transform);
-
-            pooledObjects.Add(prefabs[i].type, manager);
 
         }
     }

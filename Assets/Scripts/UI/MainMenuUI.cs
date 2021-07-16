@@ -25,7 +25,7 @@ public class MainMenuUI : MonoBehaviour
 
     private void Start()
     {
-        NetworkClient.RegisterHandler<GameStartedMessage>(GameStart);
+        //NetworkClient.RegisterHandler<GameStartedMessage>(GameStart);
 
         // GAME MODE SELECTION
         localButton.onClick.AddListener(OnLocalButtonPressed);

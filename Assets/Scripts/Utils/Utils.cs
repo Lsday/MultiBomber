@@ -1,9 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using Mirror;
+using System;
+using System.Collections.Generic;
 
 public static class Utils
 {
+    public static void FreeMemory()
+    {
+        GC.Collect();
+        Resources.UnloadUnusedAssets();
+    }
+
     public static int RoundedSign(float value, float threshold = 0.001f)
     {
         return (value < -threshold ? -1 : value > threshold ? 1 : 0);

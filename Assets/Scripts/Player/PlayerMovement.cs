@@ -156,13 +156,16 @@ public class PlayerMovement : NetworkBehaviour
                 isRunning = false;
             }
 
-            horizontalInput = Utils.RoundedSign(horizontal, 0.5f);
-            verticalInput = Utils.RoundedSign(vertical, 0.5f);
+            int newH = Utils.RoundedSign(horizontal, 0.5f);
+            int newV = Utils.RoundedSign(vertical, 0.5f);
 
-            if (prevRunning != isRunning)
+            if (prevRunning != isRunning || newH != horizontalInput || newV != verticalInput)
             {
-                CmdSyncRunning(isRunning, horizontalInput, verticalInput);
+                CmdSyncRunning(isRunning, newH, newV);
             }
+            horizontalInput = newH;
+            verticalInput = newV;
+
             prevRunning = isRunning;
         }
         else
@@ -184,6 +187,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             OnPlayerMoved?.Invoke(horizontalInput, verticalInput);
         }
+       
+        Debug.DrawLine(transform.position + Vector3.up, transform.position + Vector3.up + new Vector3(horizontalInput, 0, verticalInput),Color.yellow);
 
         // ANIM-TODO : à bouger
         playerAnimations.UpdateAnimations(isRunning);
@@ -287,6 +292,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
+
         Gizmos.color = Color.red;
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -294,12 +300,12 @@ public class PlayerMovement : NetworkBehaviour
             {
 
                 Gizmos.color = new Color(0f, 1f, 0f, tiles[i].occupation);
-                Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one);
+                Gizmos.DrawWireCube(tiles[i].tile.worldPosition, Vector3.one*0.95f);
 
                 if (tiles[i].occupation > playerEntity.deathThreshold)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawWireCube(new Vector3((float)tiles[i].tile.x + 0.5f, 0.5f, (float)tiles[i].tile.y + 0.5f), Vector3.one * 0.3f);
+                    Gizmos.DrawWireCube(tiles[i].tile.worldPosition, Vector3.one * 0.3f);
 
                 }
             }

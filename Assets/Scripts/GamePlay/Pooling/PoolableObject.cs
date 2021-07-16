@@ -29,6 +29,10 @@ public class PoolableObject : NetworkBehaviour
             //Debug.Log("Call UNSPAWN for "+name);
             NetworkServer.UnSpawn(this.gameObject);
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
         
  
     }

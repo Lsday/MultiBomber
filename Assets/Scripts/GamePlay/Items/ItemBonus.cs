@@ -25,6 +25,7 @@ public class ItemBonus : ItemPlayerModifier
         bonusBehaviour.PerformAction(playerEntity);
         playerEntity.playerBonusManager.AddItem(bonusBehaviour);
         base.Loot(playerEntity);
+        ResetVariables();
     }
 
     public void SetBonus(BonusBehaviour<PlayerEntity> bonus)
@@ -117,6 +118,12 @@ public class ItemBonus : ItemPlayerModifier
         }
     }
 
+    public override void OnDisable()
+    {
+        StopAllCoroutines();
+        base.OnDisable();
+    }
+
     void ResetVariables()
     {
         if (propertyBlock == null)
@@ -150,15 +157,10 @@ public class ItemBonus : ItemPlayerModifier
     {
 
         if (destroyedTriggered) return;
-
+        
         base.InitDestroy(delay, fireEndDelay);
 
         StartDestroyAnimation(fireEndDelay);
-    }
-    
-    public void Enable()
-    {
-        ResetVariables();
     }
     
 }

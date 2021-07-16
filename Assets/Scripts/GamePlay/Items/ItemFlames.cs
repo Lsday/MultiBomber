@@ -91,7 +91,7 @@ public class ItemFlames : ItemBase
         if (!initialized) return;
 
 
-        // suppression de la chaleur un peu avant la fin de a visibilité de l'explosion
+        // suppression de la chaleur un peu avant la fin de la visibilité de l'explosion
         if (!heatRemoved && age >= lifeTime - fadeoutDuration)
         {
             RemoveHeat();
@@ -156,12 +156,12 @@ public class ItemFlames : ItemBase
         heatRemoved = true;
 
         Tile tile = LevelBuilder.grid.GetGridObject(sourcePosition);
-        tile.temperature--;
+        if(tile.temperature > 0) tile.temperature--;
 
         for (int i = 1; i <= currentPower; i++)
         {
             tile = LevelBuilder.grid.GetGridObject(sourcePosition + direction * i);
-            if(tile != null) tile.temperature--;
+            if(tile != null && tile.temperature > 0) tile.temperature--;
         }
 
         // on remet le prevPower à zéro, pour repartir du début de la flamme
@@ -325,7 +325,7 @@ public class ItemFlames : ItemBase
 
         ResetData();
 
-        // multiple flames can be spwaned on the same tile
+        // multiple flames can be spawned on the same tile
         // force a clear tile here to leave the Tile clean when all the flames are removed
         parentTile?.ClearTile();
         

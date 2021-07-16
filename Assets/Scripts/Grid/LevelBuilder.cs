@@ -117,8 +117,8 @@ public class LevelBuilder : NetworkBehaviour
 
     private void Start()
     {
-        NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
-        NetworkClient.RegisterHandler<ClearMapMessage>(ClearMapCallBack);
+        //NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
+        //NetworkClient.RegisterHandler<ClearMapMessage>(ClearMapCallBack);
 
         bonusDispenser = new BonusDispenser();
 
@@ -179,8 +179,7 @@ public class LevelBuilder : NetworkBehaviour
         {
             grid.ClearGridDebug();
             grid = null;
-            GC.Collect();
-            Resources.UnloadUnusedAssets();
+            Utils.FreeMemory();
         }
     }
 
@@ -263,9 +262,10 @@ public class LevelBuilder : NetworkBehaviour
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
             //Calculate Box Position
-            Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
-
-            ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, boxTilePosition) as ItemBox;
+            //Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
+            
+            //ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, boxTilePosition) as ItemBox;
+            ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, potentialBoxTile[i].worldPosition) as ItemBox;
 
             actualBoxes.Add(box);
         }
@@ -585,7 +585,7 @@ public class LevelBuilder : NetworkBehaviour
     }
     private void CreateMapCallBack(CreateMapMessage msg)
     {
-        //Debug.Log("Receive Map CallBack");
+        Debug.Log("Receive Map CallBack");
 
         mapSize = msg.mapSize;
         boxPercent = msg.boxPercent;
@@ -611,20 +611,19 @@ public class LevelBuilder : NetworkBehaviour
     {
         if (isServer)
         {
-            if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+            if (!buildingMap)
             {
+                if (GUI.Button(new Rect(300, 10, 200, 25), "Create Map"))
+                {
 
-                //NetworkServer.SendToAll(new ClearMapMessage { });
+                    CreateMap();
+                }
 
-                //Debug.Log("Send CreateMap Message");
-
-
-                CreateMap();
-            }
-
-            if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
-            {
-                NetworkServer.SendToAll(new ClearMapMessage { });
+                if (GUI.Button(new Rect(600, 10, 200, 25), "Clear Map"))
+                {
+                    //NetworkServer.SendToAll(new ClearMapMessage { });
+                    RpcClearMap();
+                }
             }
 
             if (GUI.Button(new Rect(500, 35, 100, 25), "Slow"))
@@ -641,25 +640,54 @@ public class LevelBuilder : NetworkBehaviour
 
 
     bool buildingMap = false;
-    public void CreateMap()
+
+
+    void CreateMap()
     {
         if (buildingMap) return;
 
         StartCoroutine(InitMap());
-        
     }
+
+    [ClientRpc]
+    void RpcCreateMap(byte mapSize, byte boxPercent )
+    {
+        this.mapSize = mapSize;
+        this.boxPercent = boxPercent;
+
+        Init();
+    }
+
+
+
+    [Command]
+    void CmdClearMap()
+    {
+        if (buildingMap) return;
+
+        RpcClearMap();
+    }
+
+    [ClientRpc]
+    void RpcClearMap()
+    {
+        ClearMap();
+    }
+
 
     IEnumerator InitMap()
     {
         buildingMap = true;
 
-        NetworkServer.SendToAll(new ClearMapMessage { });
-        yield return new WaitForSecondsRealtime(0.1f);
+        //NetworkServer.SendToAll(new ClearMapMessage { });
+        RpcClearMap();
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
-        yield return new WaitForSecondsRealtime(0.1f);
+        //NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
+        RpcCreateMap(this.mapSize, this.boxPercent);
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        NetworkServer.SendToAll(new GameStartedMessage { });
+        GameManager.instance.RpcStartGame();
         yield return new WaitForSecondsRealtime(0.1f);
 
         buildingMap = false;

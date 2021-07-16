@@ -57,7 +57,7 @@ MonoBehaviour:
   sceneId: 0
   serverOnly: 0
   visible: 0
-  m_AssetId: 
+  m_AssetId: 2181dbe36f4eb6544913ba7492badc9f
   hasSpawned: 0
 --- !u!114 &4082906206535819223
 MonoBehaviour:
@@ -78,6 +78,8 @@ MonoBehaviour:
   localRotationSensitivity: 1
   localScaleSensitivity: 0.01
   compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
   interpolateScale: 0
   syncScale: 0
 --- !u!114 &471709280951393523
@@ -147,7 +149,7 @@ MonoBehaviour:
   bombCount: 1
   bombOnMap: 0
   bombMaxOnMap: 10
-  flamesPower: 1
+  flamesPower: 2
   flamePowerMax: 15
   currentFilter: {fileID: 0}
 --- !u!114 &2718188998225735062

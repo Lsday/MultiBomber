@@ -128,7 +128,6 @@ public class PlayerBombDropper : NetworkBehaviour
     private void CmdDropBomb()
     {
         DropBomb();
-      
     }
 
     [ClientRpc]
@@ -159,7 +158,7 @@ public class PlayerBombDropper : NetworkBehaviour
     } 
     private void DropBomb()
     {
-        if (LevelBuilder.grid == null) return;
+        if (LevelBuilder.grid == null || playerEntity.isDead) return;
 
         Tile tile = LevelBuilder.grid.GetGridObject(transform.position);
 

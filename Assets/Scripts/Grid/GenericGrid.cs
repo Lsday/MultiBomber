@@ -19,7 +19,7 @@ public class GenericGrid<TGridObject>
     private float cellSize;
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
-    bool showDebug = false;
+    bool showDebug = true;
     TextMeshPro[,] debugTextArray;
 
 

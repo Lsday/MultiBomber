@@ -159,6 +159,22 @@ public class PlayerEntity : NetworkBehaviour
 
         return player;
     }
+
+    public static float GetMajorPlayerOccupation(int x, int y)
+    {
+        float maxOccupation = 0;
+
+        for (int i = 0; i < instancesList.Count; i++)
+        {
+            float o = instancesList[i].GetTileOccupation(x, y);
+            if (o > maxOccupation && !instancesList[i].isDead)
+            {
+                maxOccupation = o;
+            }
+        }
+
+        return maxOccupation;
+    }
     /// <summary>
     /// Set the pointer to the NetworkIndentity of the PlayerHub which created this player.
     /// </summary>
@@ -201,24 +217,31 @@ public class PlayerEntity : NetworkBehaviour
         //if (hubIdentity) SortInstances();
     }
 
+    private void OnDestroy()
+    {
+        instancesList.Remove(this);
+        if (hubIdentity) SortInstances();
+    }
+
     #endregion
 
     #region Local functions
     private void Start()
     {
-        Debug.Log("Start");
         if (hubIdentity.isLocalPlayer)
         {
             if (controllerDevice == null)
             {
                 controllerDevice = DeviceEntity.instancesList[localPlayerIndex];
             }
-            SortInstances();
+            
         }
+        
+        SortInstances();
 
         if (isServer)
         {
-            defaultColor = UnityEngine.Random.ColorHSV(0,1,0,1,0.7f,1f);
+            defaultColor = PlayerSkinsManager.instance.PickColor();
             RpcSetColor(defaultColor);
         }
 

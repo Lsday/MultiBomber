@@ -19,7 +19,7 @@ public class DisplayData : MonoBehaviour
         string lst = "";
         for(int i = 0; i < PlayerEntity.instancesList.Count; i++)
         {
-            lst += PlayerEntity.instancesList[i].debugName + "\n";
+            lst += i+") "+PlayerEntity.instancesList[i].debugName + "\n";
         }
 
         GUI.Label(new Rect(0, Screen.height - (120 + PlayerEntity.instancesList.Count*30), 500, 300), lst);

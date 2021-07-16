@@ -8,7 +8,7 @@ public struct GameStartedMessage : NetworkMessage { };
 
 public delegate void GameState();
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public event GameState onGameStarted;
 
@@ -19,14 +19,12 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
     }
-    private void Start()
-    {
-        NetworkClient.RegisterHandler<GameStartedMessage>(GameStartedCallBack);
 
-    }
-
-    private void GameStartedCallBack(GameStartedMessage arg)
+    [ClientRpc]
+    public void RpcStartGame()
     {
         onGameStarted?.Invoke();
     }
+
+
 }

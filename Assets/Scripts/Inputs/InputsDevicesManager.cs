@@ -108,16 +108,16 @@ public class InputsDevicesManager : MonoBehaviour
 
     private void AddBot()
     {
-        Debug.Log("A");
+
         Instantiate(virtualDevicePrefab, transform);
 
-        Debug.Log("B");
+
         if (PlayersHub.instance != null)
         {
-            Debug.Log("C");
+
             PlayersHub.instance.AddPlayer((byte)localPlayersCount.value);
         }
-        Debug.Log("D");
+
         //TODO : déplacer ces additions dans physicalDevicePrefab, ou trouver une manière plus propre de faire ce comptage
         localPlayersCount.value++;
         totalPlayersCount.value++;

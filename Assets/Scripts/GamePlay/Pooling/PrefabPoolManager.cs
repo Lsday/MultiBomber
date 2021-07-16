@@ -23,19 +23,37 @@ public class PrefabPoolManager
         this.prefab = prefab;
         this.parent = parent;
 
+        NetworkClient.RegisterPrefab(prefab, SpawnHandler, UnspawnHandler);
+
         InitializePool();
 
-        NetworkClient.RegisterPrefab(prefab, SpawnHandler, UnspawnHandler);
+    }
+
+    public void Clear()
+    {
+        while(pool.Count > 0)
+        {
+            PoolableObject next = pool.Count > 0 ? pool.Dequeue() : null;
+            if (next)
+            {
+                GameObject.Destroy(next.gameObject);
+            }
+        }
+        pool.Clear();
     }
 
     public void Destroy()
     {
+        Clear();
+
         NetworkClient.UnregisterPrefab(prefab);
     }
 
     private void InitializePool()
     {
-        pool = new Queue<PoolableObject>();
+        if(pool == null) pool = new Queue<PoolableObject>();
+        pool.Clear();
+        currentCount = 0;
         for (int i = 0; i < startSize; i++)
         {
             PoolableObject next = CreateNew();

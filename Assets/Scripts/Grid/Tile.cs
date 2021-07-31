@@ -48,12 +48,12 @@ public class Tile
 
         if (item != null)
         {
-            return item.ToString();
+            //return item.ToString();
         }
 
         if ((type == ElementType.Empty && _temperature==0) || type == ElementType.Wall) return "";
 
-        return type.ToString() + "("+_temperature+")";
+        return type.ToString() + " "+_temperature;
         
     }
     public void ClearTile()

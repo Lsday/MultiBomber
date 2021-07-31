@@ -35,15 +35,20 @@ public class PlayerBombDropper : NetworkBehaviour
         bombOnMap = 0;
         bombCount = 1;
         canDropbomb = true;
+        bombShit = false;
     }
 
     private void OnEnable()
     {
+        ResetVariables();
+
         LinkInputActions();
     }
 
     private void OnDisable()
     {
+        ResetVariables();
+
         if (playerEntity && playerEntity.hubIdentity.isLocalPlayer && playerEntity.controllerDevice)
             playerEntity.controllerDevice.inputs.onDropBombAction -= PlaceBomb;
 

@@ -71,6 +71,11 @@ public abstract class ItemBase : PoolableObject
         RemoveFromTile();
     }
 
+    public virtual void Destroy()
+    {
+        Disable();
+    }
+
     #endregion
 
     #region Mirror Messages

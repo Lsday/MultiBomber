@@ -277,6 +277,7 @@ MonoBehaviour:
   boxPrefab: {fileID: 4546237658697349989, guid: eabe006795fa98b45b481a2b7dffc664, type: 3}
   boxPercent: 50
   playerStartPositions: []
+  toggleBoxes: 0
 --- !u!4 &618848640
 Transform:
   m_ObjectHideFlags: 0
@@ -378,15 +379,15 @@ MonoBehaviour:
     maxCount: 500
   - type: 1
     prefab: {fileID: 5312718094065896331, guid: e72500da95a7db046a8e949a0bd3fd4b, type: 3}
-    startCount: 25
-    maxCount: 150
+    startCount: 200
+    maxCount: 300
   - type: 2
     prefab: {fileID: 5683890554072257796, guid: dba95a151fe3b0c4480f50ec751a9f5d, type: 3}
-    startCount: 50
-    maxCount: 100
+    startCount: 200
+    maxCount: 300
   - type: 3
     prefab: {fileID: 1708823365755688, guid: 521afbc6d6fca8748abadfd8e72a2b95, type: 3}
-    startCount: 50
+    startCount: 200
     maxCount: 400
 --- !u!114 &618848645
 MonoBehaviour:
@@ -692,7 +693,7 @@ Camera:
   near clip plane: 3
   far clip plane: 100
   field of view: 35
-  orthographic: 0
+  orthographic: 1
   orthographic size: 8
   m_Depth: -1
   m_CullingMask:
@@ -716,13 +717,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.65070796, y: 0, z: 0, w: 0.7593281}
-  m_LocalPosition: {x: 8, y: 25.2, z: 3.8}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 8, y: 25.2, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 83.35, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,7 +1149,7 @@ MonoBehaviour:
   SendWindowSize: 4096
   ReceiveWindowSize: 4096
   debugLog: 0
-  statisticsGUI: 0
+  statisticsGUI: 1
   statisticsLog: 0
 --- !u!114 &1486902721
 MonoBehaviour:

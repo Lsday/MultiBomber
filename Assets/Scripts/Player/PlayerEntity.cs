@@ -219,6 +219,7 @@ public class PlayerEntity : NetworkBehaviour
 
     private void OnDestroy()
     {
+        PlayerSkinsManager.instance.UnpickColor(defaultColor);
         instancesList.Remove(this);
         if (hubIdentity) SortInstances();
     }

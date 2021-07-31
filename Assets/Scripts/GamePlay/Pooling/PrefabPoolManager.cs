@@ -85,13 +85,14 @@ public class PrefabPoolManager
     GameObject SpawnHandler(SpawnMessage msg)
     {
         GameObject spawned = GetFromPool(msg.position, msg.rotation);
-
+        Debug.Log("SPAWN "+spawned.name);
         return spawned;
     }
 
     // used by NetworkClient.RegisterPrefab
     void UnspawnHandler(GameObject spawned)
     {
+        Debug.Log("UNSPAWN " + spawned.name);
         PutBackInPool(spawned);
     }
 
@@ -126,7 +127,7 @@ public class PrefabPoolManager
 
         // CreateNew might return null if max size is reached
         if (next == null) { return null; }
-
+        Debug.Log("PICK "+next.name);
         return next;
     }
 
@@ -138,7 +139,7 @@ public class PrefabPoolManager
     /// 
     public void PutBackInPool(PoolableObject spawned)
     {
-        //Debug.Log("PutBackInPool sc " + spawned.name);
+        Debug.Log("PutBackInPool sc " + spawned.name);
         // disable object
         spawned.gameObject.SetActive(false);
 
@@ -148,7 +149,7 @@ public class PrefabPoolManager
 
     public void PutBackInPool(GameObject spawned)
     {
-        //Debug.Log("PutBackInPool go " + spawned.name);
+        Debug.Log("PutBackInPool go " + spawned.name);
         // disable object
         spawned.SetActive(false);
 

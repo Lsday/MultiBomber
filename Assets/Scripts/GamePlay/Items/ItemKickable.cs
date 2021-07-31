@@ -65,6 +65,8 @@ public class ItemKickable : ItemBase, IKickable
         kicked = true;
 
         sphereCollider.enabled = true;
+        
+        RemoveFromTile();
 
         StartCoroutine(KickUpdate());
     }

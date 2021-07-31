@@ -60,7 +60,7 @@ public class ItemBomb : ItemKickable, IDestroyable
         timer.StartTimer(delay);
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
         //Debug.Log("Destroy");
         if (alreadyTriggered) return;

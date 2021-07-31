@@ -25,13 +25,16 @@ public class PoolableObject : NetworkBehaviour
         // tell server to send ObjectDestroyMessage, which will call UnspawnHandler on client
         if (isServer)
         {
+            Debug.Log("Disable SRV " + name);
             poolManager.PutBackInPool(this.gameObject);
             //Debug.Log("Call UNSPAWN for "+name);
             NetworkServer.UnSpawn(this.gameObject);
+            
         }
         else
         {
             gameObject.SetActive(false);
+            Debug.Log("Disable CLT " + name);
         }
         
  

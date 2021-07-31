@@ -8,16 +8,16 @@ public class PlayerSkinsManager : MonoBehaviour
 
     public Color[] colors;
 
-    Queue<Color> availableColors = new Queue<Color>();
+    List<Color> availableColors = new List<Color>();
 
-    
     void Awake()
     {
         instance = this;
         for (int i = 0; i < colors.Length; i++)
         {
-            availableColors.Enqueue(colors[i]);
+            availableColors.Add(colors[i]);
         }
+        availableColors.Reverse();
     }
 
     public Color PickColor()
@@ -29,7 +29,7 @@ public class PlayerSkinsManager : MonoBehaviour
         }
         else
         {
-            color = availableColors.Dequeue();
+            color = availableColors.Pop();
         }
         
         return color;
@@ -37,6 +37,6 @@ public class PlayerSkinsManager : MonoBehaviour
 
     public void UnpickColor(Color color)
     {
-        availableColors.Enqueue(color);
+        availableColors.Add(color);
     }
 }

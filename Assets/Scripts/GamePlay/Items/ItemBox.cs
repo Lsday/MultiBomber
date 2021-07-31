@@ -32,7 +32,17 @@ public class ItemBox : ItemKickable, IDestroyable
         explodeProgress = 0;
         rendererObject.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
         propertyBlock.SetFloat("_NoiseValue", 0);
-        propertyBlock.SetFloat("_RandomValue", Random.Range(0.7f, 1f)); // set random color
+
+        float rr = LevelBuilder.instance.toggleBoxes ? 0.2f : 1f;
+        if (LevelBuilder.instance.toggleBoxes)
+        {
+            transform.localScale = new Vector3(0.9f, 1f, 1f);
+        }
+        else
+        {
+            transform.localScale = new Vector3(1f, 1f, 0.9f);
+        }
+        propertyBlock.SetFloat("_RandomValue", Random.Range(0.7f, 1f)*rr); // set random color
         rendererObject.SetPropertyBlock(propertyBlock);
     }
     private IEnumerator UpdateMaterialData()
@@ -60,7 +70,7 @@ public class ItemBox : ItemKickable, IDestroyable
         StartCoroutine(this.UpdateMaterialData());
     }
 
-    public void Destroy()
+    public override void Destroy()
     {
         destroyedTriggered = false;
 
@@ -75,7 +85,7 @@ public class ItemBox : ItemKickable, IDestroyable
         // reset bonus
         bonus = null;
 
-        Disable();
+        base.Destroy();
     }
 
     [Command]
@@ -99,12 +109,13 @@ public class ItemBox : ItemKickable, IDestroyable
         if (delay > 0)
         {
             destroyedTriggered = true;
+            Debug.Log("Invoke destroy " + name);
             Invoke("Destroy", delay);
 
             StartDestroyAnimation(fireEndDelay);
             return;
         }
-
+        Debug.Log("Direct destroy " + name);
         Destroy();
     }
 

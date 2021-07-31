@@ -163,5 +163,11 @@ public class ItemBonus : ItemPlayerModifier
         StartDestroyAnimation(fireEndDelay);
     }
     
+    public override void Destroy()
+    {
+        ResetVariables();
+
+        base.Destroy();
+    }
 }
 

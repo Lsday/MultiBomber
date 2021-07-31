@@ -35,6 +35,8 @@ public struct ClearMapMessage : NetworkMessage {};
 
 public class LevelBuilder : NetworkBehaviour
 {
+
+    public static LevelBuilder instance;
     #region Properties
 
     /// <summary>
@@ -115,10 +117,15 @@ public class LevelBuilder : NetworkBehaviour
 
     #region Init
 
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         //NetworkClient.RegisterHandler<CreateMapMessage>(CreateMapCallBack);
         //NetworkClient.RegisterHandler<ClearMapMessage>(ClearMapCallBack);
+        
 
         bonusDispenser = new BonusDispenser();
 
@@ -128,7 +135,8 @@ public class LevelBuilder : NetworkBehaviour
     private void Init()
     {
         //ClearMap();
-        
+
+        toggleBoxes = !toggleBoxes;
 
         int mapDimension = GetMapDimension(mapSize);
         grid = new GenericGrid<Tile>(mapDimension, mapDimension, 1, Vector3.zero, TileConstructor);
@@ -245,8 +253,10 @@ public class LevelBuilder : NetworkBehaviour
         }
     }
 
+    public bool toggleBoxes = false;
     private void CreateBoxes()
     {
+
         if (!isServer) return;
 
         int boxCount = Mathf.RoundToInt(potentialBoxTile.Count * (1 - (boxPercent/100f)));
@@ -258,13 +268,12 @@ public class LevelBuilder : NetworkBehaviour
             potentialBoxTile.RemoveAt(randomIndex);
         }
 
+        
+
         actualBoxes.Clear();
         for (int i = 0; i < potentialBoxTile.Count; i++)
         {
             //Calculate Box Position
-            //Vector3 boxTilePosition = grid.GetGridObjectWorldCenter(potentialBoxTile[i].x, potentialBoxTile[i].y);
-            
-            //ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, boxTilePosition) as ItemBox;
             ItemBox box = PoolingSystem.instance.GetPoolObject(ItemsType.BOX, potentialBoxTile[i].worldPosition) as ItemBox;
 
             actualBoxes.Add(box);
@@ -681,11 +690,11 @@ public class LevelBuilder : NetworkBehaviour
 
         //NetworkServer.SendToAll(new ClearMapMessage { });
         RpcClearMap();
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         //NetworkServer.SendToAll(new CreateMapMessage { mapSize = this.mapSize, boxPercent = this.boxPercent });
         RpcCreateMap(this.mapSize, this.boxPercent);
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         GameManager.instance.RpcStartGame();
         yield return new WaitForSecondsRealtime(0.1f);

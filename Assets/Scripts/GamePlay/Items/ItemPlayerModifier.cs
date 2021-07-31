@@ -7,10 +7,12 @@ public class ItemPlayerModifier : ItemBase, ILootable, IDestroyable
     public ScriptableAction<PlayerEntity> scriptableAction;
     protected bool destroyedTriggered = false;
 
-    public void Destroy()
+    public override void Destroy()
     {
+        
         destroyedTriggered = false;
-        Disable();
+        
+        base.Destroy();
     }
 
     [ClientRpc]
